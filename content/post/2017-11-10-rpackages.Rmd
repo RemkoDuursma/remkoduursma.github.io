@@ -1,0 +1,70 @@
+---
+title: "My R Packages"
+author: "Remko Duursma"
+date: 2017-11-10
+categories: ["R"]
+---
+
+A somewhat comprehensive list of the R packages that I have developed over the years.
+
+
+## plantecophys
+
+[Website](https://remkoduursma.github.io/plantecophys) / [CRAN](https://cran.r-project.org/package=plantecophys) / [github](https://github.com/RemkoDuursma/plantecophys)
+
+Analysis of leaf gas exchange. Fit A-Ci curves, simulate from the coupled leaf gas exchange model, fit Ball-Berry models of stomatal conductance, and more. [Read open-access publication describing plantecophys](http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0143346).
+
+## fitplc
+
+[Website](https://remkoduursma.github.io/fitplc) / [CRAN](https://cran.r-project.org/package=fitplc) / [github](https://github.com/RemkoDuursma/fitplc)
+
+Analysis and visualization of plant hydraulics data. Fit PLC curves to estimate P50 and related parameters, report uncertainty via bootstrap resampling, incorporate random effects, and more. [Read open-access publication describing fitplc](http://jplanthydro.org/article/view/1541).
+
+## speciesmap
+
+[Website](https://remkoduursma.github.io/speciesmap) / [github](https://github.com/RemkoDuursma/speciesmap)
+
+Obtain species occurrence data from one of two web services, download corresponding climate data from WorldClim, rasterize occurrences, calculate climate envelopes. [See here for an example demonstration](https://remkoduursma.github.io/speciesmap/articles/Using_speciesmap.html).
+
+## YplantQMC
+
+[CRAN](https://cran.r-project.org/package=YplantQMC) / [bitbucket](https://www.bitbucket.org/RemkoDuursma/YplantQMC)
+
+Implementation of a functional-structural plant model, coupling plant architecture (Y-Plant) to the QuasiMC ray-tracer (developed by Mik Cieslak). Calculate radiative transfer in 3D plant canopies, estimate photosynthesis and transpiration for each leaf.
+
+## Maeswrap
+
+[CRAN](https://cran.r-project.org/package=Maeswrap) / [github](https://github.com/RemkoDuursma/Maeswrap)
+
+Wrapper functions for the **Maespa** model, a detailed model to estimate vegetation water use and carbon uptake, and hydraulics of the soil-to-plant pathway. [Read further on my website on the Maespa model](https://maespa.github.io).
+
+## phenora
+
+[bitbucket](https://www.bitbucket.org/RemkoDuursma/phenora)
+
+Analysis of phenocam images for greenness. Uses the `imager` R package to calculate greenness indices, as used to record phenology of leaf growth and senescence, with convenient functions to analyze many images, extract time and date of images, etc.
+
+## bootpredictlme4
+
+[github](https://github.com/remkoDuursma/bootpredictlme4)
+
+Calculate confidence intervals for predictions from linear mixed-effects models with the bootstrap, implemented as a wrapper around the `bootMer` function. [Read further in this blog post](http://www.remkoduursma.com/post/2017-06-15-bootpredictlme4/).
+
+## HIEv
+
+[bitbucket](https://www.bitbucket.org/RemkoDuursma/HIEv)
+
+Collection of tools to interface with the API of a data management system at the [HIE](https://www.westernsydney.edu.au/hie), the HIEv. Find and download files, upload files, tools for timeseries data, and more. 
+
+
+
+
+
+
+
+
+
+
+
+
+
