@@ -8,7 +8,7 @@ ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
 
 contentdir = "content"
 layoutdir = "layouts"
-publishdir = "public"
+publishdir = "docs"
 
 author = "Remko Duursma"
 title = "Remko Duursma"
