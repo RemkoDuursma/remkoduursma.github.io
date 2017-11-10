@@ -50,7 +50,7 @@ highlightjs = true
 
 ## Main Menu
 [[menu.main]]
-    name = "blog"
+    name = "Blog"
     weight = 100
     identifier = "blog"
     url = "/post/"
@@ -68,5 +68,5 @@ highlightjs = true
     name = "CV"
     identifier = "cv"
     weight = 200
-    url = "/files/CV_Duursma.pdf"
+    url = "/files/cvduursma.pdf"
 
