@@ -1,0 +1,62 @@
+---
+title: "The Cherriest Pick"
+author: "Remko Duursma"
+date: 2017-06-01
+categories: ["R"]
+tags: ["ecology", "journalclub"]
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+We discussed a paper in journal club today ([Tan et al. 2017](http://iopscience.iop.org/article/10.1088/1748-9326/aa6f97/meta)), where three outliers were removed from a plot with just seven data points. The authors were happy to report a correlation coefficient (*r*) of 0.99. Here is their Fig. 2b (doesn't matter what's on the axes), where 'outliers' were labelled with open symbols.
+
+![](img/tanetal_fig2.png)
+
+What value of *r* do we expect between two normally distributed variables (where n=7), when we remove three points so that *r* is maximal?
+
+```{r}
+# Take 7 normally distributed points, try all combinations where we choose 4
+# points, and select the one with the highest correlation.
+cherrypick <- function(plotit=FALSE){
+  x <- rnorm(7, mean = 28, sd = 1)
+  y <- rnorm(7, mean = 26, sd = 1)
+  
+  m <- combn(7, 4)
+  cr <- apply(m, 2, function(i)cor(x[i],y[i]))
+  
+  if(plotit){ 
+    ii <- m[,which.max(abs(cr))]
+    
+    plot(x,y)
+    points(x[ii], y[ii], pch=19)
+    abline(lm(y[ii] ~ x[ii]), lty=5)
+  } else {
+    return(max(abs(cr)))
+  }
+}
+```
+
+A few examples with the above function, where the regression line uses the four solid points (and the remaining 3 are 'outliers').
+
+```{r}
+set.seed(1234)
+par(mfrow=c(3,3), mar=c(2.2,2.2,0.2,0.2), 
+    cex.axis=0.8,
+    cex.lab=0.8, mgp=c(1.2,0.4,0), tcl=0.2)
+for(i in 1:9)cherrypick(plotit=TRUE)
+```
+
+
+Now we simulate ten thousand times and get the distribution of the cherry-picked *r* (absolute values).
+
+```{r}
+picks <- replicate(10^4, cherrypick())
+
+hist(picks, breaks=100, col="darkgrey", border="darkgrey",
+     xlab="Correlation coefficient n=4", main="")
+```
+
+Clearly high values of *r* are very likely. In this simulation, `r round(100 * length(picks[picks > 0.9]) / length(picks), 1)`% of simulated *r* values were above 0.9, and `r round(100 * length(picks[picks > 0.95]) / length(picks), 1)`% above 0.95.
+

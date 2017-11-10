@@ -1,0 +1,324 @@
+---
+title: "Reading data from the web"
+author: "Remko Duursma"
+date: 2017-04-13
+categories: ["R"]
+tags: ["plot", "regression", "nonlinear", "multivariate", "mixedeffects"]
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(collapse = TRUE, message= FALSE, warning=FALSE)
+```
+
+
+In this tutorial I show how to read data from online sources, in various ways. I will also demonstrate how to tidy data using the `tidyr` package, in particular converting from wide to long format.
+
+
+# Reading data files directly
+
+In the case where a csv or other text file is available as a direct link, we can simply read the file from the URL without having to download it. To read the current CO~2~ concentrations on Mauna Loa, for example, we can use the following:
+
+```{r}
+url <- "ftp://aftp.cmdl.noaa.gov/products/trends/co2/co2_weekly_mlo.txt"
+d <- read.table(url, na.strings="-999.99")
+plot(d[,4], d[,5], type='l', xlab="Year", ylab=expression("["*CO[2]*"]"~(ppm)))
+```
+
+The only hitch here is that the column names are not read (they are embedded in the comments in a messy way), but we can find that year is the 4th column, and CO~2~ concentration the 5th.
+
+Also note the use of `na.strings` to convert missing values coded as `-999.99` to `NA`.
+
+## Finding the URL of a datasource
+
+In the example above, and all that follow, we have to save the URL of the data source. When you find the URL of the datafile, or the button that says 'Click to Download', or whatever, right-click on it and select 'Copy Link Address' (Windows instructions).
+
+# Downloading text files
+
+In the above example, we read a text file from a direct URL. Sometimes this is not possible, and other times you would also like to have a local copy of the text file for safekeeping (in case [something happens to NOAA](https://www.bloomberg.com/view/articles/2017-03-10/trump-s-reckless-plan-to-starve-noaa), for example).
+
+The following example downloads the CO2 data to a local file.
+
+```{r}
+url <- "ftp://aftp.cmdl.noaa.gov/products/trends/co2/co2_weekly_mlo.txt"
+fn <- basename(url)
+download.file(url, fn)
+```
+
+Here I use `basename` to extract the right-hand side of the url (`co2_weekly_mlo.txt`), a natural name for the file.
+
+
+
+# Downloading and unzipping zip files
+
+
+The next example shows how to download a zip file, containing data files, from an online source. Downloading a zip file proceeds as above, however we have to specify one extra argument.
+
+**Warning:** For non-text files, on Windows, you **must** use the argument `mode="wb"`!
+
+If you don't follow this warning, the file will download just fine but you cannot read it (and it may take you some time to figure out why not).
+
+The following example downloads data from the Research Data at Western Sydney University (your data ends up here if you publish your data via the HIEv).
+
+```{r}
+url <- "http://research-data.westernsydney.edu.au/redbox/verNum1.8-SNAPSHOT/default/detail/094c4376cead38dc21556f59470de5a0/WTC_TEMPERATURE_SUNSHADE.zip?preview=true"
+
+# Note the mode='wb'
+download.file(url, "data.zip", mode="wb")
+
+# Using the built-in unzipper - it returns the filenames.
+u <- unzip("data.zip")
+
+# Find the csv files
+csvfiles <- u[grep("[.]csv", u, ignore.case=TRUE)]
+
+# Read the first one
+dat <- read.csv(csvfiles[1])
+```
+
+
+# Reading HTML tables (Option 1)
+
+There are a few options to read HTML tables directly into R. This example shows the use of the simple `readHTMLTable` from the `XML` package. Reading data from HTML tables on the web is particularly useful for data that are updated frequently. 
+
+Here I read the water level of the Hawkesbury river at Windsor, as provided by the BOM.
+
+```{r, eval=-5}
+library(XML)
+url <- "http://www.bom.gov.au/fwo/IDN60233/IDN60233.567044.tbl.shtml"
+
+# to open a URL with the default browser, do this:
+# browseURL(url)
+
+wat <- readHTMLTable(url, which=1)
+names(wat) <- c("DateTime","WaterLevel")
+
+# for 'mutate', a cleaner way to add new variables
+library(dplyr)
+wat <- mutate(wat, 
+  WaterLevel = as.numeric(as.character(WaterLevel)),
+  DateTime = as.POSIXct(DateTime, format="%d/%m/%Y %H:%M"))
+
+# Simple line plot of the river height
+par(cex.main=0.85)
+with(wat, plot(DateTime, WaterLevel, type='l', main="Hawkesbury River water level at Windsor"))
+```
+
+
+
+# Reading HTML table (Option 2)
+
+The second option uses the `rvest` package. I will also introduce the pipe operator (`%>%`) for tidier coding.
+
+```{r}
+library(rvest)
+url <- "https://en.wikipedia.org/wiki/Demography_of_Australia"
+
+tb <- html_nodes(read_html(url), "table")
+
+# Many tables are found
+head(tb)
+```
+
+In the above example we do the usual nesting of expressions. First the url is read (`read_html(url)`), then the table nodes are found (`html_nodes`). Often we have multiple steps that are nested in this way, which can make for long and sometimes unreadable code. An alternate way of writing these expressions is to use the pipe operator, which allows us to write expressions in the order that they occur. Example:
+
+
+```{r}
+# this expression:
+tb <- html_nodes(read_html(url), "table")
+
+# is equivalent to:
+tb <- url %>% read_html %>% html_nodes("table")
+```
+
+With the pipe operator, the result of the expression to the left will be used as the *first argument* to the next expression. For example, `url` is sent to `read_html` which treats it as its first argument. The output from `read_html` is sent to `html_nodes` which uses that as its first argument.
+
+After digging in the results a bit, we find we want the third table. That returns a list of length one, so we take just the first element (`pop[[1]]`).
+
+```{r}
+pop <- html_table(tb[4], fill=TRUE)
+
+# Also delete first row, contains headers (again), keep only first two columnss.
+pop <- pop[[1]][-1,1:2] 
+```
+
+The resulting table is far from pretty. First we fix the column names, then format the total population column.
+
+```{r}
+names(pop) <- c("Region","population")
+
+# Remove commas by substituting them with nothing ("")
+pop$population <- as.numeric(gsub(",","", pop$population))
+
+# And a simple barplot
+par(mar=c(10,4,1,1), las=3, cex.axis=0.8)
+pop <- pop[order(pop$population),]
+with(pop, barplot(population * 10^-6, 
+                  col="cornflowerblue",
+                  names.arg=Region, ylab="Population (millions)"))
+
+```
+
+
+
+# Reading and tidying a complex Excel workbook
+
+In some cases data are stored as an Excel workbook, with data organized in tabs. I usually prefer to convert all tabs to CSV files and work with those. However there are two distinct advantages to reading data from the Excel workbook directly (although of course I do not advocate you use Excel to begin with; the point is others do and we have to work with that).
+
+Advantages are:
+
+1. Reading from Excel directly avoids a manual step (saving as CSV), making your workflow more reproducible.
+2. If cells are formatted in Excel (for example, large numbers may have commas in it), reading the data from Excel will ignore the formatting and just read the actual data in the sheets. This also applies to cells formatted as Dates (which will be read as the number of days since 1900-1-1, and can be converted with `as.Date(num, origin="1900-1-1")`).
+
+
+## Getting the data
+
+In this example I use data form agricultural commodities (crops, livestock), available on the Australian Bureau of Statistics (http://www.abs.gov.au/AUSSTATS).
+
+Again the URL could be found by 'Copy Link Address' after right-clicking the Download button.
+
+```{r}
+url <- "http://www.abs.gov.au/AUSSTATS/subscriber.nsf/log?openagent&7124%20data%20cube.xls&7124.0&Data%20Cubes&EF15C557DF98A5F9CA257B2500137D3B&0&2010-11&06.03.2013&Latest"
+
+download.file(url, "tmp.xls", mode="wb")
+```
+
+
+## Simple timeseries
+
+We use `read_excel` from the `readxl` package, which is pretty quick and easy to use. It does have some issues, for example it spits out a long message a lot of the time (in hexadecimal code), which is quite useless and annoying. I have suppressed the messages below, but you will see many on the screen!
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+library(tidyr)
+library(readxl)
+
+excel_sheets <- function(path) {
+  quiet_excel_sheets <- purrr::quietly(readxl::excel_sheets)
+  out <- quiet_excel_sheets(path)
+  if(length(c(out[["warnings"]], out[["messages"]])) == 0)
+         return(out[["result"]])
+  else readxl::excel_sheets(path)
+}
+
+read_excel <-  function(...) {
+  quiet_read <- purrr::quietly(readxl::read_excel)
+  out <- quiet_read(...)
+  if(length(c(out[["warnings"]], out[["messages"]])) == 0)
+    return(out[["result"]])
+  else readxl::read_excel(...)
+}
+```
+
+
+```{r, eval=FALSE}
+library(readxl) # for read_excel
+library(tidyr)  # for gather, spread
+```
+
+As a first example we will read the 'Horses' tab, showing the number of horses in the country since 1885. The data are in wide format (every column is a year), and we can use `gather` from `tidyr` to quickly make this into long format. The first argument is the name of the new variable in long format that will contain the names of the columns that used to be in wide format (here, `year`). The second argument is the new name of the variable that will contain the data (I here call it `count`).
+
+Also note the use of the `%>%` operator, and the indexing (square brackets) to keep only the first row, and to delete the first column (`[1,-1]`).
+
+```{r, message=FALSE}
+# Look at the 'horses' tab, we just want to plot the number of horses over time.
+horses <- read_excel("tmp.xls", sheet=7, skip=4)[1,-1] %>%
+  gather(year,count)
+
+with(horses, plot(year, count, type='l'))
+```
+
+Clearly number of horses has declined steadily since the introduction of the automobile - but note the pause in decline during the Great Depression.
+
+Now let's write a simple function that takes the name of the sheet, and plots the first row of data against year. The trick here is to store the names of the sheets first (as `sh`).
+
+```{r}
+# Read sheet names, store as vector
+# library(XLConnect)
+# sh <- getSheets(loadWorkbook("tmp.xls"))
+
+# Or with readxl
+sh <- excel_sheets("tmp.xls")
+
+plot_row1 <- function(sheetname){
+  
+  # Look up which sheet has that name
+  i <- which(sh == sheetname)
+  
+  # Read that sheet. 
+  # Keep only first row, delete first column ([1,-1])
+  # Make into long format, with year as first variable, new variable
+  # 'count' as variable that stores the data (gather).
+  data <- read_excel("tmp.xls", sheet=i, skip=4)[1,-1] %>%
+    gather(year,count)
+  
+  # Simple line plot
+  with(data, plot(year, count, main=sheetname, type='l'))
+}
+plot_row1("Sheep")
+
+```
+
+
+
+## More complex example
+
+The final example is more complex. If you inspect the Barley tab in the Excel workbook, you see that we want to reshape two variables, representing area, and total yield. I want to plot yield per area over time (productivity), so we need to keep track of both variables. This example shows the use of `tidyr` to accomplish that. 
+
+
+
+```{r, message=FALSE, eval=FALSE}
+library(readxl)
+library(tidyr)
+library(dplyr)
+
+# Read second sheet, Barley.
+# Keep first and second row, delete first column
+aus_barley <- read_excel("tmp.xls", sheet=2, skip=4)[1:2,-1]
+
+# Rename first column, reset 'Variable' to more useful names.
+names(aus_barley)[1] <- "Variable"
+aus_barley$Variable <- c("Area","Yield")
+
+# Make long format, but ignore the 'Variable' column when doing so.
+aus_barley_long <- gather(aus_barley, year, value, -Variable)
+
+# Now we have area and yield for every year, as rows following each other:
+head(aus_barley_long)
+
+# Now we go back to wide format, 'splitting' by the 'Variable' column,
+# so that we have separate columns for area and yield, using spread() from tidyr.
+aus_barley_long <- spread(aus_barley_long, Variable, value)
+
+head(aus_barley_long)
+
+# Now add year and yield per hectare, using the convenient mutate function from dplyr
+aus_barley_long <- mutate(aus_barley_long,
+                          year = round(as.numeric(year),0),
+                          yield_ha = Yield / Area)
+
+# Yield per hectare over time.
+with(aus_barley_long, plot(year, yield_ha, type='l', 
+                           xlab="Year",
+                           ylab=expression(Yield~~(t~ha^-1)),
+                           main="Barley yield"))
+
+```
+
+
+
+```{r cleanup, echo=FALSE}
+fn <- c("bag-info.txt",
+        "bagit.txt",
+        "co2_weekly_mlo.txt",
+        "data.zip",
+        "manifest-md5.txt",
+        "manifest-sha1.txt",
+        "tmp.xls")
+unlink(fn)
+unlink("data", recursive=TRUE)
+```
+
+
+
+
+
+

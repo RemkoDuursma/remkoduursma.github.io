@@ -1,0 +1,10 @@
+---
+title: The cherriest pick
+author: Remko Duursma
+date: '2017-11-10'
+slug: the-cherriest-pick
+categories:
+  - R
+tags: []
+---
+

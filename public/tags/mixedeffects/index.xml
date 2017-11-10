@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Mixedeffects on Remko Duursma</title>
+    <link>/tags/mixedeffects/</link>
+    <description>Recent content in Mixedeffects on Remko Duursma</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-US</language>
+    <lastBuildDate>Thu, 13 Apr 2017 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/mixedeffects/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Advanced Topics in R</title>
+      <link>/post/2017-04-13-rworkshops/</link>
+      <pubDate>Thu, 13 Apr 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2017-04-13-rworkshops/</guid>
+      <description>Together with Jeff Powell, I am teaching a new series of workshops in Advanced Topics in R this week. Follow the links below for each of the workshops. Also visit the informal page for the R course, and these workshops at .
+Each of the pages hosts the handouts and other materials - all are available free of charge.
+Community Ecology and Multivariate StatisticsLinear Mixed-Effects ModelsAdvanced PlottingNon-linear Modelling</description>
+    </item>
+    
+    <item>
+      <title>Reading data from the web</title>
+      <link>/post/2017-4-13-readingwebdata/</link>
+      <pubDate>Thu, 13 Apr 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2017-4-13-readingwebdata/</guid>
+      <description>In this tutorial I show how to read data from online sources, in various ways. I will also demonstrate how to tidy data using the tidyr package, in particular converting from wide to long format.
+Reading data files directlyIn the case where a csv or other text file is available as a direct link, we can simply read the file from the URL without having to download it. To read the current CO2 concentrations on Mauna Loa, for example, we can use the following:</description>
+    </item>
+    
+  </channel>
+</rss>

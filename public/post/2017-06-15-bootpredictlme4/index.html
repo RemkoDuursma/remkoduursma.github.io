@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+<meta name="description" content="Simple minimalist theme">
+<meta name="keywords" content="minimalist,blog,goa,hugo,developer">
+
+<base href="/">
+
+<title>Remko Duursma</title>
+
+<meta name="generator" content="Hugo 0.30.2" />
+
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:300,400|Roboto+Slab:400,700|Roboto:300,300i,400,400i,500,500i,700,700i">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/favicon-16x16.png" sizes="16x16">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+<meta name="theme-color" content="#ffffff">
+
+</head>
+<body lang="en-US">
+<div class="container">
+
+
+<header class="row text-left title">
+  <h1 class="title">Confidence intervals on predictions from mixed-effects models</h1>
+</header>
+<section id="category-pane" class="row meta">
+  
+  <div class="col-md-12">
+    <h6 class="text-left meta">
+        PUBLISHED ON JUN 1, 2017 
+      
+      
+      
+      —
+      
+      
+      <a class="meta" href="/categories/r">R</a>
+      
+      
+      
+    </h6>
+  </div>
+  
+</section>
+<section id="content-pane" class="row">
+  <div class="col-md-12 text-justify content">
+    <p>With simple linear regression, standard errors and confidence intervals for fitted (and predicted) values are easily computed. In R, we can use the <code>se.fit</code> argument in <code>predict.lm</code>, which returns the standard error for the fitted values, and <code>interval = &quot;confidence&quot;</code> to return confidence intervals. With linear mixed-effects models, however, it is not so easy. Neither <code>predict.lme</code> (from <code>nlme</code>) nor <code>predict.merMod</code> (from <code>lme4</code>) provide these methods, as confidence intervals on mixed-effects model predictions are harder to produce.</p>
+<p>The solution is to use the parametric bootstrap, which is conveniently implemented in <code>bootMer</code> to be applied to models fit with the <code>lme4</code> package (<code>lmer</code>, not <code>glmer</code>). Here I describe a simple wrapper around <code>bootMer</code>, providing an alternative for <code>predict.merMod</code> that calculates standard errors (and confidence intervals) for predictions.</p>
+<p>A side-effect of this implementation is that confidence intervals now appear in <code>visreg</code> plots of mixed-effects models.</p>
+<p>The code shown below is implemented as a very simple package, <code>bootpredictlme4</code>, which can be installed with,</p>
+<pre class="r"><code>devtools::install_github(&quot;remkoduursma/bootpredictlme4&quot;)</code></pre>
+<p>Note that the package cannot be used in conjunction with the <code>lmerTest</code> package, since both packages replace the <code>predict.merMod</code> function from <code>lme4</code>. For this reason I will probably not attempt to submit this package to CRAN.</p>
+<div id="bootstrapped-confidence-intervals" class="section level1">
+<h1>Bootstrapped confidence intervals</h1>
+<p>Suppose we fit a linear mixed-effects model, using the built-in <code>sleepstudy</code> dataset (in the <code>lme4</code> package), which fits the reaction time of subjects as a function of the number of days since a sleep deprivation (3 hours per night) experiment.</p>
+<pre class="r"><code>library(lme4)
+fm1 &lt;- lmer(Reaction ~ Days + (Days | Subject), sleepstudy)</code></pre>
+<p>The structure allows for a random intercept and slope of reaction vs. days by subject. A <code>visreg</code> plot (Fig. 1) shows the fitted model (for the average subject). Note that I have not yet loaded the <code>bootpredictlme4</code> package.</p>
+<pre class="r"><code>library(visreg)
+visreg(fm1, &quot;Days&quot;, ylab=&quot;Reaction time (ms)&quot;)</code></pre>
+<div class="figure"><span id="fig:unnamed-chunk-3"></span>
+<img src="/post/2017-06-15-bootpredictlme4_files/figure-html/unnamed-chunk-3-1.png" alt="A simple visreg plot of the sleepstudy mixed-effects model." width="672" />
+<p class="caption">
+Figure 1: A simple visreg plot of the sleepstudy mixed-effects model.
+</p>
+</div>
+<p>If we are interested in the fitted value at some specified time, let’s say 5 days, we can use <code>predict</code>, setting <code>re.form=NA</code> to yield predictions for the average subject (i.e. not include random effects in the predictions). Note that we actually invoke <code>predict.merMod</code>, because <code>fm1</code> is fitted with <code>lmer</code>.</p>
+<pre class="r"><code>predict(fm1, newdata = data.frame(Days=5), re.form=NA)</code></pre>
+<pre><code>##        1 
+## 303.7415</code></pre>
+<p>Now we would like to calculate a confidence interval on this prediction, using the bootstrap. We can generate 100 bootstrap resamples with the <code>bootMer</code> function, as follows. In this case, we apply the <code>predict.merMod</code> to each of the bootstrapped fits. I am just using 100 fits to speed up this code, but you probably want to use 1000 samples or more.</p>
+<pre class="r"><code>b &lt;- bootMer(fm1, nsim=100, 
+             FUN=function(x)predict(x, newdata=data.frame(Days=5), re.form=NA))</code></pre>
+<p>The resulting object <code>b</code> contains lots of information, but most useful is the element <code>b$t</code>, which lists the output of the function we applied to each of the bootstrap resamples, in this case the fitted value at <code>Days=5</code>.</p>
+<p>The following histogram shows the distribution of the fitted values, that is, the sampling distribution. Note that if you use more samples (which you should), the distribution will look more like a normal distribution.</p>
+<pre class="r"><code>hist(b$t, breaks=seq(250,350,by=5),
+     ylim=c(0,25),
+     main=&quot;&quot;, xlab=&quot;Reaction time at 5 Days (ms)&quot;,
+     col=&quot;cornflowerblue&quot;)
+box()</code></pre>
+<div class="figure"><span id="fig:unnamed-chunk-6"></span>
+<img src="/post/2017-06-15-bootpredictlme4_files/figure-html/unnamed-chunk-6-1.png" alt="The sampling distribution of the fitted Reaction time at 5 days, a histogram of bootstrap estimates." width="672" />
+<p class="caption">
+Figure 2: The sampling distribution of the fitted Reaction time at 5 days, a histogram of bootstrap estimates.
+</p>
+</div>
+<p>The standard error of our predicted value can be estimated simply as the <em>standard deviation</em> of the sampling distribution, that is,</p>
+<pre class="r"><code>sd(b$t)</code></pre>
+<pre><code>## [1] 9.184015</code></pre>
+<p>and the confidence interval as the <em>quantiles</em> of the distribution (in this case, a 95% confidence interval).</p>
+<pre class="r"><code>quantile(b$t, probs=c(0.025, 0.975))</code></pre>
+<pre><code>##     2.5%    97.5% 
+## 286.5467 321.5505</code></pre>
+</div>
+<div id="a-simple-r-package" class="section level1">
+<h1>A simple R package</h1>
+<p>The example above is implemented in the <code>bootpredictlme4</code> package (as mentioned, install with <code>devtools::install_github(&quot;remkoduursma/bootpredictlme4&quot;)</code>). When loading the package, the <code>predict.merMod</code> function is replaced with a function that takes an <code>se.fit</code> argument.</p>
+<pre class="r"><code>library(bootpredictlme4)
+predict(fm1, newdata=data.frame(Days=5), re.form=NA, se.fit=TRUE, nsim=100)</code></pre>
+<pre><code>## $fit
+##        1 
+## 303.7415 
+## 
+## $se.fit
+##        1 
+## 10.50841 
+## 
+## $ci.fit
+##              1
+## 2.5%  283.6878
+## 97.5% 323.8666</code></pre>
+<p>Two standard errors are computed, the <code>se.boot</code> is the one described above (the standard deviation of the sampling distribution), and <code>se.fit</code> is an <em>effective</em> standard error that reconstructs the bootstrapped confidence interval if we were to assume asymptotic normality. In the case of normality, the half-width of the confidence interval (for 95% coverage) is of course 1.96 times the standard error. Thus <code>se.fit</code> is calculated as the half-width of the bootstrapped confidence interval, divided by 1.96. It is this standard error that is used by <code>visreg</code> (see below), making sure that the resulting confidence interval is actually equal to the bootstrapped confidence interval.</p>
+<p>In most cases <code>se.fit</code> and <code>se.boot</code> will be very similar, unless you used very few bootstrap samples, or the sampling distribution is very non-normal (which is certainly possible).</p>
+<p>A major advantage is that <code>visreg</code> automatically recognizes that we can compute standard errors, and now a confidence interval appears on the standard effects plot. Note that <code>bootpredictlme4</code> warns about using few bootstrap resamples. The default has a low number to allow rapid testing.</p>
+<pre class="r"><code>visreg(fm1, &quot;Days&quot;, ylab=&quot;Reaction time (ms)&quot;)</code></pre>
+<pre><code>## Number of bootstrap replicates very low. 
+##  Set to higher value with e.g. options(bootnsim = 500)</code></pre>
+<div class="figure"><span id="fig:unnamed-chunk-10"></span>
+<img src="/post/2017-06-15-bootpredictlme4_files/figure-html/unnamed-chunk-10-1.png" alt="A simple visreg plot of the sleepstudy mixed-effects model - with the bootpredictlme4 package loaded." width="672" />
+<p class="caption">
+Figure 3: A simple visreg plot of the sleepstudy mixed-effects model - with the bootpredictlme4 package loaded.
+</p>
+</div>
+<p>The new predict method also allows more complicated <code>visreg</code> plots, like the overlay plot (my personal favorite).</p>
+<pre class="r"><code># Add a fake grouping variable to sleepstudy
+high &lt;- with(sleepstudy, levels(reorder(Subject,Reaction,mean)))[1:9]
+
+sleepstudy$Group &lt;- factor(ifelse(sleepstudy$Subject %in% high, &quot;A&quot;, &quot;B&quot;))
+
+fm2 &lt;- lmer(Reaction ~ Days*Group + (Days | Subject), sleepstudy)
+visreg(fm2, &quot;Days&quot;, by=&quot;Group&quot;, overlay=TRUE, ylab=&quot;Reaction time (ms)&quot;)</code></pre>
+<pre><code>## Number of bootstrap replicates very low. 
+##  Set to higher value with e.g. options(bootnsim = 500)
+## Number of bootstrap replicates very low. 
+##  Set to higher value with e.g. options(bootnsim = 500)</code></pre>
+<div class="figure"><span id="fig:unnamed-chunk-11"></span>
+<img src="/post/2017-06-15-bootpredictlme4_files/figure-html/unnamed-chunk-11-1.png" alt="A visreg plot with a factor variable included in the mixed-effects model. Confidence intervals are calculated with the bootstrap via bootpredictlme4." width="672" />
+<p class="caption">
+Figure 4: A visreg plot with a factor variable included in the mixed-effects model. Confidence intervals are calculated with the bootstrap via bootpredictlme4.
+</p>
+</div>
+</div>
+
+  </div>
+</section>
+<section id="tag-pane" class="row meta">
+  
+  <div class="col-md-12">
+    <h6 class="text-right meta">
+      
+      
+      
+      TAGS:
+      
+      
+      <a class="meta" href="/tags/lme4">LME4</a>, 
+      
+      <a class="meta" href="/tags/statistics">STATISTICS</a>
+      
+      
+      
+    </h6>
+  </div>
+  
+</section>
+
+
+
+
+
+
+
+
+<section id="menu-pane" class="row menu text-center">
+  
+  
+  <span><a class="menu-item" href="/post/2017-06-01-cherriestpick/">&lt; prev | </a></span>
+  
+  
+  <span><a class="menu-item" href="/post">post</a></span>
+  
+  
+  
+  <h4 class="text-center"><a class="menu-item" href="/">home</a></h4>
+</section>
+
+
+
+<footer class="row text-center footer">
+  <hr />
+  
+  <h6 class="text-center copyright">© 2017. Remko Duursma.</h6>
+  
+  <h6 class="text-center powered">Powered by <a href="https://gohugo.io/">Hugo</a> &amp; <a href="https://github.com/shenoybr/hugo-goa">Goa</a>.</h6>
+  
+  
+</footer>
+
+</div>
+
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  
+
+<script type="text/javascript">
+hljs.initHighlightingOnLoad();
+</script>
+
+
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
+
+

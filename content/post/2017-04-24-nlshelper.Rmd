@@ -1,0 +1,138 @@
+---
+title: "Introducing the nlshelper package"
+author: "Remko Duursma"
+date: 2017-04-24
+categories: ["R"]
+tags: ["plot", "regression", "nonlinear"]
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(collapse = TRUE, message= FALSE, warning=FALSE, fig.width=6)
+```
+
+
+I recently organized a workshop on non-linear regression with R, covering the fundamentals and a few extras. When preparing the handout (which is [available here](http://www.hiercourse.com/nonlinear) as a PDF), I realized it is actually quite cumbersome to plot a fitted model with `nls`, together with the data. To make this process easier, I wrote a simple package - `nlshelper` - which does just that and a few other things. Read on for a simple demonstration, or visit the [Github repository](https://github.com/remkoduursma/nlshelper) here, or read the full chapter in the link above. The package is also on CRAN. 
+
+# Plotting a single fitted curve
+
+The main motivation for writing this package was to quickly be able to plot a fitted curve on top of the data, but has since grown to include a few extra tools. The `nlstools` package can already be used for plotting, with `plotfit`, but it is a little inflexible, and it also does not accept models fit with `nlsList` (more on that below).
+
+The following example fits the Chapman-Richards equation to the `Loblolly` dataset, and plot the fitted curve with the data. With the `extrapolate=TRUE` argument, `plot_nls` plots the fitted curve to the X-axis limits (as specified with `xlim`).
+
+```{r, message=FALSE}
+# Define function to fit
+chapm <- function(x,Asym,b,c)Asym*(1-exp(-b*x))^c
+
+# Fit model
+# Note the specification of the starting values.
+nls_lob <- nls(height ~ chapm(age, Asym, b,c),
+               data=Loblolly,
+               start=list(Asym=100, b=0.1, c=2.5))
+
+# Plot fitted curve
+library(nlshelper)
+plot_nls(nls_lob, pch=16, points.col="cornflowerblue", 
+         xlim=c(0,40), ylim=c(0,80), extrapolate=TRUE)
+```
+
+# Plotting nlsList models
+
+It is straightforward to fit a non-linear regression by each group in a dataframe with `nlsList` from `nlme`, but it is much harder than it should be to plot the data with the fitted curves plotted on top. The `plot_nls` function also accepts objects returned by `nlsList`. The following example fits the Gompertz growth model to the `ChickWeight` data, for each `Diet`, and plots the curves with the data.
+
+```{r, echo=-1, message=FALSE}
+par(las=1, cex.axis=0.8)
+library(nlshelper)
+library(nlme)
+
+fit1 <- nlsList(weight ~ SSgompertz(Time, Asym, b2, b3)|Diet, 
+                data=ChickWeight)
+
+palette(c("#EAC435","#345995","#E40066","#03CEA4"))
+plot_nls(fit1, pch=16, cex=0.5, lwd=2)
+```
+
+
+# Plotting loess and non-linear quantile regression models
+
+After having implemented the simple `plot_nls` function, it turned out that it can be used (or at least was easily modified) for some other objects, including those fit with `loess` and non-linear quantile regression (`nlrq` from `quantreg`).
+
+The following example fits a non-linear quantile regression model to the `ChickWeight` data, for three quantiles, and plots the fitted curves with the data. To plot multiple quantiles, it is convenient to wrap the fit in a function, accepting only `.tau` as an argument.
+
+```{r}
+library(quantreg)
+
+fit_quan <- function(.tau){
+  nlrq(weight ~ SSgompertz(Time, Asym, b2, b3), 
+             tau=.tau,
+              data=ChickWeight)
+}
+
+plot_nls(fit_quan(0.1), pch=16, cex=0.5, points.col="dimgrey", lines.col="firebrick", lty=3)
+plot_nls(fit_quan(0.9), add=TRUE, lines.col="firebrick", lty=3)
+plot_nls(fit_quan(0.5), add=TRUE, lines.col="black", lwd=2)
+```
+
+
+
+# Testing a grouping variable in non-linear regression
+
+A question that frequently arises in non-linear regression is whether the fitted curve differs 'somehow' between groups. There are some rather cumbersome solutions to this problem, using indexing, but we'd like a simple function that gives an overall p-value for the contribution of the group to the fit. The `nlshelper` package provides `anova_nlslist` for this purpose. It simply performs an F-test of a model fit with `nlsList`, which includes the grouping variable, and the equivalent model fit with `nls`. It calculates the appropriate degrees of freedom, and prints a familiar `anova`-like table.
+
+The following example uses the built-in `Puromycin` data. The data include reaction velocity (\code{rate}) versus subtrate concentration in an enzymatic reaction for cells treated with the antibiotic Puromycin, or an untreated control. For enzymatic reactions that depend on the concentration of the substrate, the Michaelis-Menten model is often used, and follows from simple assumptions on the reaction rate versus the concentration of the substrate and enzyme. 
+
+The following example performs an F-test of a model including a grouping variable, versus one without.
+
+```{r}
+# Fit the vanilla model without grouping
+pur0 <- nls(rate ~ SSmicmen(conc, Vm, K), data=Puromycin)
+
+# Fit a model that includes a grouping variable with nlsList
+pur1 <- nlsList(rate ~ SSmicmen(conc, Vm, K)|state, data=Puromycin)
+
+# F-test : does the fitted model differ significantly by 'state'?
+# The first argument is the full model, the second one the reduced model.
+anova_nlslist(pur1, pur0)
+```
+
+Clearly from this we learn that `state` affects the relationship very (very) much. Of course, in this example, we don't need p-values since it is obvious from a plot of the fitted model. Also useful in this context is a quick table of the fitted coefficients, separately for each group, with confidence intervals. The `nlshelper` package adds a method to the `tidy` function from the `broom` package, as the following example shows.
+
+
+```{r, echo=-1}
+par(las=1, cex.axis=0.8)
+# Only works if the nlshelper package is loaded
+tidy(pur1, conf.int=TRUE)
+
+# A plot of the fitted model
+palette(c("#3BB8C4","#FF3D2F"))
+plot_nls(pur1, pch=19, xlim=c(0,1.2))
+
+# A future version of the package may include an automatic legend...
+legend("bottomright", names(pur1), pch=19, col=palette())
+```
+
+I have a few developments planned for the `nlshelper` package including:
+
+- Methods for non-linear mixed-effects models
+- Computation and plotting of confidence intervals for the fitted line, based on the bootstrap (much like the `fitplc` package does for very specific non-linear regressions, [see our paper here](http://jplanthydro.org/article/view/1541))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

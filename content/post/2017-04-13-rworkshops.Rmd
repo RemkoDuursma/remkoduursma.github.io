@@ -1,0 +1,27 @@
+---
+title: "Advanced Topics in R"
+author: "Remko Duursma"
+date: 2017-04-13
+categories: ["R"]
+tags: ["plot", "regression", "nonlinear", "multivariate", "mixedeffects"]
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(collapse = TRUE)
+```
+
+
+Together with Jeff Powell, I am teaching a new series of workshops in Advanced Topics in R this week. Follow the links below for each of the workshops. Also visit the informal page for the R course, and these workshops at [](http://www.hiercourse.com).
+
+Each of the pages hosts the handouts and other materials - all are available free of charge.
+
+- [Community Ecology and Multivariate Statistics](http://www.hiercourse.com/multivariate)
+- [Linear Mixed-Effects Models](http://www.hiercourse.com/mixedeffects)
+- [Advanced Plotting](http://www.hiercourse.com/advancedplot)
+- [Non-linear Modelling](http://www.hiercourse.com/nonlinear)
+
+
+
+
+
+

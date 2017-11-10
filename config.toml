@@ -1,0 +1,72 @@
+## Basic Configuration
+
+baseurl = "https://remkoduursma.github.io"
+builddrafts = false
+canonifyurls = false
+languageCode = "en-US"
+ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
+
+contentdir = "content"
+layoutdir = "layouts"
+publishdir = "public"
+
+author = "Remko Duursma"
+title = "Remko Duursma"
+
+theme = "hugo-goa"
+
+## Hugo Built-in Features
+#disqusShortname = "https-shenoybr-github-io-hugo-goa-demo" # Comment out to disable Disqus.
+#googleAnalytics = "XYZ"
+enableRobotsTXT = true
+
+## Site Settings
+[params]
+author = "Remko Duursma"
+intro = "Scientist with Data Skills"
+description = "Senior Lecturer in Modelling Vegetation Function and Structure  <br/> at the Hawkesbury Institute for the Environment, Western Sydney University."
+authorimage = "remko.jpg"
+dateformat = "Jan 2, 2006"
+
+## Site Meta Settings
+[params.meta]
+description = "Simple minimalist theme"
+keywords = "minimalist,blog,goa,hugo,developer"
+
+## Social Accounts
+[params.social]
+github = "RemkoDuursma"
+linkedin = "remkoduursma"
+stackoverflow = "1758082"
+email = "remkoduursma@gmail.com"
+gscholar = "qGSIWxcAAAAJ"
+bitbucket = "remkoduursma"
+
+## Extras
+[params.extra]
+copyright = "© 2017. Remko Duursma." 
+poweredby = true
+highlightjs = true
+
+## Main Menu
+[[menu.main]]
+    name = "blog"
+    weight = 100
+    identifier = "blog"
+    url = "/post/"
+#[[menu.main]]
+#    name = "about"
+#    identifier = "about"
+#    weight = 200
+#    url = "/about/"
+[[menu.main]]
+    name = "R Course"
+    identifier = "rcourse"
+    weight = 200
+    url = "http://www.hiercourse.com"
+[[menu.main]]
+    name = "CV"
+    identifier = "cv"
+    weight = 200
+    url = "/files/CV_Duursma.pdf"
+

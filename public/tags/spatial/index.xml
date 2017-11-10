@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Spatial on Remko Duursma</title>
+    <link>/tags/spatial/</link>
+    <description>Recent content in Spatial on Remko Duursma</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-US</language>
+    <lastBuildDate>Tue, 30 May 2017 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/spatial/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Four ways to make chloropleths in R</title>
+      <link>/post/2017-05-30-chloropleths/</link>
+      <pubDate>Tue, 30 May 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2017-05-30-chloropleths/</guid>
+      <description>Population of Australia by stateA powerful way to visualize spatial data is to colour the regions with the variable of interest. These sort of maps are called chloropleths. If you are visualizing data in the USA, you are quite lucky because the maps package, and even chloroplethr, can be used directly to make chloropleths. Outside of the USA, however, it is trickier and we have to do some manual work to prepare the files.</description>
+    </item>
+    
+  </channel>
+</rss>

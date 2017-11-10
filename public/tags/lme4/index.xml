@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Lme4 on Remko Duursma</title>
+    <link>/tags/lme4/</link>
+    <description>Recent content in Lme4 on Remko Duursma</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-US</language>
+    <lastBuildDate>Thu, 01 Jun 2017 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/lme4/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Confidence intervals on predictions from mixed-effects models</title>
+      <link>/post/2017-06-15-bootpredictlme4/</link>
+      <pubDate>Thu, 01 Jun 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2017-06-15-bootpredictlme4/</guid>
+      <description>With simple linear regression, standard errors and confidence intervals for fitted (and predicted) values are easily computed. In R, we can use the se.fit argument in predict.lm, which returns the standard error for the fitted values, and interval = &amp;quot;confidence&amp;quot; to return confidence intervals. With linear mixed-effects models, however, it is not so easy. Neither predict.lme (from nlme) nor predict.merMod (from lme4) provide these methods, as confidence intervals on mixed-effects model predictions are harder to produce.</description>
+    </item>
+    
+  </channel>
+</rss>

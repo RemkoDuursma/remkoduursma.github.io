@@ -1,0 +1,282 @@
+---
+title: "Four ways to make chloropleths in R"
+author: "Remko Duursma"
+date: 2017-05-30
+categories: ["R"]
+tags: ["spatial", "maps"]
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(ggplot2)
+library(dplyr)
+library(rvest)
+library(sp)
+library(RColorBrewer)
+library(ggmap)
+library(rgeos)
+library(leaflet)
+library(htmltools)
+library(oz)
+```
+
+
+# Population of Australia by state
+
+A powerful way to visualize spatial data is to colour the regions with the variable of interest. These sort of maps are called chloropleths.  If you are visualizing data in the USA, you are quite lucky because the `maps` package, and even `chloroplethr`, can be used directly to make chloropleths. Outside of the USA, however, it is trickier and we have to do some manual work to prepare the files.
+
+Here I show three ways to make chloropleth maps of Australia. In these maps, I will colour the state (or territory) by the population for the state. To start off, I read population data from Wikipedia using the `rvest` package.
+
+```{r, message=FALSE}
+library(rvest)
+url <- "https://en.wikipedia.org/wiki/Demography_of_Australia"
+
+# Find all table nodes from the page
+tb <- html_nodes(read_html(url), "table")
+
+# Read the fourth table (inspect tb to find out which you want)
+pop <- html_table(tb[4], fill=TRUE)
+pop <- pop[[1]][-1,1:2] 
+
+names(pop) <- c("Region","population")
+
+# Remove commas by substituting them with nothing ("")
+# and convert to millions.
+pop$population <- as.numeric(gsub(",","", pop$population)) * 10^-6
+
+```
+
+We'll make a quick plot of the population by state.
+
+```{r, fig.height=4, fig.width=5}
+library(ggplot2)
+library(dplyr)
+
+mutate(pop, Region = reorder(Region, population)) %>% 
+  ggplot(aes(x=Region, y=population)) +
+  geom_point() + coord_flip() + theme_minimal() +
+  labs(y="Population (millions)", x="")
+```
+
+# Map 1 : spplot
+
+The first map I will show is made using the `spplot` from the `sp` package. Before we make the plot, we have to find data that contains the spatial outlines of the states (and territories) of Australia. An excellent collection of files with administrative boundaries for many countries around the world is [GADM](www.gadm.org). Conveniently, they even store `rds` files which we can directly read into R with `readRDS`.
+
+On the GADM site, I found the file I wanted, and copied the link, which is pasted below.
+
+```{r}
+url <- "http://biogeo.ucdavis.edu/data/gadm2.8/rds/AUS_adm1.rds"
+tf <- tempfile()
+
+# Download the file to a temporary file 
+# (mode="wb" is necessary on Windows only)
+download.file(url,  tf, mode="wb")
+
+# Read the rds file. 
+aus_shp <- readRDS(tf)
+```
+
+The object `aus_shp` is a `SpatialPolygonsDataframe`, containing the states etc. of Australia at quite high resolution. This type of object takes a bit of time to get used to, but basically it contains both polygons of the regions, as well as a dataframe containing descriptors of these polygons. As a result some dataframey functions are still useful, like `nrow(aus_shp)` gives the number of polygons.
+
+The second thing to know is that the data descriptors are held in the `@data` slot, so that `aus_shp@data` returns all 11 rows of data for the polygons. From this we can see that the column `NAME_1` contains the name of the state, which we will need later.
+
+
+```{r}
+# Next we merge the population data onto the descriptor data
+# in the spatial polygons dataframe (aus_shp).
+# Here is is important to keep regions that don't exist in
+# the population data - because we need to end up with the same
+# number of rows.
+aus_shp@data <- merge(aus_shp@data, pop, 
+                      by.x="NAME_1", by.y="Region", 
+                      all=TRUE)
+
+# We define factor levels by cutting population into bins.
+aus_shp$colbin <- cut(aus_shp$population, 0:7, 
+                      labels=c("0-1","1-2","2-3","3-4","4-5","5-6","6-7"))
+
+# Set the palette for coloring.
+library(RColorBrewer)
+colpal <- brewer.pal(7, "Purples")
+
+# And make the plot.
+spplot(aus_shp, "colbin", col.regions=colpal)
+```
+
+
+# Map 2 : ggmap
+
+The next method to make a chloropleth map uses the `ggmap` package. In this approach, we download a nice Google Maps tile, and add-on whatever spatial elements we like. Less convenient is the fact that `ggmap` does not have methods for spatial polygons dataframes, so we have to convert it and merge with the population data.
+
+Here we continue with the `aus_shp` object made above (including merging the population data).
+
+```{r, message=FALSE, warning=FALSE}
+# We will also need ggplot2 to add the polygons,
+# but we already loaded it above.
+library(ggmap)
+
+# First, get a google map tile.
+# We can specify coordinates or use geocode directly.
+center_map <- geocode("Australia")
+aus_map <- get_map(c(lon = center_map$lon, lat = center_map$lat), 
+                   maptype = "terrain", source = "google", zoom=4)
+
+# Use just ggmap by itself to plot the map (not shown).
+# ggmap(aus_map)
+
+# First we add an 'id' to aus_shp, which we will need later
+# as it is also output by fortify. This id variable will link
+# the polygons with the population data.
+aus_shp@data$id <- rownames(aus_shp@data)
+
+# fortify (from ggplot2) mysteriously converts the spatial object
+# to a dataframe where coordinates are stored in rows.
+# The 'id' column refers to the polygon ID.
+fort <- fortify(aus_shp, "NAME_1")
+
+# And now merge this dataframe with the data descriptors 
+# from the spatial object, which contain our population data:
+aus_pop_data <- merge(fort, aus_shp@data, by = "id")
+```
+
+Now that we have a dataframe with the spatial coordinates as well as the variable of interest (`population`), and the map returned by `get_map`, we can make our chloropleth using `ggmap` and `geom_polygon`.
+
+Note that `group=group` is necessary, as `fortify` adds that  variable. We fill the polygons by population, add map coordinates, and set a fill gradient from grey to red.
+
+```{r}
+ggmap(aus_map) + 
+  geom_polygon(aes(x = long, y = lat, 
+                   group = group, fill = population), 
+               size = .2, color = 'black', 
+               data = aus_pop_data, alpha = 0.8) +
+  coord_map() +
+  scale_fill_gradient(name="Population (millions)", 
+                      low = "darkgrey", high = "red2") + 
+  theme(legend.position = "bottom")
+```
+
+
+# Map 3 : leaflet
+
+The next implementation uses the fancy `leaflet` package, which gives us a very impressive map that can be zoomed, scrolled, and gives pop-ups with more information. Also worth pointing out that `leaflet` returns responsive HTML which is viewed in a browser, but if you want to save a snapshot you can use `webshot` from the `mapview` package. That package is in fact a sort of wrapper around `leaflet` but support for chloropleths seems to be quite undeveloped at time of writing.
+
+```{r}
+library(leaflet)
+
+# For formatting the popup text.
+library(htmltools)
+
+# Cut the population into bins, and assign colours.
+# The colorBin function takes RColorBrewer palette names as input.
+pal <- colorBin("YlGn", domain=aus_shp$population, bins=0:7)
+
+# Define the text that will appear on the popup; this can contain
+# HTML tags.
+state_popup <- paste0(aus_shp$NAME_1, 
+                      "<br><strong>Population (millions): </strong>", 
+                      round(aus_shp$population,1)) %>% 
+  lapply(HTML)
+
+# Make the map. 
+leaflet(data = aus_shp) %>%
+  addProviderTiles("CartoDB.Positron") %>%
+  addPolygons(fillColor = ~pal(population),  # refers to pal defined above
+              fillOpacity = 0.8, 
+              color = "#BDBDC3", # colour between polygons
+              weight = 1,
+              highlight = highlightOptions(
+                weight = 5,
+                color = "#666",
+                dashArray = "",
+                fillOpacity = 0.7,
+                bringToFront = TRUE),
+              label=state_popup) %>%
+  addLegend(pal = pal, values = ~population, 
+            opacity = 0.7, title = NULL,
+            position = "bottomright")
+```
+
+
+<br>
+
+# Map 4 : oz and base graphics
+
+As mentioned in the introduction, the `maps` package can be used for chloropleth maps of the USA, or global country-level maps. However it does not contain data at state-level for Australia (or anywhere else). The `oz` package fills that void but unfortunately does not store the data in the same way, making it difficult or even impossible to use it for chloropleths.
+
+By random chance I came across [Etienne Laliberté](http://www.elaliberte.info/code) 's homepage which hosts a converted version of the `oz()` data. I use it here for another version of the chloropleth map. I am now also hosting this dataset on my own site, just in case Etienne's site no longer exists.
+
+```{r echo=FALSE}
+oz2 <- read.csv("c:/repos/remkoduursma.github.io/static/files/ozdata.csv")
+```
+
+```{r eval=FALSE}
+# Read Etienne's converted Oz data. 
+oz2 <- read.csv("http://www.remkoduursma.com/docs/ozdata.csv")
+```
+
+If you inspect `oz2` you will notice it looks just like the result from `fortify` in the previous example. The next step is to reconcile the state abbreviations in this dataframe with the long names used in the population data. I simply merge a dataframe that links the two:
+
+```{r, message=FALSE, warning=FALSE}
+oz_states <- data.frame(state=c("NSW", "NT","QLD", "SA",  "TAS", "VIC", "WA"),
+                        Region=c("New South Wales","Northern Territory",
+                                 "Queensland","South Australia",
+                                 "Tasmania","Victoria","Western Australia"))
+
+# Merge oz2 with the states, and population data.
+oz2 <- left_join(oz2, oz_states) %>% left_join(pop)
+```
+
+
+We can now use `oz2` as input to `polygon` from base graphics, which is easily combined with a map of Australia as plotted by `oz()`:
+
+```{r}
+library(oz)
+oz()
+with(subset(oz2, state == "NSW"), polygon(long, lat, col="grey"))
+```
+
+We can now make our chloropleth using just base graphics, using `polygon` for the coloured states, and `colorRampPalette` for a series of colours.
+
+A distinct advantage of this base plot is *speed* - all other examples shown here are very slow. Speed matters when we want a responsive figure, for example as part of a shiny app.
+
+```{r}
+# Plot a map of Australia
+# Make a bit more y-space so that the legend can fit.
+oz(ylim=c(-47, -10))
+
+# Cut population into a factor
+oz2$colbin <- cut(oz2$population, 0:7, 
+                  labels=c("0-1","1-2","2-3","3-4","4-5","5-6","6-7"))
+
+# Split the dataframe into a list, by region (state/territory)
+ozl <- split(oz2, oz2$Region)
+
+# Set the palette to colours from grey to red.
+palette(colorRampPalette(c("grey","red2"))(7))
+
+# For every region, plot the polygon.
+invisible(lapply(ozl, function(x)polygon(x$long, x$lat, col=x$colbin)))
+
+legend("bottom",  inset=c(0,-0.02),levels(oz2$colbin), fill=palette(), 
+       horiz=TRUE, cex=0.6, bty='n', title="Population (millions)")
+```
+
+And finally we can make the same map using `ggplot`, since `oz2` is a regular dataframe. Clearly this example is very similar to Map 2 - with the only difference that the source of spatial data is different, and so is the use of `ggplot` instead of `ggmap` (which can plot a nice google map tile behind the data).
+
+```{r}
+ggplot(oz2) + 
+  geom_polygon(aes(x = long, y = lat, group = group, fill = population), 
+               size = .2, color = 'black', alpha = 0.8) +
+  coord_map() +
+  scale_fill_gradient(name="Population (millions)", 
+                      low = "darkgrey", high = "red2") + 
+  theme(legend.position = "bottom")
+```
+
+
+
+
+
+

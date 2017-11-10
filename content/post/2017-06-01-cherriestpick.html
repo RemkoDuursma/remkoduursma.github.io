@@ -1,0 +1,49 @@
+---
+title: "The Cherriest Pick"
+author: "Remko Duursma"
+date: 2017-06-01
+categories: ["R"]
+tags: ["ecology", "journalclub"]
+---
+
+
+
+<p>We discussed a paper in journal club today (<a href="http://iopscience.iop.org/article/10.1088/1748-9326/aa6f97/meta">Tan et al. 2017</a>), where three outliers were removed from a plot with just seven data points. The authors were happy to report a correlation coefficient (<em>r</em>) of 0.99. Here is their Fig. 2b (doesn’t matter what’s on the axes), where ‘outliers’ were labelled with open symbols.</p>
+<div class="figure">
+<img src="img/tanetal_fig2.png" />
+
+</div>
+<p>What value of <em>r</em> do we expect between two normally distributed variables (where n=7), when we remove three points so that <em>r</em> is maximal?</p>
+<pre class="r"><code># Take 7 normally distributed points, try all combinations where we choose 4
+# points, and select the one with the highest correlation.
+cherrypick &lt;- function(plotit=FALSE){
+  x &lt;- rnorm(7, mean = 28, sd = 1)
+  y &lt;- rnorm(7, mean = 26, sd = 1)
+  
+  m &lt;- combn(7, 4)
+  cr &lt;- apply(m, 2, function(i)cor(x[i],y[i]))
+  
+  if(plotit){ 
+    ii &lt;- m[,which.max(abs(cr))]
+    
+    plot(x,y)
+    points(x[ii], y[ii], pch=19)
+    abline(lm(y[ii] ~ x[ii]), lty=5)
+  } else {
+    return(max(abs(cr)))
+  }
+}</code></pre>
+<p>A few examples with the above function, where the regression line uses the four solid points (and the remaining 3 are ‘outliers’).</p>
+<pre class="r"><code>set.seed(1234)
+par(mfrow=c(3,3), mar=c(2.2,2.2,0.2,0.2), 
+    cex.axis=0.8,
+    cex.lab=0.8, mgp=c(1.2,0.4,0), tcl=0.2)
+for(i in 1:9)cherrypick(plotit=TRUE)</code></pre>
+<p><img src="/post/2017-06-01-cherriestpick_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<p>Now we simulate ten thousand times and get the distribution of the cherry-picked <em>r</em> (absolute values).</p>
+<pre class="r"><code>picks &lt;- replicate(10^4, cherrypick())
+
+hist(picks, breaks=100, col=&quot;darkgrey&quot;, border=&quot;darkgrey&quot;,
+     xlab=&quot;Correlation coefficient n=4&quot;, main=&quot;&quot;)</code></pre>
+<p><img src="/post/2017-06-01-cherriestpick_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<p>Clearly high values of <em>r</em> are very likely. In this simulation, 87% of simulated <em>r</em> values were above 0.9, and 66.5% above 0.95.</p>
