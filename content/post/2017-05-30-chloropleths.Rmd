@@ -4,6 +4,7 @@ author: "Remko Duursma"
 date: 2017-05-30
 categories: ["R"]
 tags: ["spatial", "maps"]
+description: "Four examples on plotting colored geographic maps in R. This simple example is for Australian population by state, but applies to more complicated datasets also."
 ---
 
 
@@ -208,12 +209,12 @@ As mentioned in the introduction, the `maps` package can be used for chloropleth
 By random chance I came across [Etienne Laliberté](http://www.elaliberte.info/code) 's homepage which hosts a converted version of the `oz()` data. I use it here for another version of the chloropleth map. I am now also hosting this dataset on my own site, just in case Etienne's site no longer exists.
 
 ```{r echo=FALSE}
-oz2 <- read.csv("c:/repos/remkoduursma.github.io/static/files/ozdata.csv")
+oz2 <- read.csv("c:/repos/remkoweb/static/files/ozdata.csv")
 ```
 
 ```{r eval=FALSE}
 # Read Etienne's converted Oz data. 
-oz2 <- read.csv("http://www.remkoduursma.com/docs/ozdata.csv")
+oz2 <- read.csv("http://www.remkoduursma.com/files/ozdata.csv")
 ```
 
 If you inspect `oz2` you will notice it looks just like the result from `fortify` in the previous example. The next step is to reconcile the state abbreviations in this dataframe with the long names used in the population data. I simply merge a dataframe that links the two:
@@ -263,7 +264,7 @@ legend("bottom",  inset=c(0,-0.02),levels(oz2$colbin), fill=palette(),
        horiz=TRUE, cex=0.6, bty='n', title="Population (millions)")
 ```
 
-And finally we can make the same map using `ggplot`, since `oz2` is a regular dataframe. Clearly this example is very similar to Map 2 - with the only difference that the source of spatial data is different, and so is the use of `ggplot` instead of `ggmap` (which can plot a nice google map tile behind the data).
+And finally we can make a bonus fifth map using `ggplot`, since `oz2` is a regular dataframe. Clearly this example is very similar to Map 2 - with the only difference that the source of spatial data is different, and so is the use of `ggplot` instead of `ggmap` (which can plot a nice google map tile behind the data).
 
 ```{r}
 ggplot(oz2) + 

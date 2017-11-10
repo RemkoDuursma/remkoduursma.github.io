@@ -11,7 +11,10 @@
     width: device-width;
 }
 a,
-a:hover,
+a:hover
+{
+  text-decoration: underline;
+}
 a:visited,
 a:link
 {
@@ -175,6 +178,10 @@ h3.intro
 {
     margin-top: 10px;
     margin-bottom: 20px;
+}
+.main-menu.a
+{
+  text-decoration: none;
 }
 .menu
 {

@@ -4,6 +4,7 @@ author: "Remko Duursma"
 date: 2017-04-24
 categories: ["R"]
 tags: ["plot", "regression", "nonlinear"]
+description: "An early implementation of an R package with a few utility functions for non-linear regression, including nls, loess, nlme, quantreg. It is particularly easy to plot fitted models, and compare coefficients between models."
 ---
 
 ```{r setup, include=FALSE}
@@ -67,6 +68,7 @@ fit_quan <- function(.tau){
               data=ChickWeight)
 }
 
+f <- fit_quan(0.1)
 plot_nls(fit_quan(0.1), pch=16, cex=0.5, points.col="dimgrey", lines.col="firebrick", lty=3)
 plot_nls(fit_quan(0.9), add=TRUE, lines.col="firebrick", lty=3)
 plot_nls(fit_quan(0.5), add=TRUE, lines.col="black", lwd=2)
@@ -109,6 +111,8 @@ plot_nls(pur1, pch=19, xlim=c(0,1.2))
 # A future version of the package may include an automatic legend...
 legend("bottomright", names(pur1), pch=19, col=palette())
 ```
+
+# Future development
 
 I have a few developments planned for the `nlshelper` package including:
 

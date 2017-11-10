@@ -111,6 +111,7 @@ fit_quan &lt;- function(.tau){
               data=ChickWeight)
 }
 
+f &lt;- fit_quan(0.1)
 plot_nls(fit_quan(0.1), pch=16, cex=0.5, points.col=&quot;dimgrey&quot;, lines.col=&quot;firebrick&quot;, lty=3)
 plot_nls(fit_quan(0.9), add=TRUE, lines.col=&quot;firebrick&quot;, lty=3)
 plot_nls(fit_quan(0.5), add=TRUE, lines.col=&quot;black&quot;, lwd=2)</code></pre>
@@ -160,6 +161,9 @@ plot_nls(pur1, pch=19, xlim=c(0,1.2))
 # A future version of the package may include an automatic legend...
 legend(&quot;bottomright&quot;, names(pur1), pch=19, col=palette())</code></pre>
 <p><img src="/post/2017-04-24-nlshelper_files/figure-html/unnamed-chunk-5-1.png" width="576" /></p>
+</div>
+<div id="future-development" class="section level1">
+<h1>Future development</h1>
 <p>I have a few developments planned for the <code>nlshelper</code> package including:</p>
 <ul>
 <li>Methods for non-linear mixed-effects models</li>

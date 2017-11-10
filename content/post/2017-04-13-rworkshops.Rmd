@@ -4,6 +4,7 @@ author: "Remko Duursma"
 date: 2017-04-13
 categories: ["R"]
 tags: ["plot", "regression", "nonlinear", "multivariate", "mixedeffects"]
+description: "Announcement and free teaching materials for four R workshops held at Western Sydney University, April 2017."
 ---
 
 ```{r setup, include=FALSE}

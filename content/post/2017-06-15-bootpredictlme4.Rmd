@@ -4,6 +4,7 @@ author: "Remko Duursma"
 date: 2017-06-01
 categories: ["R"]
 tags: ["statistics", "lme4"]
+description: "A light-weight implementation of confidence intervals for fitted linear-mixed effects models, by applying the semi-parametric bootstrap provided by bootMer."
 ---
 
 ```{r setup, include=FALSE}
