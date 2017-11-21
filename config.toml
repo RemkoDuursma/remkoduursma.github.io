@@ -49,26 +49,28 @@ poweredby = true
 highlightjs = true
 
 ## Main Menu
-[[menu.main]]
-    name = "Blog"
-    weight = 100
-    identifier = "blog"
-    url = "/post/"
+
 #[[menu.main]]
 #    name = "about"
 #    identifier = "about"
 #    weight = 200
 #    url = "/about/"
+
+[[menu.main]]
+    name = "Publications"
+    identifier = "publications"
+    weight = 200
+    url = "https://scholar.google.com.au/citations?user=qGSIWxcAAAAJ"
+[[menu.main]]
+    name = "Blog"
+    weight = 100
+    identifier = "blog"
+    url = "/post/"
 [[menu.main]]
     name = "R Course"
     identifier = "rcourse"
     weight = 200
     url = "http://www.hiercourse.com"
-[[menu.main]]
-    name = "CV"
-    identifier = "cv"
-    weight = 200
-    url = "/files/cvduursma.pdf"
 [[menu.main]]
     name = "R Packages"
     identifier = "rpackages"
