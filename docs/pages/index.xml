@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Pages on Remko Duursma</title>
+    <link>/pages/</link>
+    <description>Recent content in Pages on Remko Duursma</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-US</language>
+    
+	<atom:link href="/pages/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Remko Duursma - All Publications</title>
+      <link>/pages/publications_full/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/pages/publications_full/</guid>
+      <description>My complete list of peer-reviewed scientific articles (2003-2017).
+ Broughton, K.J., Smith, R.A., Duursma, R.A., Tan, D.K., Payton, P., Bange, M.P., Tissue, D.T. 2017. Warming alters the positive impact of elevated CO~2~ concentration on cotton growth and physiology during soil water deficit. Functional Plant Biology, 44, 267-278 .
+ Duursma, R., Choat, B. 2017. fitplc - an R package to fit hydraulic vulnerability curves. Journal of Plant Hydraulics, 4, 002 .</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -91,5 +91,16 @@ Reading data files directlyIn the case where a csv or other text file is availa
       <description>Erlich administers the Hacker Hostel, a tech incubator where Richard, Big Head, Dinesh, and Gilfoyle live and work in exchange for 10 percent of their potential businesses. Erlich clings to his glory days, when he sold aviation start-up Aviato, a move that, at least in his mind, qualifies him to be a svengali lording over other tech nerds. He still drives a car emblazoned with multiple Aviato logos and smokes copious amounts of weed.</description>
     </item>
     
+    <item>
+      <title>Remko Duursma - All Publications</title>
+      <link>/pages/publications_full/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/pages/publications_full/</guid>
+      <description>My complete list of peer-reviewed scientific articles (2003-2017).
+ Broughton, K.J., Smith, R.A., Duursma, R.A., Tan, D.K., Payton, P., Bange, M.P., Tissue, D.T. 2017. Warming alters the positive impact of elevated CO~2~ concentration on cotton growth and physiology during soil water deficit. Functional Plant Biology, 44, 267-278 .
+ Duursma, R., Choat, B. 2017. fitplc - an R package to fit hydraulic vulnerability curves. Journal of Plant Hydraulics, 4, 002 .</description>
+    </item>
+    
   </channel>
 </rss>

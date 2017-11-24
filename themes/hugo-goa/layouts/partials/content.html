@@ -1,6 +1,7 @@
 <header class="row text-left title">
   <h1 class="title">{{ .Title }}</h1>
 </header>
+
 <section id="category-pane" class="row meta">
   {{ if ne .Params.showpagemeta false }}
   <div class="col-md-12">
@@ -20,11 +21,16 @@
   </div>
   {{ end }}
 </section>
+
+
 <section id="content-pane" class="row">
   <div class="col-md-12 text-justify content">
     {{ .Content }}
   </div>
 </section>
+
+
+
 <section id="tag-pane" class="row meta">
   {{ if ne .Params.showpagemeta false }}
   <div class="col-md-12">
@@ -43,3 +49,5 @@
   </div>
   {{ end }}
 </section>
+
+

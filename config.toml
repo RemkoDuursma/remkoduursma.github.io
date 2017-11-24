@@ -60,7 +60,7 @@ highlightjs = true
     name = "Publications"
     identifier = "publications"
     weight = 200
-    url = "https://scholar.google.com.au/citations?user=qGSIWxcAAAAJ"
+    url = "/pages/publications_full/"
 [[menu.main]]
     name = "Blog"
     weight = 100
@@ -76,4 +76,6 @@ highlightjs = true
     identifier = "rpackages"
     weight = 200
     url = "/post/2017-11-10-rpackages/index.html"
+
+
 
