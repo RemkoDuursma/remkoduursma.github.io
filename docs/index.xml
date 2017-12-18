@@ -92,14 +92,26 @@ Reading data files directlyIn the case where a csv or other text file is availa
     </item>
     
     <item>
-      <title>Remko Duursma - All Publications</title>
+      <title>All Publications</title>
       <link>/pages/publications_full/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>/pages/publications_full/</guid>
-      <description>My complete list of peer-reviewed scientific articles (2003-2017).
- Broughton, K.J., Smith, R.A., Duursma, R.A., Tan, D.K., Payton, P., Bange, M.P., Tissue, D.T. 2017. Warming alters the positive impact of elevated CO~2~ concentration on cotton growth and physiology during soil water deficit. Functional Plant Biology, 44, 267-278 .
- Duursma, R., Choat, B. 2017. fitplc - an R package to fit hydraulic vulnerability curves. Journal of Plant Hydraulics, 4, 002 .</description>
+      <description>All Publications Selected Publications
+My complete list of peer-reviewed scientific articles (2003-2017). See my Google Scholar for citations and sources.
+ Charbonnier, F., Roupsard, O., le Maire, G., Guillemot, J., Casanoves, F., Lacointe, A., Vaast, P., Allinne, C., Audebert, L., Cambou, A., Clement-Vidal, A., Defrenet, E., Duursma, R.A., Jarri, L., Jourdan, C., Khac, E., Leandro, P., Medlyn, B.E., Saint-Andre, L., Thaler, P., Van Den Meersche, K., Barquero Aguilar, A., Lehner, P.</description>
+    </item>
+    
+    <item>
+      <title>Selected Publications</title>
+      <link>/pages/publications_select/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/pages/publications_select/</guid>
+      <description>All Publications Selected Publications
+Selected peer-reviewed publications, 2003 - 2017. See my Google Scholar for citations and sources.
+Canopy structure, allometry and plant architecture  Duursma, R.A., Gimeno, T.E., Boer, M.M., Crous, K.Y., Tjoelker, M.G., Ellsworth, D.S. 2016. Canopy leaf area of a mature evergreen Eucalyptus woodland does not respond to elevated atmospheric [CO2] but tracks water availability. Global Change Biology, 22, 1666-1676 .
+ Duursma, R.A., Falster, D.S. 2016.</description>
     </item>
     
   </channel>
