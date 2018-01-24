@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Temporal on Remko Duursma</title>
+    <link>/tags/temporal/</link>
+    <description>Recent content in Temporal on Remko Duursma</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-US</language>
+    <lastBuildDate>Wed, 24 Jan 2018 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/temporal/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Analysis of fuel prices in New South Wales</title>
+      <link>/post/2018-01-24-fuelprices1/</link>
+      <pubDate>Wed, 24 Jan 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2018-01-24-fuelprices1/</guid>
+      <description>How do petrol prices vary across the state?The price of fuel at service stations varies tremendously, both in space - across the large Australian state of New South Wales, and time - with surprising patterns. In this post I begin my quest to understand how fuel price varies, what factors explain its fluctuation over time and spatial variation. Obviously it would be nice to be able to know where to drive for cheaper fuel (what kind of areas are cheaper?</description>
+    </item>
+    
+  </channel>
+</rss>

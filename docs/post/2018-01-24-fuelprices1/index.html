@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+<meta name="description" content="Simple minimalist theme">
+<meta name="keywords" content="minimalist,blog,goa,hugo,developer">
+
+<base href="/">
+
+<title>Remko Duursma</title>
+
+<meta name="generator" content="Hugo 0.30.2" />
+
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:300,400|Roboto+Slab:400,700|Roboto:300,300i,400,400i,500,500i,700,700i">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/favicon-16x16.png" sizes="16x16">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+<meta name="theme-color" content="#ffffff">
+
+</head>
+<body lang="en-US">
+<div class="container">
+
+
+<header class="row text-left title">
+  <h1 class="title">Analysis of fuel prices in New South Wales</h1>
+</header>
+
+<section id="category-pane" class="row meta">
+  
+  <div class="col-md-12">
+    <h6 class="text-left meta">
+        PUBLISHED ON JAN 24, 2018 
+      
+      
+      
+      —
+      
+      
+      <a class="meta" href="/categories/r">R</a>
+      
+      
+      
+    </h6>
+  </div>
+  
+</section>
+
+
+<section id="content-pane" class="row">
+  <div class="col-md-12 text-justify content">
+    <div id="how-do-petrol-prices-vary-across-the-state" class="section level3">
+<h3><em>How do petrol prices vary across the state?</em></h3>
+<p>The price of fuel at service stations varies tremendously, both in space - across the large Australian state of New South Wales, and time - with surprising patterns. In this post I begin my quest to understand how fuel price varies, what factors explain its fluctuation over time and spatial variation. Obviously it would be nice to be able to know where to drive for cheaper fuel (what kind of areas are cheaper?), and when to fill up (should I wait until Thursday?).</p>
+<p>Since August 2016, the NSW government runs the <a href="https://www.fuelcheck.nsw.gov.au/app">FuelCheck service</a>, which allows monitoring of fuel prices <em>in real time</em>. Several apps tap into this publicly available API, allowing users to find the cheapest fuel in the neighborhood, or inspect some simple graphs of fuel price over time.</p>
+<p>As an additional service, (nearly) daily prices of all types of fuel, all brands of service stations, and <strong>all locations</strong> across the state can be downloaded from the <a href="https://data.nsw.gov.au/">NSW Data portal</a>, currently from August 2016 to October 2017. The dataset contains over one million records, for over 2000 service stations, and 11 fuel types.</p>
+<div class="figure">
+<img src="img/fuelcheck_web.png" />
+
+</div>
+</div>
+<div id="approach" class="section level3">
+<h3>Approach</h3>
+<p>This is the first in a series of posts on this hobby project to find out if we can <em>predict fuel prices in space and time</em>. What I want to know is:</p>
+<ul>
+<li><p>Is fuel cheaper on a particular day of the week? It is a widely-held belief that fuel prices are more expensive on the day that everyone receives their weekly paycheck (Thursday), but do the data support this?</p></li>
+<li><p>Across the state, how does fuel price vary and why? Quick inspection of the data shows that remote areas are more expensive; how do we summarize that, and what else matters? As roughly 5 out of 7.5 million people in NSW live in the Sydney metropolitan area - that is two thirds of the population on 1.5% of the land area - I will look at Sydney and non-Sydney data separately for much of this analysis.</p></li>
+</ul>
+<p>Instead of just showing results, these posts are very much about getting into the details of the R code to generate them. I will use <code>dplyr</code>, <code>forcats</code>, <code>ggplot2</code>, <code>deldir</code> (Voronoi polygons), <code>SDraw</code> (better Voronoi polygons), <code>oz</code> (quick maps of Australia), <code>rgeos</code>, and <code>magicaxis</code> throughout the code.</p>
+<p>But before we get started, here is a taste of what’s to come:</p>
+<p><img src="/post/2018-01-24-fuelprices1_files/figure-html/figure1-1.png" width="600px" /></p>
+<p>The data show an interesting fluctuation in fuel prices, <a href="https://www.accc.gov.au/consumers/petrol-diesel-lpg/petrol-price-cycles#petrol-prices-in-sydney">which can be viewed on this official site as well</a>, but the fluctuations are on much longer timescales than weekly. Zooming in on a two-month period in 2017, we see the peculiar pattern of a very sudden jump in fuel prices, followed by a gradual decline over the period of a month or so.</p>
+<p><img src="/post/2018-01-24-fuelprices1_files/figure-html/unnamed-chunk-1-1.png" width="400px" /></p>
+</div>
+<div id="getting-the-data" class="section level1">
+<h1>Getting the Data</h1>
+<p>The FuelCheck service in New South Wales, Australia, provides real-time data on fuel prices at service stations across the state. <a href="https://data.nsw.gov.au/data/dataset/fuel-check">This page</a> contains information, as well as monthly files containing fuel prices for all service stations, for all fuel types. The first step is to download all <code>xlsx</code> files, and save them locally. We then use <code>readxl</code> to read them all, and <code>dplyr</code> to tidy things up.</p>
+<pre class="r"><code>pacman::p_load(readxl, dplyr, lubridate, ggmap,
+               SDraw, deldir, sp, rgeos, geosphere,
+               janitor, magicaxis)</code></pre>
+<p>And then</p>
+<pre class="r"><code># Don&#39;t have to run this, since the clean raw data is bundled
+# in the fuelpricensw package (github: remkoduursma/fuelpricensw)
+if(FALSE){
+  readx &lt;- function(x){
+    res &lt;-  read_excel(x)
+    if(names(res)[2] == &quot;X__1&quot;){
+      res &lt;-  read_excel(x, skip=1)   
+    }
+    
+    res &lt;- mutate(res, Postcode  = as.numeric(Postcode))
+    if(&quot;FuelType&quot; %in% names(res)){
+      res &lt;- rename(res, FuelCode = FuelType)
+    }
+    
+  return(res)
+  }
+  
+  fuel &lt;- lapply(dir(&quot;rawdata&quot;, pattern=&quot;xlsx&quot;, full.names = TRUE), readx) %&gt;%
+    bind_rows %&gt;%
+    mutate(DateTime = ymd_hms(PriceUpdatedDate),
+           Date = as.Date(DateTime)) %&gt;%
+    dplyr::select(-PriceUpdatedDate) %&gt;%
+    filter(Price &lt; 500)
+
+}</code></pre>
+<p>You can skip this step as I have bundled the clean dataset in the R package <code>fuelpricensw</code>, which is available on <a href="https://github.com/RemkoDuursma/fuelpricensw">this Github repos</a>.</p>
+<pre class="r"><code>devtools::install_github(&quot;remkoduursma/fuelpricensw&quot;)
+library(fuelpricensw)
+data(fuel)</code></pre>
+<div id="feature-engineering-spatial-components" class="section level2">
+<h2>Feature engineering : spatial components</h2>
+<p>The remainder of this first part on fuel price analysis will look at the spatial component of fuel prices, and we will calculate some spatial features based on the locations of the service stations. The first step, then, is to get the latitude and longitude for each station based on the address.</p>
+<p>Here I used Google’s geocode service, as made easily available in the <code>ggmap</code> package. The service does not always return a proper result, even though when typing in the same address in <code>maps.google.com</code> might give the right address.</p>
+<pre class="r"><code>latcache &lt;- &quot;data/Fuel_NSW_addresses_latlon.csv&quot;
+if(!file.exists(latcache)){
+
+  # Unique addresses to look up.
+  addr &lt;- unique(fuel$Address)
+  
+  # After some failures, I found that extra info between () messes with 
+  # the geocode service. Remove them.
+  addr_re &lt;- gsub(&quot;\\(.+\\)&quot;, &quot;&quot;, addr)
+  
+  # Get rid of &quot;Cnr of ...,&quot;, but not when address starts with it.
+  addr_re &lt;- gsub(&quot;(.+)(Cnr.+,)&quot;, &quot;\\1&quot;, addr_re)
+  
+  # Add Australia though it seems unnecessary
+  addr_re &lt;- paste(addr_re, &quot;Australia&quot;)
+  
+  # Now run the service.
+  gcres &lt;- geocode(addr_re, output=&quot;latlon&quot;)
+  
+  # Code not shown: run code twice on separate days,
+  # since we go over the API use limit.
+  write.csv(gcres, latcache, row.names=FALSE) 
+  
+}</code></pre>
+<p>The next step is to get rid of USA addresses, since when geocode does not find a good match, Google returns some random address in the USA (even when we paste ‘Australia’ at the end!). Better approaches exist here, like the geonames service to find the country code, and filter that way, but here this suffices.</p>
+<pre class="r"><code>locs &lt;- read.csv(latcache, stringsAsFactors = FALSE) %&gt;%
+  filter(lon &gt; 120) %&gt;%
+  dplyr::select(-Address_geo)</code></pre>
+</div>
+<div id="distance-to-nearest-competitor" class="section level2">
+<h2>Distance to nearest competitor</h2>
+<p>Suppose you drive up to a service station and wonder, what if I drive to the next station because it might be cheaper? If there are many choices for you, competition between service stations will be more intense and we should see a lower price at the pump. The next step is then to calculate the distance to the nearest station, as a potential predictor for fuel price.</p>
+<pre class="r"><code>library(sp)
+library(rgeos)
+library(geosphere)
+
+# Copy of simple dataframe &#39;locs&#39;, to a SpatialPointsDataframe.
+# Note how we assign new variables to &#39;locs&#39;, which is a simple 
+# dataframe.
+locs_sp &lt;- locs
+coordinates(locs_sp) &lt;- ~lon+lat
+
+# From geosphere, the correct way to calculate distances between spatial coordinates.
+geo_dist &lt;- distm(locs_sp)
+
+# How many other service stations &lt;5km away
+countd &lt;- function(x, dist)length(x[x &lt; dist])
+locs$nr_5km &lt;- apply(geo_dist, 1, countd, d = 5000)
+
+# Dist to nearest service station
+min2 &lt;- function(x)min(x[x &gt; 0])  # exclude self; x &gt; 0 
+locs$dist_1 &lt;- apply(geo_dist, 1, min2)</code></pre>
+<p>The distance to the nearest next service station peaks at 1km (1000m). The most remote service station appears to be 28 Columbus Street, Ivanhoe NSW 2878, though recall that geocoding failed for some stations, so we don’t have distance to all stations.</p>
+<pre class="r"><code>hist(log10(locs$dist_1), breaks=100, axes=FALSE,
+     main=&quot;&quot;, col=&quot;cornflowerblue&quot;,
+     xlab=&quot;Distance to nearest service station (m)&quot;)
+magicaxis::magaxis(side=1, unlog=1)
+axis(2)</code></pre>
+<p><img src="/post/2018-01-24-fuelprices1_files/figure-html/hist_dist_1-1.png" width="500px" /></p>
+</div>
+<div id="area-served-voronoi-polygons" class="section level2">
+<h2>Area served : Voronoi polygons</h2>
+<p>Related to the above is the idea that each station ‘serves’ a particular area of the state. Think of a polygon around each service station, if you are inside this polygon then that service station is the closest to your location. These polygons are known as Voronoi polygons, and are easily computed in R.</p>
+<pre class="r"><code>library(deldir)
+voro_plain &lt;- deldir(locs$lon, locs$lat)</code></pre>
+<p>I say easily, but the edge effects are massive! Clearly this is not the desired result, and as always a reminder to always visualize your analysis to make sure you did not do something stupid.</p>
+<pre class="r"><code>par(mar=c(3,3,1,1))
+plot(voro_plain, wlines=&quot;tess&quot;, wpoints=&quot;real&quot;, 
+     lty=1, col=c(&quot;black&quot;,&quot;grey&quot;,&quot;red&quot;,&quot;black&quot;,&quot;black&quot;),
+     cex=0.6, xlab=&quot;&quot;, ylab=&quot;&quot;)
+box()</code></pre>
+<p><img src="/post/2018-01-24-fuelprices1_files/figure-html/voro_plain_fig-1.png" width="700px" /></p>
+<p>Instead we will use the New South Wales border to trim the Voronoi polygons. This is not an ideal solution either, since stations will be competing with stations on the other side of each border (for which we have no data), but it is an improvement on the above.</p>
+<pre class="r"><code># Make NSW polygon
+# Similar to oz::oz(), but coordinates are ordered by state.
+oz2 &lt;- read.csv(&quot;http://www.remkoduursma.com/files/ozdata.csv&quot;)
+nsw &lt;- filter(oz2, state == &quot;NSW&quot;) %&gt;%
+  dplyr::select(long, lat) %&gt;% as.data.frame
+
+# Convert to SpatialPolygonsDataframe
+coordinates(nsw) &lt;- ~long + lat
+nswp &lt;- Polygon(nsw)
+nswpg &lt;- SpatialPolygons(list(Polygons(list(NSW=nswp), &quot;NSW&quot;)))
+
+# Using a zero-width buffer cleans up many topology problems in R.
+nswpg &lt;- rgeos::gBuffer(nswpg, byid=TRUE, width=0)
+
+# We use the coordinates returned by voronoi to assign voronoi
+# areas for each service station, because for some reason a few dozen 
+# polygons cannot be computed (so simple cbind is not possible).
+coorsx &lt;- voro_plain$summary[,c(&quot;x&quot;,&quot;y&quot;)]
+coordinates(coorsx) &lt;- ~x+y
+
+# Voronoi polygons with a 
+library(SDraw)
+vp &lt;- voronoi.polygons(coorsx)
+voro_buffer &lt;- gIntersection(vp, nswpg, byid=TRUE)
+
+# Now lookup area of each polygon
+# We have to do this the hard way, because not all polygons
+# are returned (perhaps some failed?).
+get_area &lt;- function(point, spoly){
+  g &lt;- gContains(spoly, point, byid=TRUE)
+  if(any(g)){
+    pol &lt;- spoly[which(g)]
+    if(!is.null(pol)){
+      geosphere::areaPolygon(pol)
+    }
+  } else {
+    NA
+  }
+}
+
+# Loop through points, look up Voronoi polygon areas.
+# Note that `apply` won&#39;t work with a SpatialPointsDataframe,
+# at least not like this.
+area &lt;- c()
+for(i in 1:length(locs_sp))area[i] &lt;- get_area(locs_sp[i,], spoly=voro_buffer)
+
+# Add to &#39;locs&#39; dataframe with locations of Service Stations.
+locs$area_voronoi &lt;- area</code></pre>
+<p>The figure below shows each service station, colored by the ‘area served’ (i.e. the area of the Voronoi polygon), with more yellow indicating smaller areas.</p>
+<pre class="r"><code>library(ggmap)
+
+nsw_map &lt;- get_map(c(lon = 147.5, lat = -32.5), 
+                    source = &quot;google&quot;, zoom=6, maptype=&quot;terrain&quot;)</code></pre>
+<pre><code>## Map from URL : http://maps.googleapis.com/maps/api/staticmap?center=-32.5,147.5&amp;zoom=6&amp;size=640x640&amp;scale=2&amp;maptype=terrain&amp;language=en-EN&amp;sensor=false</code></pre>
+<pre class="r"><code>ggmap(nsw_map) + 
+  geom_point(aes(x=lon, y=lat, col=log10(area_voronoi+1)), data=locs) +
+  scale_colour_gradientn(colours=rev(heat.colors(10))) + 
+  theme(legend.position = &quot;none&quot;) +
+  geom_path(aes(x=long, y=lat), data=as.data.frame(nsw), col=&quot;darkgrey&quot;, lwd=0.6) +
+  labs(x=&quot;&quot;, y=&quot;&quot;, caption=&quot;Service stations coloured by area served (Voronoi polygons)&quot;)</code></pre>
+<p><img src="/post/2018-01-24-fuelprices1_files/figure-html/buffer_voronoi_fig-1.png" width="700px" /></p>
+</div>
+<div id="remoteness-distance-to-coast" class="section level2">
+<h2>Remoteness, distance to coast</h2>
+<p>Eventually I want to build a model that predicts fuel price based on location, and time of year. To do so, we have to start adding some features of interest. The Atlas of Living Australia provides a ‘remoteness index’, which seems interesting since at first sight fuel prices are much higher for more remote locations. Though the ALA provides API services, I did this the quick way by visiting <a href="http://spatial.ala.org.au/webportal/">this page</a>, uploading a CSV with lat and long, and downloading a CSV file with a remoteness index, and the distance to coast. You can read more about how the (unitless) remoteness index is <a href="http://spatial.ala.org.au/layers/more/aria">calculated here</a>.</p>
+<pre class="r"><code>library(dplyr)
+library(janitor)
+
+# Subset of one date, to get unique locations only.
+# The ALA service wants a Date added to the dataframe,
+# since remoteness is a time-dependent variable. 
+locsub &lt;- filter(locs, lon, lat) %&gt;%
+  mutate(eventDate = &quot;2016-6-1&quot;)
+
+# Save to disk...
+write.csv(locsub, &quot;data/NSW_fuel_locations_lonlatonly.csv&quot;, row.names=FALSE)
+
+# ... so that it can be uploaded at the ALA:
+# http://spatial.ala.org.au/webportal//#
+# See that page for help on how to select variables. I just picked
+# &#39;remoteness&#39;, and distance to coast, which I saved again locally:
+remo &lt;- read.csv(&quot;data/NSW_fuel_ALA_remoteness_locations.csv&quot;, stringsAsFactors = FALSE) %&gt;%
+  clean_names %&gt;%
+  dplyr::select(locality, latitude_original, longitude_original,
+                remoteness_index, distance_to_coast) %&gt;%
+  rename(Address = locality,
+         lat = latitude_original,
+         lon = longitude_original,
+         remoteness = remoteness_index,
+         dist_to_coast = distance_to_coast) %&gt;%
+  mutate(dist_to_coast = 100 * dist_to_coast)
+write.csv(remo, &quot;data/NSW_fuel_ALA_remoteness_locations_cleaned.csv&quot;, row.names=F)
+
+# And merge onto &#39;locs&#39;.
+remo_m &lt;- dplyr::select(remo, Address, remoteness, dist_to_coast)
+locs &lt;- left_join(locs, remo_m, by=&quot;Address&quot;)</code></pre>
+<p>A plot of New South Wales, where every service station is colored by its ‘remoteness index’,</p>
+<pre class="r"><code># Figure
+library(oz)
+oz(sections=c(4, 13:15), col=&quot;darkgrey&quot;)
+cols &lt;- colorRampPalette(c(&quot;yellow&quot;,&quot;darkorange&quot;,&quot;red&quot;))(10)
+with(locs, 
+     points(lon,lat, pch=21, cex=0.95, col=&quot;white&quot;,
+            bg=cols[cut(log(remoteness+1), 10)]))
+title(main = &quot;Darker colour = more remote&quot;, line=1, cex.main=0.8, 
+      adj=0, font.main=3)</code></pre>
+<p><img src="/post/2018-01-24-fuelprices1_files/figure-html/remote_fig1-1.png" width="600px" /></p>
+<p>Shares some features with the median fuel price, which I first calculate for each service station:</p>
+<pre class="r"><code>u91_mean_dat &lt;- filter(fuel, FuelCode == &quot;U91&quot;) %&gt;%
+  group_by(Address) %&gt;%
+  dplyr::summarize(Price = median(Price, na.rm=TRUE),
+                   lon = first(lon), lat=first(lat),
+                   Brand = first(Brand),
+                   remote = mean(remoteness),
+                   nr_5km = mean(nr_5km),
+                   dist_1 = mean(dist_1)
+                   ) %&gt;%
+  filter(Price &lt; 160) %&gt;%
+  mutate(Brand = forcats::fct_lump(as.factor(Brand), 6))</code></pre>
+<p><img src="/post/2018-01-24-fuelprices1_files/figure-html/remote_fig2-1.png" width="600px" /></p>
+<p>And finally we see some relationship between the median fuel price recorded for each station (for just U91 fuel, for now), and the remoteness index of the station. We also see some effect of the brand, with ‘Metro Fuel’ (which serves Sydney, Newcastle mostly) the cheaptes, and Coles Express quickly becoming expensive in slightly more remote locations.</p>
+<pre class="r"><code>ggplot(u91_mean_dat, aes(x=remote, y=Price, group=Brand, col=Brand)) +
+  geom_point() +
+  geom_smooth(method=&quot;lm&quot;, se=F) +
+  theme_bw() + 
+  theme(
+    legend.position = c(.95, .05),
+    legend.justification = c(&quot;right&quot;, &quot;bottom&quot;),
+    legend.box.just = &quot;right&quot;,
+    legend.margin = margin(6, 6, 6, 6)
+  ) +
+  scale_colour_manual(values=RColorBrewer::brewer.pal(7,&quot;Set3&quot;)) +
+  labs(x=&quot;Remoteness index&quot;, y=&quot;Median fuel price (U91) ($ cents)&quot;)</code></pre>
+<p><img src="/post/2018-01-24-fuelprices1_files/figure-html/remote_price_fig-1.png" width="600px" /></p>
+<p>We see another interesting relationship with the number of service stations in a 5km radius; the fuel price drops quickly when more service stations are added. However, there is a lot of variation particularly for low number of stations. Presumably other factors like distance from the supplier, affluence of the region, will come into play as well.</p>
+<p><img src="/post/2018-01-24-fuelprices1_files/figure-html/unnamed-chunk-3-1.png" width="600px" /></p>
+</div>
+<div id="conclusions" class="section level2">
+<h2>Conclusions</h2>
+<p>So far, I spent most of my time cleaning and organizing the data, obtaining spatial coordinates of the stations, and some basic exploration of spatial patterns. I was able to show that fuel is cheaper in less remote, more competitive environments - but many questions remain on what drives the variation in fuel prices. To be continued.</p>
+</div>
+</div>
+
+  </div>
+</section>
+
+
+
+<section id="tag-pane" class="row meta">
+  
+  <div class="col-md-12">
+    <h6 class="text-right meta">
+      
+      
+      
+      TAGS:
+      
+      
+      <a class="meta" href="/tags/spatial">SPATIAL</a>, 
+      
+      <a class="meta" href="/tags/temporal">TEMPORAL</a>
+      
+      
+      
+    </h6>
+  </div>
+  
+</section>
+
+
+
+
+
+
+
+
+
+
+<section id="menu-pane" class="row menu text-center">
+  
+  
+  <span><a class="menu-item" href="/post/2017-11-10-rpackages/">&lt; prev | </a></span>
+  
+  
+  <span><a class="menu-item" href="/post">post</a></span>
+  
+  
+  
+  <h4 class="text-center"><a class="menu-item" href="/">home</a></h4>
+</section>
+
+
+
+<footer class="row text-center footer">
+  <hr />
+  
+  <h6 class="text-center copyright">© 2017. Remko Duursma.</h6>
+  
+  <h6 class="text-center powered"> <a href="https://gohugo.io/">Hugo</a> + <a href="https://github.com/shenoybr/hugo-goa">Goa</a> + <a href="https://github.com/rstudio/blogdown">blogdown</a> + <a href="https://github.com/RemkoDuursma/remkoweb">github</a></h6>
+  
+  
+</footer>
+
+</div>
+
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  
+
+<script type="text/javascript">
+hljs.initHighlightingOnLoad();
+</script>
+
+
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
+
+

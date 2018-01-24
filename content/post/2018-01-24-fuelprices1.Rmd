@@ -1,0 +1,299 @@
+---
+title: "Analysis of fuel prices in New South Wales"
+author: "Remko Duursma"
+date: 2018-01-24
+categories: ["R"]
+tags: ["spatial", "temporal"]
+description: "Can we predict fuel prices at service stations across the state of New South Wales? Analysis of a large dataset of high resolution observations."
+---
+
+
+```{r setup, include=FALSE, cache=FALSE}
+library(knitr)
+opts_chunk$set(echo = TRUE, eval=FALSE, dpi=300, warning = FALSE)
+read_chunk('c:/repos/fuelanalysis/read_andgeo_fuelprices.R')
+```
+
+```{r getdata_prep, include=FALSE, eval=FALSE}
+# Do this once or when needed (one minute)
+source("read_andgeo_fuelprices.R")
+save.image("cache/fuel_objects.RData")
+```
+
+```{r loaddata, include=FALSE, eval=TRUE}
+load("c:/repos/fuelanalysis/cache/fuel_objects.RData")
+```
+
+```{r loadpackages, eval=TRUE, include=FALSE, echo=F}
+pacman::p_load(dplyr, oz, magicaxis, deldir, rgeos, ggplot2, gridExtra)
+```
+
+### *How do petrol prices vary across the state?*
+
+The price of fuel at service stations varies tremendously, both in space - across the large Australian state of New South Wales, and time - with surprising patterns. In this post I begin my quest to understand how fuel price varies, what factors explain its fluctuation over time and spatial variation. Obviously it would be nice to be able to know where to drive for cheaper fuel (what kind of areas are cheaper?), and when to fill up (should I wait until Thursday?).
+
+Since August 2016, the NSW government runs the [FuelCheck service](https://www.fuelcheck.nsw.gov.au/app), which allows monitoring of fuel prices *in real time*. Several apps tap into this publicly available API, allowing users to find the cheapest fuel in the neighborhood, or inspect some simple graphs of fuel price over time.
+
+As an additional service, (nearly) daily prices of all types of fuel, all brands of service stations, and **all locations** across the state can be downloaded from the [NSW Data portal](https://data.nsw.gov.au/), currently from August 2016 to October 2017. The dataset contains over one million records, for over 2000 service stations, and 11 fuel types. 
+
+
+![](img/fuelcheck_web.png)
+
+### Approach
+
+This is the first in a series of posts on this hobby project to find out if we can *predict fuel prices in space and time*. What I want to know is:
+
+- Is fuel cheaper on a particular day of the week? It is a widely-held belief that fuel prices are more expensive on the day that everyone receives their weekly paycheck (Thursday), but do the data support this? 
+
+- Across the state, how does fuel price vary and why? Quick inspection of the data shows that remote areas are more expensive; how do we summarize that, and what else matters? As roughly 5 out of 7.5 million people in NSW live in the Sydney metropolitan area - that is two thirds of the population on 1.5% of the land area - I will look at Sydney and non-Sydney data separately for much of this analysis.
+
+Instead of just showing results, these posts are very much about getting into the details of the R code to generate them. I will use `dplyr`, `forcats`, `ggplot2`, `deldir` (Voronoi polygons), `SDraw` (better Voronoi polygons), `oz` (quick maps of Australia), `rgeos`, and `magicaxis` throughout the code.
+
+But before we get started, here is a taste of what's to come:
+
+
+```{r figure1, echo=FALSE, fig.width=8, fig.height=4, eval=TRUE, out.width="600px"}
+
+library(dplyr)
+fuelsub <- filter(fuel, Address %in% c("741 George St, Windsor South NSW 2756",
+                                  "552 Pennant Hills Road, West Pennant Hills NSW 2125",
+                                  "1 Blende St, Broken Hill NSW 2880",
+                                  "119 Bourke St Cnr Erskine St, Dubbo NSW 2830")) %>%
+  mutate(location = case_when(
+    grepl("Windsor|Pennant", Address) ~ "Sydney",
+    TRUE ~ "Outback"
+  ))
+
+
+library(ggplot2)
+
+filter(fuelsub, FuelCode == "U91") %>%
+  ggplot(aes(x=Date, y=Price, col=Address)) +
+  geom_line() +
+  geom_point(size=1) +
+  theme_bw() +
+  theme(legend.position="none") +
+  facet_wrap(~location, ncol=1) +
+  scale_colour_manual(values=c("blue2","cornflowerblue","red2","darkorange")) +
+  labs(x="", y="Fuel price (U91) ($ cents)")
+```
+
+
+The data show an interesting fluctuation in fuel prices, [which can be viewed on this official site as well ](https://www.accc.gov.au/consumers/petrol-diesel-lpg/petrol-price-cycles#petrol-prices-in-sydney), but the fluctuations are on much longer timescales than weekly. Zooming in on a two-month period in 2017, we see the peculiar pattern of a very sudden jump in fuel prices, followed by a gradual decline over the period of a month or so.
+
+```{r, eval=TRUE, echo=FALSE, fig.width=6, fig.height=5, out.width="400px"}
+filter(fuel, Date > as.Date("2017-4-25") & Date < as.Date("2017-8-1"),
+       Address == "105 Station Rd Cnr Powers St, Seven Hills NSW 2147",
+        FuelCode == "U91") %>%
+  ggplot(aes(x=Date, y=Price)) +
+  geom_line() + geom_point() + theme_bw() +
+  labs(x="", y="Fuel price (U91) ($ cents)")
+```
+
+
+# Getting the Data
+
+The FuelCheck service in New South Wales, Australia, provides real-time data on fuel prices at service stations across the state. [This page](https://data.nsw.gov.au/data/dataset/fuel-check) contains information, as well as monthly files containing fuel prices for all service stations, for all fuel types. The first step is to download all `xlsx` files, and save them locally. We then use `readxl` to read them all, and `dplyr` to tidy things up.
+
+```{r load_packages}
+
+```
+
+And then
+
+```{r read_fuel_raw}
+
+```
+
+You can skip this step as I have bundled the clean dataset in the R package `fuelpricensw`, which is available on [this Github repos](https://github.com/RemkoDuursma/fuelpricensw). 
+
+```{r}
+devtools::install_github("remkoduursma/fuelpricensw")
+library(fuelpricensw)
+data(fuel)
+```
+
+
+
+## Feature engineering : spatial components
+
+The remainder of this first part on fuel price analysis will look at the spatial component of fuel prices, and we will calculate some spatial features based on the locations of the service stations. The first step, then, is to get the latitude and longitude for each station based on the address.
+
+Here I used Google's geocode service, as made easily available in the `ggmap` package. The service does not always return a proper result, even though when typing in the same address in `maps.google.com` might give the right address.
+
+```{r get_lat_long}
+
+```
+
+The next step is to get rid of USA addresses, since when geocode does not find a good match, Google returns some random address in the USA (even when we paste 'Australia' at the end!). Better approaches exist here, like the geonames service to find the country code, and filter that way, but here this suffices.
+
+```{r filter_locs}
+ 
+```
+
+
+## Distance to nearest competitor
+
+Suppose you drive up to a service station and wonder, what if I drive to the next station because it might be cheaper? If there are many choices for you, competition between service stations will be more intense and we should see a lower price at the pump. The next step is then to calculate the distance to the nearest station, as a potential predictor for fuel price.
+
+
+```{r, nearest_neighbours}
+
+```
+
+
+The distance to the nearest next service station peaks at 1km (1000m). The most remote service station appears to be `r locs[which.max(locs$dist_1),"Address"]`, though recall that geocoding failed for some stations, so we don't have distance to all stations.
+
+```{r hist_dist_1, eval=TRUE, out.width="500px"}
+hist(log10(locs$dist_1), breaks=100, axes=FALSE,
+     main="", col="cornflowerblue",
+     xlab="Distance to nearest service station (m)")
+magicaxis::magaxis(side=1, unlog=1)
+axis(2)
+```
+
+## Area served : Voronoi polygons
+
+Related to the above is the idea that each station 'serves' a particular area of the state. Think of a polygon around each service station, if you are inside this polygon then that service station is the closest to your location. These polygons are known as Voronoi polygons, and are easily computed in R. 
+
+```{r plain_voronoi}
+```
+
+I say easily, but the edge effects are massive! Clearly this is not the desired result, and as always a reminder to always visualize your analysis to make sure you did not do something stupid.
+
+```{r voro_plain_fig, fig.width=10, fig.height=8, eval=TRUE, out.width="700px"}
+par(mar=c(3,3,1,1))
+plot(voro_plain, wlines="tess", wpoints="real", 
+     lty=1, col=c("black","grey","red","black","black"),
+     cex=0.6, xlab="", ylab="")
+box()
+
+```
+
+Instead we will use the New South Wales border to trim the Voronoi polygons. This is not an ideal solution either, since stations will be competing with stations on the other side of each border (for which we have no data), but it is an improvement on the above.
+
+```{r buffer_voronoi}
+```
+
+
+The figure below shows each service station, colored by the 'area served' (i.e. the area of the Voronoi polygon), with more yellow indicating smaller areas. 
+
+```{r buffer_voronoi_fig, eval=TRUE, out.width="700px"}
+library(ggmap)
+
+nsw_map <- get_map(c(lon = 147.5, lat = -32.5), 
+                    source = "google", zoom=6, maptype="terrain")
+
+ggmap(nsw_map) + 
+  geom_point(aes(x=lon, y=lat, col=log10(area_voronoi+1)), data=locs) +
+  scale_colour_gradientn(colours=rev(heat.colors(10))) + 
+  theme(legend.position = "none") +
+  geom_path(aes(x=long, y=lat), data=as.data.frame(nsw), col="darkgrey", lwd=0.6) +
+  labs(x="", y="", caption="Service stations coloured by area served (Voronoi polygons)")
+
+```
+
+
+
+## Remoteness, distance to coast
+
+Eventually I want to build a model that predicts fuel price based on location, and time of year. To do so, we have to start adding some features of interest. The Atlas of Living Australia provides a 'remoteness index', which seems interesting since at first sight fuel prices are much higher for more remote locations. Though the ALA provides API services, I did this the quick way by visiting [this page](http://spatial.ala.org.au/webportal/), uploading a CSV with lat and long, and downloading a CSV file with a remoteness index, and the distance to coast. You can read more about how the (unitless) remoteness index is [calculated here](http://spatial.ala.org.au/layers/more/aria).
+
+```{r remoteness}
+```
+
+
+
+A plot of New South Wales, where every service station is colored by its 'remoteness index', 
+
+```{r remote_fig1, eval=TRUE, out.width="600px"}
+# Figure
+library(oz)
+oz(sections=c(4, 13:15), col="darkgrey")
+cols <- colorRampPalette(c("yellow","darkorange","red"))(10)
+with(locs, 
+     points(lon,lat, pch=21, cex=0.95, col="white",
+            bg=cols[cut(log(remoteness+1), 10)]))
+title(main = "Darker colour = more remote", line=1, cex.main=0.8, 
+      adj=0, font.main=3)
+```
+
+Shares some features with the median fuel price, which I first calculate for each service station:
+
+```{r makemeandat, eval=TRUE}
+u91_mean_dat <- filter(fuel, FuelCode == "U91") %>%
+  group_by(Address) %>%
+  dplyr::summarize(Price = median(Price, na.rm=TRUE),
+                   lon = first(lon), lat=first(lat),
+                   Brand = first(Brand),
+                   remote = mean(remoteness),
+                   nr_5km = mean(nr_5km),
+                   dist_1 = mean(dist_1)
+                   ) %>%
+  filter(Price < 160) %>%
+  mutate(Brand = forcats::fct_lump(as.factor(Brand), 6))
+```
+
+```{r remote_fig2, echo=FALSE, eval=TRUE, out.width="600px"}
+library(oz)
+library(gtools)
+oz(sections=c(4, 13:15), col="darkgrey")
+cols <- colorRampPalette(c("yellow","darkorange","red"))(10)
+with(u91_mean_dat, 
+     points(lon,lat, pch=21, cex=0.95, col="white",
+            bg=cols[quantcut(Price, 6)]))
+title(main = "Darker colour = more expensive fuel", 
+      line=1, cex.main=0.8, adj=0, font.main=3)
+```
+
+
+And finally we see some relationship between the median fuel price recorded for each station (for just U91 fuel, for now), and the remoteness index of the station. We also see some effect of the brand, with 'Metro Fuel' (which serves Sydney, Newcastle mostly) the cheaptes, and Coles Express quickly becoming expensive in slightly more remote locations.
+
+```{r, remote_price_fig, eval=TRUE, out.width="600px"}
+ggplot(u91_mean_dat, aes(x=remote, y=Price, group=Brand, col=Brand)) +
+  geom_point() +
+  geom_smooth(method="lm", se=F) +
+  theme_bw() + 
+  theme(
+    legend.position = c(.95, .05),
+    legend.justification = c("right", "bottom"),
+    legend.box.just = "right",
+    legend.margin = margin(6, 6, 6, 6)
+  ) +
+  scale_colour_manual(values=RColorBrewer::brewer.pal(7,"Set3")) +
+  labs(x="Remoteness index", y="Median fuel price (U91) ($ cents)")
+```
+
+We see another interesting relationship with the number of service stations in a 5km radius; the fuel price drops quickly when more service stations are added. However, there is a lot of variation particularly for low number of stations. Presumably other factors like distance from the supplier, affluence of the region, will come into play as well.
+
+```{r, echo=FALSE, eval=TRUE, out.width="600px"}
+ggplot(u91_mean_dat, aes(x=nr_5km, y=Price, group=Brand, col=Brand)) +
+  geom_point() +
+  geom_smooth(span=0.8, se=FALSE, method="loess", formula = y ~ x) +
+  theme_bw() + 
+  theme(
+    legend.position = c(.95, .95),
+    legend.justification = c("right", "top"),
+    legend.box.just = "right",
+    legend.margin = margin(6, 6, 6, 6)
+  ) +
+  scale_colour_manual(values=RColorBrewer::brewer.pal(7,"Set3")) +
+  labs(x="Nr. of service stations within 5km", y="Median fuel price (U91) ($ cents)")
+```
+
+
+## Conclusions
+
+So far, I spent most of my time cleaning and organizing the data, obtaining spatial coordinates of the stations, and some basic exploration of spatial patterns. I was able to show that fuel is cheaper in less remote, more competitive environments - but many questions remain on what drives the variation in fuel prices. To be continued.
+
+
+
+
+
+
+
+
+
+
+
+
