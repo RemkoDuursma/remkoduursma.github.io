@@ -161,10 +161,21 @@ h3.intro
 {
     list-style: none;
 }
+.list-maintitle
+{
+    font-family: 'Roboto Slab', serif;
+    font-size: 30px;
+    font-weight: 500;
+
+    margin-top: 40px;
+    margin-bottom: 40px;  
+}
+
+
 .list-entry
 {
     font-family: 'Roboto Slab', serif;
-    font-size: 25px;
+    font-size: 22px;
     font-weight: 400;
 
     margin-top: 10px;
@@ -187,6 +198,14 @@ h3.intro
 {
     margin-top: 10px;
     margin-bottom: 20px;
+}
+hr {
+    display: block;
+    height: 1px;
+    border: 0;
+    border-top: 1px solid #ccc;
+    margin: 1em 0;
+    padding: 0;
 }
 .menu-item
 {
@@ -273,4 +292,55 @@ a.button {
     display: inline-block;
     font-size: 16px;
 }
+
+
+
+
+
+.sidebar {
+  text-align: center;
+  padding: 2rem 1rem;
+  color: rgba(255,255,255,.5);
+  background-color: #202020;
+}
+@media (min-width: 48em) {
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 18rem;
+    text-align: left;
+  }
+}
+
+/* Sidebar links */
+.sidebar a {
+  color: #fff;
+}
+
+/* About section */
+.sidebar-about h1 {
+  color: #fff;
+  margin-top: 0;
+  font-family: "Abril Fatface", serif;
+  font-size: 3.25rem;
+}
+
+/* Sidebar nav */
+.sidebar-nav {
+  padding-left: 0;
+  list-style: none;
+}
+.sidebar-nav-item {
+  display: block;
+}
+a.sidebar-nav-item:hover,
+a.sidebar-nav-item:focus {
+  text-decoration: underline;
+}
+.sidebar-nav-item.active {
+  font-weight: bold;
+}
+
 

@@ -24,7 +24,7 @@ enableRobotsTXT = true
 [params]
 author = "Remko Duursma"
 intro = "Scientist with Data Skills"
-description = "Senior Lecturer in Modelling Vegetation Function and Structure  <br/> at the Hawkesbury Institute for the Environment, Western Sydney University."
+description = "Associate Professor in Modelling Vegetation Function and Structure  <br/> at the Hawkesbury Institute for the Environment, Western Sydney University."
 authorimage = "remko.jpg"
 dateformat = "Jan 2, 2006"
 
@@ -62,7 +62,7 @@ highlightjs = true
     weight = 200
     url = "/pages/publications_full/"
 [[menu.main]]
-    name = "Blog"
+    name = "R Blog"
     weight = 100
     identifier = "blog"
     url = "/post/"
