@@ -2,22 +2,120 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Lme4 on Remko Duursma</title>
-    <link>/tags/lme4/</link>
-    <description>Recent content in Lme4 on Remko Duursma</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <link>http://www.remkoduursma.com/post</link>
+    <description>Recent content on Remko Duursma</description>
+    <generator>Hugo, blogdown, rmarkdown</generator>
     <language>en-US</language>
     <lastBuildDate>Thu, 01 Jun 2017 00:00:00 +0000</lastBuildDate>
-    
-	<atom:link href="/tags/lme4/index.xml" rel="self" type="application/rss+xml" />
-    
+    <atom:link href="https://remkoduursma.github.io/tags/lme4/" rel="self" type="application/rss+xml" />
     
     <item>
       <title>Confidence intervals on predictions from mixed-effects models</title>
-      <link>/post/2017-06-15-bootpredictlme4/</link>
+      <link>https://remkoduursma.github.io/post/2017-06-15-bootpredictlme4/</link>
       <pubDate>Thu, 01 Jun 2017 00:00:00 +0000</pubDate>
       
-      <guid>/post/2017-06-15-bootpredictlme4/</guid>
-      <description>With simple linear regression, standard errors and confidence intervals for fitted (and predicted) values are easily computed. In R, we can use the se.fit argument in predict.lm, which returns the standard error for the fitted values, and interval = &amp;quot;confidence&amp;quot; to return confidence intervals. With linear mixed-effects models, however, it is not so easy. Neither predict.lme (from nlme) nor predict.merMod (from lme4) provide these methods, as confidence intervals on mixed-effects model predictions are harder to produce.</description>
+      <guid>https://remkoduursma.github.io/post/2017-06-15-bootpredictlme4/</guid>
+      <description>&lt;p&gt;With simple linear regression, standard errors and confidence intervals for fitted (and predicted) values are easily computed. In R, we can use the &lt;code&gt;se.fit&lt;/code&gt; argument in &lt;code&gt;predict.lm&lt;/code&gt;, which returns the standard error for the fitted values, and &lt;code&gt;interval = &amp;quot;confidence&amp;quot;&lt;/code&gt; to return confidence intervals. With linear mixed-effects models, however, it is not so easy. Neither &lt;code&gt;predict.lme&lt;/code&gt; (from &lt;code&gt;nlme&lt;/code&gt;) nor &lt;code&gt;predict.merMod&lt;/code&gt; (from &lt;code&gt;lme4&lt;/code&gt;) provide these methods, as confidence intervals on mixed-effects model predictions are harder to produce.&lt;/p&gt;
+&lt;p&gt;The solution is to use the parametric bootstrap, which is conveniently implemented in &lt;code&gt;bootMer&lt;/code&gt; to be applied to models fit with the &lt;code&gt;lme4&lt;/code&gt; package (&lt;code&gt;lmer&lt;/code&gt;, not &lt;code&gt;glmer&lt;/code&gt;). Here I describe a simple wrapper around &lt;code&gt;bootMer&lt;/code&gt;, providing an alternative for &lt;code&gt;predict.merMod&lt;/code&gt; that calculates standard errors (and confidence intervals) for predictions.&lt;/p&gt;
+&lt;p&gt;A side-effect of this implementation is that confidence intervals now appear in &lt;code&gt;visreg&lt;/code&gt; plots of mixed-effects models.&lt;/p&gt;
+&lt;p&gt;The code shown below is implemented as a very simple package, &lt;code&gt;bootpredictlme4&lt;/code&gt;, which can be installed with,&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;devtools::install_github(&amp;quot;remkoduursma/bootpredictlme4&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Note that the package cannot be used in conjunction with the &lt;code&gt;lmerTest&lt;/code&gt; package, since both packages replace the &lt;code&gt;predict.merMod&lt;/code&gt; function from &lt;code&gt;lme4&lt;/code&gt;. For this reason I will probably not attempt to submit this package to CRAN.&lt;/p&gt;
+&lt;div id=&#34;bootstrapped-confidence-intervals&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Bootstrapped confidence intervals&lt;/h1&gt;
+&lt;p&gt;Suppose we fit a linear mixed-effects model, using the built-in &lt;code&gt;sleepstudy&lt;/code&gt; dataset (in the &lt;code&gt;lme4&lt;/code&gt; package), which fits the reaction time of subjects as a function of the number of days since a sleep deprivation (3 hours per night) experiment.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(lme4)
+fm1 &amp;lt;- lmer(Reaction ~ Days + (Days | Subject), sleepstudy)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The structure allows for a random intercept and slope of reaction vs. days by subject. A &lt;code&gt;visreg&lt;/code&gt; plot (Fig. 1) shows the fitted model (for the average subject). Note that I have not yet loaded the &lt;code&gt;bootpredictlme4&lt;/code&gt; package.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(visreg)
+visreg(fm1, &amp;quot;Days&amp;quot;, ylab=&amp;quot;Reaction time (ms)&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;div class=&#34;figure&#34;&gt;&lt;span id=&#34;fig:unnamed-chunk-3&#34;&gt;&lt;/span&gt;
+&lt;img src=&#34;https://remkoduursma.github.io/post/2017-06-15-bootpredictlme4_files/figure-html/unnamed-chunk-3-1.png&#34; alt=&#34;A simple visreg plot of the sleepstudy mixed-effects model.&#34; width=&#34;672&#34; /&gt;
+&lt;p class=&#34;caption&#34;&gt;
+Figure 1: A simple visreg plot of the sleepstudy mixed-effects model.
+&lt;/p&gt;
+&lt;/div&gt;
+&lt;p&gt;If we are interested in the fitted value at some specified time, let’s say 5 days, we can use &lt;code&gt;predict&lt;/code&gt;, setting &lt;code&gt;re.form=NA&lt;/code&gt; to yield predictions for the average subject (i.e. not include random effects in the predictions). Note that we actually invoke &lt;code&gt;predict.merMod&lt;/code&gt;, because &lt;code&gt;fm1&lt;/code&gt; is fitted with &lt;code&gt;lmer&lt;/code&gt;.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;predict(fm1, newdata = data.frame(Days=5), re.form=NA)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##        1 
+## 303.7415&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Now we would like to calculate a confidence interval on this prediction, using the bootstrap. We can generate 100 bootstrap resamples with the &lt;code&gt;bootMer&lt;/code&gt; function, as follows. In this case, we apply the &lt;code&gt;predict.merMod&lt;/code&gt; to each of the bootstrapped fits. I am just using 100 fits to speed up this code, but you probably want to use 1000 samples or more.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;b &amp;lt;- bootMer(fm1, nsim=100, 
+             FUN=function(x)predict(x, newdata=data.frame(Days=5), re.form=NA))&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The resulting object &lt;code&gt;b&lt;/code&gt; contains lots of information, but most useful is the element &lt;code&gt;b$t&lt;/code&gt;, which lists the output of the function we applied to each of the bootstrap resamples, in this case the fitted value at &lt;code&gt;Days=5&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;The following histogram shows the distribution of the fitted values, that is, the sampling distribution. Note that if you use more samples (which you should), the distribution will look more like a normal distribution.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;hist(b$t, breaks=seq(250,350,by=5),
+     ylim=c(0,25),
+     main=&amp;quot;&amp;quot;, xlab=&amp;quot;Reaction time at 5 Days (ms)&amp;quot;,
+     col=&amp;quot;cornflowerblue&amp;quot;)
+box()&lt;/code&gt;&lt;/pre&gt;
+&lt;div class=&#34;figure&#34;&gt;&lt;span id=&#34;fig:unnamed-chunk-6&#34;&gt;&lt;/span&gt;
+&lt;img src=&#34;https://remkoduursma.github.io/post/2017-06-15-bootpredictlme4_files/figure-html/unnamed-chunk-6-1.png&#34; alt=&#34;The sampling distribution of the fitted Reaction time at 5 days, a histogram of bootstrap estimates.&#34; width=&#34;672&#34; /&gt;
+&lt;p class=&#34;caption&#34;&gt;
+Figure 2: The sampling distribution of the fitted Reaction time at 5 days, a histogram of bootstrap estimates.
+&lt;/p&gt;
+&lt;/div&gt;
+&lt;p&gt;The standard error of our predicted value can be estimated simply as the &lt;em&gt;standard deviation&lt;/em&gt; of the sampling distribution, that is,&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;sd(b$t)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 9.184015&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;and the confidence interval as the &lt;em&gt;quantiles&lt;/em&gt; of the distribution (in this case, a 95% confidence interval).&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;quantile(b$t, probs=c(0.025, 0.975))&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##     2.5%    97.5% 
+## 286.5467 321.5505&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;a-simple-r-package&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;A simple R package&lt;/h1&gt;
+&lt;p&gt;The example above is implemented in the &lt;code&gt;bootpredictlme4&lt;/code&gt; package (as mentioned, install with &lt;code&gt;devtools::install_github(&amp;quot;remkoduursma/bootpredictlme4&amp;quot;)&lt;/code&gt;). When loading the package, the &lt;code&gt;predict.merMod&lt;/code&gt; function is replaced with a function that takes an &lt;code&gt;se.fit&lt;/code&gt; argument.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(bootpredictlme4)
+predict(fm1, newdata=data.frame(Days=5), re.form=NA, se.fit=TRUE, nsim=100)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## $fit
+##        1 
+## 303.7415 
+## 
+## $se.fit
+##        1 
+## 10.24986 
+## 
+## $se.boot
+##        1 
+## 10.50841 
+## 
+## $ci.fit
+##              1
+## 2.5%  283.6878
+## 97.5% 323.8666&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Two standard errors are computed, the &lt;code&gt;se.boot&lt;/code&gt; is the one described above (the standard deviation of the sampling distribution), and &lt;code&gt;se.fit&lt;/code&gt; is an &lt;em&gt;effective&lt;/em&gt; standard error that reconstructs the bootstrapped confidence interval if we were to assume asymptotic normality. In the case of normality, the half-width of the confidence interval (for 95% coverage) is of course 1.96 times the standard error. Thus &lt;code&gt;se.fit&lt;/code&gt; is calculated as the half-width of the bootstrapped confidence interval, divided by 1.96. It is this standard error that is used by &lt;code&gt;visreg&lt;/code&gt; (see below), making sure that the resulting confidence interval is actually equal to the bootstrapped confidence interval.&lt;/p&gt;
+&lt;p&gt;In most cases &lt;code&gt;se.fit&lt;/code&gt; and &lt;code&gt;se.boot&lt;/code&gt; will be very similar, unless you used very few bootstrap samples, or the sampling distribution is very non-normal (which is certainly possible).&lt;/p&gt;
+&lt;p&gt;A major advantage is that &lt;code&gt;visreg&lt;/code&gt; automatically recognizes that we can compute standard errors, and now a confidence interval appears on the standard effects plot. Note that &lt;code&gt;bootpredictlme4&lt;/code&gt; warns about using few bootstrap resamples. The default has a low number to allow rapid testing.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;visreg(fm1, &amp;quot;Days&amp;quot;, ylab=&amp;quot;Reaction time (ms)&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## Number of bootstrap replicates very low. 
+##  Set to higher value with e.g. options(bootnsim = 500)&lt;/code&gt;&lt;/pre&gt;
+&lt;div class=&#34;figure&#34;&gt;&lt;span id=&#34;fig:unnamed-chunk-10&#34;&gt;&lt;/span&gt;
+&lt;img src=&#34;https://remkoduursma.github.io/post/2017-06-15-bootpredictlme4_files/figure-html/unnamed-chunk-10-1.png&#34; alt=&#34;A simple visreg plot of the sleepstudy mixed-effects model - with the bootpredictlme4 package loaded.&#34; width=&#34;672&#34; /&gt;
+&lt;p class=&#34;caption&#34;&gt;
+Figure 3: A simple visreg plot of the sleepstudy mixed-effects model - with the bootpredictlme4 package loaded.
+&lt;/p&gt;
+&lt;/div&gt;
+&lt;p&gt;The new predict method also allows more complicated &lt;code&gt;visreg&lt;/code&gt; plots, like the overlay plot (my personal favorite).&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# Add a fake grouping variable to sleepstudy
+high &amp;lt;- with(sleepstudy, levels(reorder(Subject,Reaction,mean)))[1:9]
+
+sleepstudy$Group &amp;lt;- factor(ifelse(sleepstudy$Subject %in% high, &amp;quot;A&amp;quot;, &amp;quot;B&amp;quot;))
+
+fm2 &amp;lt;- lmer(Reaction ~ Days*Group + (Days | Subject), sleepstudy)
+visreg(fm2, &amp;quot;Days&amp;quot;, by=&amp;quot;Group&amp;quot;, overlay=TRUE, ylab=&amp;quot;Reaction time (ms)&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## Number of bootstrap replicates very low. 
+##  Set to higher value with e.g. options(bootnsim = 500)
+## Number of bootstrap replicates very low. 
+##  Set to higher value with e.g. options(bootnsim = 500)&lt;/code&gt;&lt;/pre&gt;
+&lt;div class=&#34;figure&#34;&gt;&lt;span id=&#34;fig:unnamed-chunk-11&#34;&gt;&lt;/span&gt;
+&lt;img src=&#34;https://remkoduursma.github.io/post/2017-06-15-bootpredictlme4_files/figure-html/unnamed-chunk-11-1.png&#34; alt=&#34;A visreg plot with a factor variable included in the mixed-effects model. Confidence intervals are calculated with the bootstrap via bootpredictlme4.&#34; width=&#34;672&#34; /&gt;
+&lt;p class=&#34;caption&#34;&gt;
+Figure 4: A visreg plot with a factor variable included in the mixed-effects model. Confidence intervals are calculated with the bootstrap via bootpredictlme4.
+&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+</description>
     </item>
     
   </channel>
