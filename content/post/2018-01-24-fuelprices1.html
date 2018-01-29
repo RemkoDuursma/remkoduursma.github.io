@@ -193,6 +193,9 @@ for(i in 1:length(locs_sp))area[i] &lt;- get_area(locs_sp[i,], spoly=voro_buffer
 
 # Add to &#39;locs&#39; dataframe with locations of Service Stations.
 locs$area_voronoi &lt;- area</code></pre>
+<pre class="r"><code>plot(voro_buffer, col=&quot;lightgrey&quot;)
+with(locs, points(lon, lat, pch=16, col=scales::alpha(&quot;red&quot;,0.5), cex=0.5))</code></pre>
+<p><img src="/post/2018-01-24-fuelprices1_files/figure-html/voro_plot1-1.png" width="700px" /></p>
 <p>The figure below shows each service station, colored by the ‘area served’ (i.e. the area of the Voronoi polygon), with more yellow indicating smaller areas.</p>
 <pre class="r"><code>library(ggmap)
 

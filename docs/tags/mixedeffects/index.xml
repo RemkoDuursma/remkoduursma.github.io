@@ -7,14 +7,14 @@
     <generator>Hugo, blogdown, rmarkdown</generator>
     <language>en-US</language>
     <lastBuildDate>Thu, 13 Apr 2017 00:00:00 +0000</lastBuildDate>
-    <atom:link href="https://remkoduursma.github.io/tags/mixedeffects/" rel="self" type="application/rss+xml" />
+    <atom:link href="/tags/mixedeffects/" rel="self" type="application/rss+xml" />
     
     <item>
       <title>Advanced Topics in R</title>
-      <link>https://remkoduursma.github.io/post/2017-04-13-rworkshops/</link>
+      <link>/post/2017-04-13-rworkshops/</link>
       <pubDate>Thu, 13 Apr 2017 00:00:00 +0000</pubDate>
       
-      <guid>https://remkoduursma.github.io/post/2017-04-13-rworkshops/</guid>
+      <guid>/post/2017-04-13-rworkshops/</guid>
       <description>&lt;p&gt;Together with Jeff Powell, I am teaching a new series of workshops in Advanced Topics in R this week. Follow the links below for each of the workshops. Also visit the informal page for the R course, and these workshops at &lt;a href=&#34;http://www.hiercourse.com&#34;&gt;&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Each of the pages hosts the handouts and other materials - all are available free of charge.&lt;/p&gt;
 &lt;ul&gt;
@@ -28,10 +28,10 @@
     
     <item>
       <title>Reading data from the web</title>
-      <link>https://remkoduursma.github.io/post/2017-4-13-readingwebdata/</link>
+      <link>/post/2017-4-13-readingwebdata/</link>
       <pubDate>Thu, 13 Apr 2017 00:00:00 +0000</pubDate>
       
-      <guid>https://remkoduursma.github.io/post/2017-4-13-readingwebdata/</guid>
+      <guid>/post/2017-4-13-readingwebdata/</guid>
       <description>&lt;p&gt;In this tutorial I show how to read data from online sources, in various ways. I will also demonstrate how to tidy data using the &lt;code&gt;tidyr&lt;/code&gt; package, in particular converting from wide to long format.&lt;/p&gt;
 &lt;div id=&#34;reading-data-files-directly&#34; class=&#34;section level1&#34;&gt;
 &lt;h1&gt;Reading data files directly&lt;/h1&gt;
@@ -39,7 +39,7 @@
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;url &amp;lt;- &amp;quot;ftp://aftp.cmdl.noaa.gov/products/trends/co2/co2_weekly_mlo.txt&amp;quot;
 d &amp;lt;- read.table(url, na.strings=&amp;quot;-999.99&amp;quot;)
 plot(d[,4], d[,5], type=&amp;#39;l&amp;#39;, xlab=&amp;quot;Year&amp;quot;, ylab=expression(&amp;quot;[&amp;quot;*CO[2]*&amp;quot;]&amp;quot;~(ppm)))&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;https://remkoduursma.github.io/post/2017-4-13-readingwebdata_files/figure-html/unnamed-chunk-1-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2017-4-13-readingwebdata_files/figure-html/unnamed-chunk-1-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;The only hitch here is that the column names are not read (they are embedded in the comments in a messy way), but we can find that year is the 4th column, and CO&lt;sub&gt;2&lt;/sub&gt; concentration the 5th.&lt;/p&gt;
 &lt;p&gt;Also note the use of &lt;code&gt;na.strings&lt;/code&gt; to convert missing values coded as &lt;code&gt;-999.99&lt;/code&gt; to &lt;code&gt;NA&lt;/code&gt;.&lt;/p&gt;
 &lt;div id=&#34;finding-the-url-of-a-datasource&#34; class=&#34;section level2&#34;&gt;
@@ -98,7 +98,7 @@ wat &amp;lt;- mutate(wat,
 # Simple line plot of the river height
 par(cex.main=0.85)
 with(wat, plot(DateTime, WaterLevel, type=&amp;#39;l&amp;#39;, main=&amp;quot;Hawkesbury River water level at Windsor&amp;quot;))&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;https://remkoduursma.github.io/post/2017-4-13-readingwebdata_files/figure-html/unnamed-chunk-4-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2017-4-13-readingwebdata_files/figure-html/unnamed-chunk-4-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;div id=&#34;reading-html-table-option-2&#34; class=&#34;section level1&#34;&gt;
 &lt;h1&gt;Reading HTML table (Option 2)&lt;/h1&gt;
@@ -141,7 +141,7 @@ pop &amp;lt;- pop[order(pop$population),]
 with(pop, barplot(population * 10^-6, 
                   col=&amp;quot;cornflowerblue&amp;quot;,
                   names.arg=Region, ylab=&amp;quot;Population (millions)&amp;quot;))&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;https://remkoduursma.github.io/post/2017-4-13-readingwebdata_files/figure-html/unnamed-chunk-8-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2017-4-13-readingwebdata_files/figure-html/unnamed-chunk-8-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;div id=&#34;reading-and-tidying-a-complex-excel-workbook&#34; class=&#34;section level1&#34;&gt;
 &lt;h1&gt;Reading and tidying a complex Excel workbook&lt;/h1&gt;
@@ -171,7 +171,7 @@ horses &amp;lt;- read_excel(&amp;quot;tmp.xls&amp;quot;, sheet=7, skip=4)[1,-1] 
   gather(year,count)
 
 with(horses, plot(year, count, type=&amp;#39;l&amp;#39;))&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;https://remkoduursma.github.io/post/2017-4-13-readingwebdata_files/figure-html/unnamed-chunk-12-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2017-4-13-readingwebdata_files/figure-html/unnamed-chunk-12-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;Clearly number of horses has declined steadily since the introduction of the automobile - but note the pause in decline during the Great Depression.&lt;/p&gt;
 &lt;p&gt;Now let’s write a simple function that takes the name of the sheet, and plots the first row of data against year. The trick here is to store the names of the sheets first (as &lt;code&gt;sh&lt;/code&gt;).&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# Read sheet names, store as vector
@@ -197,7 +197,7 @@ plot_row1 &amp;lt;- function(sheetname){
   with(data, plot(year, count, main=sheetname, type=&amp;#39;l&amp;#39;))
 }
 plot_row1(&amp;quot;Sheep&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;https://remkoduursma.github.io/post/2017-4-13-readingwebdata_files/figure-html/unnamed-chunk-13-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2017-4-13-readingwebdata_files/figure-html/unnamed-chunk-13-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;div id=&#34;more-complex-example&#34; class=&#34;section level2&#34;&gt;
 &lt;h2&gt;More complex example&lt;/h2&gt;

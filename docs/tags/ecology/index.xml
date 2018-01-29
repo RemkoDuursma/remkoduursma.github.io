@@ -7,14 +7,14 @@
     <generator>Hugo, blogdown, rmarkdown</generator>
     <language>en-US</language>
     <lastBuildDate>Thu, 01 Jun 2017 00:00:00 +0000</lastBuildDate>
-    <atom:link href="https://remkoduursma.github.io/tags/ecology/" rel="self" type="application/rss+xml" />
+    <atom:link href="/tags/ecology/" rel="self" type="application/rss+xml" />
     
     <item>
       <title>The Cherriest Pick</title>
-      <link>https://remkoduursma.github.io/post/2017-06-01-cherriestpick/</link>
+      <link>/post/2017-06-01-cherriestpick/</link>
       <pubDate>Thu, 01 Jun 2017 00:00:00 +0000</pubDate>
       
-      <guid>https://remkoduursma.github.io/post/2017-06-01-cherriestpick/</guid>
+      <guid>/post/2017-06-01-cherriestpick/</guid>
       <description>&lt;p&gt;We discussed a paper in journal club today (&lt;a href=&#34;http://iopscience.iop.org/article/10.1088/1748-9326/aa6f97/meta&#34;&gt;Tan et al. 2017&lt;/a&gt;), where three outliers were removed from a plot with just seven data points. The authors were happy to report a correlation coefficient (&lt;em&gt;r&lt;/em&gt;) of 0.99. Here is their Fig. 2b (doesn’t matter what’s on the axes), where ‘outliers’ were labelled with open symbols.&lt;/p&gt;
 &lt;div class=&#34;figure&#34;&gt;
 &lt;img src=&#34;img/tan2017fig2.png&#34; /&gt;
@@ -46,13 +46,13 @@ par(mfrow=c(3,3), mar=c(2.2,2.2,0.2,0.2),
     cex.axis=0.8,
     cex.lab=0.8, mgp=c(1.2,0.4,0), tcl=0.2)
 for(i in 1:9)cherrypick(plotit=TRUE)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;https://remkoduursma.github.io/post/2017-06-01-cherriestpick_files/figure-html/unnamed-chunk-2-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2017-06-01-cherriestpick_files/figure-html/unnamed-chunk-2-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;Now we simulate ten thousand times and get the distribution of the cherry-picked &lt;em&gt;r&lt;/em&gt; (absolute values).&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;picks &amp;lt;- replicate(10^4, cherrypick())
 
 hist(picks, breaks=100, col=&amp;quot;darkgrey&amp;quot;, border=&amp;quot;darkgrey&amp;quot;,
      xlab=&amp;quot;Correlation coefficient n=4&amp;quot;, main=&amp;quot;&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;https://remkoduursma.github.io/post/2017-06-01-cherriestpick_files/figure-html/unnamed-chunk-3-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2017-06-01-cherriestpick_files/figure-html/unnamed-chunk-3-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;Clearly high values of &lt;em&gt;r&lt;/em&gt; are very likely. In this simulation, 87% of simulated &lt;em&gt;r&lt;/em&gt; values were above 0.9, and 66.5% above 0.95.&lt;/p&gt;
 </description>
     </item>

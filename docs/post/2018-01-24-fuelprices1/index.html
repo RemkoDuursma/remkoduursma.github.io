@@ -10,7 +10,7 @@
 <meta name="description" content="Simple minimalist theme">
 <meta name="keywords" content="minimalist,blog,goa,hugo,developer">
 
-<base href="https://remkoduursma.github.io">
+<base href="/">
 
 <title>Remko Duursma</title>
 
@@ -25,7 +25,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:300,400|Roboto+Slab:400,700|Roboto:300,300i,400,400i,500,500i,700,700i">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
-<link rel="stylesheet" href="https://remkoduursma.github.io/css/main.css">
+<link rel="stylesheet" href="/css/main.css">
 
 
 
@@ -253,6 +253,9 @@ for(i in 1:length(locs_sp))area[i] &lt;- get_area(locs_sp[i,], spoly=voro_buffer
 
 # Add to &#39;locs&#39; dataframe with locations of Service Stations.
 locs$area_voronoi &lt;- area</code></pre>
+<pre class="r"><code>plot(voro_buffer, col=&quot;lightgrey&quot;)
+with(locs, points(lon, lat, pch=16, col=scales::alpha(&quot;red&quot;,0.5), cex=0.5))</code></pre>
+<p><img src="/post/2018-01-24-fuelprices1_files/figure-html/voro_plot1-1.png" width="700px" /></p>
 <p>The figure below shows each service station, colored by the ‘area served’ (i.e. the area of the Voronoi polygon), with more yellow indicating smaller areas.</p>
 <pre class="r"><code>library(ggmap)
 
@@ -386,14 +389,14 @@ title(main = &quot;Darker colour = more remote&quot;, line=1, cex.main=0.8,
 <section id="menu-pane" class="row menu text-center">
   
   
-  <span><a class="menu-item" href="https://remkoduursma.github.io/post/2017-11-10-rpackages/">&lt; prev | </a></span>
+  <span><a class="menu-item" href="/post/2017-11-10-rpackages/">&lt; prev | </a></span>
   
   
   <span><a class="menu-item" href="/post">post</a></span>
   
   
   
-  <h4 class="text-center"><a class="menu-item" href="https://remkoduursma.github.io">home</a></h4>
+  <h4 class="text-center"><a class="menu-item" href="/">home</a></h4>
 </section>
 
 

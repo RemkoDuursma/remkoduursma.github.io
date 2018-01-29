@@ -7,14 +7,14 @@
     <generator>Hugo, blogdown, rmarkdown</generator>
     <language>en-US</language>
     <lastBuildDate>Thu, 01 Jun 2017 00:00:00 +0000</lastBuildDate>
-    <atom:link href="https://remkoduursma.github.io/tags/statistics/" rel="self" type="application/rss+xml" />
+    <atom:link href="/tags/statistics/" rel="self" type="application/rss+xml" />
     
     <item>
       <title>Confidence intervals on predictions from mixed-effects models</title>
-      <link>https://remkoduursma.github.io/post/2017-06-15-bootpredictlme4/</link>
+      <link>/post/2017-06-15-bootpredictlme4/</link>
       <pubDate>Thu, 01 Jun 2017 00:00:00 +0000</pubDate>
       
-      <guid>https://remkoduursma.github.io/post/2017-06-15-bootpredictlme4/</guid>
+      <guid>/post/2017-06-15-bootpredictlme4/</guid>
       <description>&lt;p&gt;With simple linear regression, standard errors and confidence intervals for fitted (and predicted) values are easily computed. In R, we can use the &lt;code&gt;se.fit&lt;/code&gt; argument in &lt;code&gt;predict.lm&lt;/code&gt;, which returns the standard error for the fitted values, and &lt;code&gt;interval = &amp;quot;confidence&amp;quot;&lt;/code&gt; to return confidence intervals. With linear mixed-effects models, however, it is not so easy. Neither &lt;code&gt;predict.lme&lt;/code&gt; (from &lt;code&gt;nlme&lt;/code&gt;) nor &lt;code&gt;predict.merMod&lt;/code&gt; (from &lt;code&gt;lme4&lt;/code&gt;) provide these methods, as confidence intervals on mixed-effects model predictions are harder to produce.&lt;/p&gt;
 &lt;p&gt;The solution is to use the parametric bootstrap, which is conveniently implemented in &lt;code&gt;bootMer&lt;/code&gt; to be applied to models fit with the &lt;code&gt;lme4&lt;/code&gt; package (&lt;code&gt;lmer&lt;/code&gt;, not &lt;code&gt;glmer&lt;/code&gt;). Here I describe a simple wrapper around &lt;code&gt;bootMer&lt;/code&gt;, providing an alternative for &lt;code&gt;predict.merMod&lt;/code&gt; that calculates standard errors (and confidence intervals) for predictions.&lt;/p&gt;
 &lt;p&gt;A side-effect of this implementation is that confidence intervals now appear in &lt;code&gt;visreg&lt;/code&gt; plots of mixed-effects models.&lt;/p&gt;
@@ -30,7 +30,7 @@ fm1 &amp;lt;- lmer(Reaction ~ Days + (Days | Subject), sleepstudy)&lt;/code&gt;&
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(visreg)
 visreg(fm1, &amp;quot;Days&amp;quot;, ylab=&amp;quot;Reaction time (ms)&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
 &lt;div class=&#34;figure&#34;&gt;&lt;span id=&#34;fig:unnamed-chunk-3&#34;&gt;&lt;/span&gt;
-&lt;img src=&#34;https://remkoduursma.github.io/post/2017-06-15-bootpredictlme4_files/figure-html/unnamed-chunk-3-1.png&#34; alt=&#34;A simple visreg plot of the sleepstudy mixed-effects model.&#34; width=&#34;672&#34; /&gt;
+&lt;img src=&#34;/post/2017-06-15-bootpredictlme4_files/figure-html/unnamed-chunk-3-1.png&#34; alt=&#34;A simple visreg plot of the sleepstudy mixed-effects model.&#34; width=&#34;672&#34; /&gt;
 &lt;p class=&#34;caption&#34;&gt;
 Figure 1: A simple visreg plot of the sleepstudy mixed-effects model.
 &lt;/p&gt;
@@ -50,7 +50,7 @@ Figure 1: A simple visreg plot of the sleepstudy mixed-effects model.
      col=&amp;quot;cornflowerblue&amp;quot;)
 box()&lt;/code&gt;&lt;/pre&gt;
 &lt;div class=&#34;figure&#34;&gt;&lt;span id=&#34;fig:unnamed-chunk-6&#34;&gt;&lt;/span&gt;
-&lt;img src=&#34;https://remkoduursma.github.io/post/2017-06-15-bootpredictlme4_files/figure-html/unnamed-chunk-6-1.png&#34; alt=&#34;The sampling distribution of the fitted Reaction time at 5 days, a histogram of bootstrap estimates.&#34; width=&#34;672&#34; /&gt;
+&lt;img src=&#34;/post/2017-06-15-bootpredictlme4_files/figure-html/unnamed-chunk-6-1.png&#34; alt=&#34;The sampling distribution of the fitted Reaction time at 5 days, a histogram of bootstrap estimates.&#34; width=&#34;672&#34; /&gt;
 &lt;p class=&#34;caption&#34;&gt;
 Figure 2: The sampling distribution of the fitted Reaction time at 5 days, a histogram of bootstrap estimates.
 &lt;/p&gt;
@@ -91,7 +91,7 @@ predict(fm1, newdata=data.frame(Days=5), re.form=NA, se.fit=TRUE, nsim=100)&lt;/
 &lt;pre&gt;&lt;code&gt;## Number of bootstrap replicates very low. 
 ##  Set to higher value with e.g. options(bootnsim = 500)&lt;/code&gt;&lt;/pre&gt;
 &lt;div class=&#34;figure&#34;&gt;&lt;span id=&#34;fig:unnamed-chunk-10&#34;&gt;&lt;/span&gt;
-&lt;img src=&#34;https://remkoduursma.github.io/post/2017-06-15-bootpredictlme4_files/figure-html/unnamed-chunk-10-1.png&#34; alt=&#34;A simple visreg plot of the sleepstudy mixed-effects model - with the bootpredictlme4 package loaded.&#34; width=&#34;672&#34; /&gt;
+&lt;img src=&#34;/post/2017-06-15-bootpredictlme4_files/figure-html/unnamed-chunk-10-1.png&#34; alt=&#34;A simple visreg plot of the sleepstudy mixed-effects model - with the bootpredictlme4 package loaded.&#34; width=&#34;672&#34; /&gt;
 &lt;p class=&#34;caption&#34;&gt;
 Figure 3: A simple visreg plot of the sleepstudy mixed-effects model - with the bootpredictlme4 package loaded.
 &lt;/p&gt;
@@ -109,7 +109,7 @@ visreg(fm2, &amp;quot;Days&amp;quot;, by=&amp;quot;Group&amp;quot;, overlay=TRUE
 ## Number of bootstrap replicates very low. 
 ##  Set to higher value with e.g. options(bootnsim = 500)&lt;/code&gt;&lt;/pre&gt;
 &lt;div class=&#34;figure&#34;&gt;&lt;span id=&#34;fig:unnamed-chunk-11&#34;&gt;&lt;/span&gt;
-&lt;img src=&#34;https://remkoduursma.github.io/post/2017-06-15-bootpredictlme4_files/figure-html/unnamed-chunk-11-1.png&#34; alt=&#34;A visreg plot with a factor variable included in the mixed-effects model. Confidence intervals are calculated with the bootstrap via bootpredictlme4.&#34; width=&#34;672&#34; /&gt;
+&lt;img src=&#34;/post/2017-06-15-bootpredictlme4_files/figure-html/unnamed-chunk-11-1.png&#34; alt=&#34;A visreg plot with a factor variable included in the mixed-effects model. Confidence intervals are calculated with the bootstrap via bootpredictlme4.&#34; width=&#34;672&#34; /&gt;
 &lt;p class=&#34;caption&#34;&gt;
 Figure 4: A visreg plot with a factor variable included in the mixed-effects model. Confidence intervals are calculated with the bootstrap via bootpredictlme4.
 &lt;/p&gt;

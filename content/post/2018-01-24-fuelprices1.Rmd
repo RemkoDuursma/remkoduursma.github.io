@@ -175,6 +175,11 @@ Instead we will use the New South Wales border to trim the Voronoi polygons. Thi
 ```{r buffer_voronoi}
 ```
 
+```{r voro_plot1, eval=TRUE, out.width="700px"}
+plot(voro_buffer, col="lightgrey")
+with(locs, points(lon, lat, pch=16, col=scales::alpha("red",0.5), cex=0.5))
+```
+
 
 The figure below shows each service station, colored by the 'area served' (i.e. the area of the Voronoi polygon), with more yellow indicating smaller areas. 
 
