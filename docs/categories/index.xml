@@ -7,23 +7,23 @@
     <generator>Hugo, blogdown, rmarkdown</generator>
     <language>en-US</language>
     <lastBuildDate>Sun, 02 Oct 2016 22:55:05 -0400</lastBuildDate>
-    <atom:link href="/categories/" rel="self" type="application/rss+xml" />
+    <atom:link href="http://www.remkoduursma.com/categories/" rel="self" type="application/rss+xml" />
     
     <item>
       <title>About</title>
-      <link>/categories/about/</link>
+      <link>http://www.remkoduursma.com/categories/about/</link>
       <pubDate>Sun, 02 Oct 2016 22:55:05 -0400</pubDate>
       
-      <guid>/categories/about/</guid>
+      <guid>http://www.remkoduursma.com/categories/about/</guid>
       <description></description>
     </item>
     
     <item>
       <title>R</title>
-      <link>/categories/r/</link>
+      <link>http://www.remkoduursma.com/categories/r/</link>
       <pubDate>Wed, 24 Jan 2018 00:00:00 +0000</pubDate>
       
-      <guid>/categories/r/</guid>
+      <guid>http://www.remkoduursma.com/categories/r/</guid>
       <description></description>
     </item>
     

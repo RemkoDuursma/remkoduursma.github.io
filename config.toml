@@ -1,6 +1,6 @@
 ## Basic Configuration
 
-baseurl = "https://remkoduursma.github.io"
+baseurl = "http://www.remkoduursma.com"
 builddrafts = false
 canonifyurls = false
 languageCode = "en-US"

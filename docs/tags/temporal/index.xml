@@ -7,14 +7,14 @@
     <generator>Hugo, blogdown, rmarkdown</generator>
     <language>en-US</language>
     <lastBuildDate>Wed, 24 Jan 2018 00:00:00 +0000</lastBuildDate>
-    <atom:link href="/tags/temporal/" rel="self" type="application/rss+xml" />
+    <atom:link href="http://www.remkoduursma.com/tags/temporal/" rel="self" type="application/rss+xml" />
     
     <item>
       <title>Analysis of fuel prices in New South Wales</title>
-      <link>/post/2018-01-24-fuelprices1/</link>
+      <link>http://www.remkoduursma.com/post/2018-01-24-fuelprices1/</link>
       <pubDate>Wed, 24 Jan 2018 00:00:00 +0000</pubDate>
       
-      <guid>/post/2018-01-24-fuelprices1/</guid>
+      <guid>http://www.remkoduursma.com/post/2018-01-24-fuelprices1/</guid>
       <description>&lt;div id=&#34;how-do-petrol-prices-vary-across-the-state&#34; class=&#34;section level3&#34;&gt;
 &lt;h3&gt;&lt;em&gt;How do petrol prices vary across the state?&lt;/em&gt;&lt;/h3&gt;
 &lt;p&gt;The price of fuel at service stations varies tremendously, both in space - across the large Australian state of New South Wales, and time - with surprising patterns. In this post I begin my quest to understand how fuel price varies, what factors explain its fluctuation over time and spatial variation. Obviously it would be nice to be able to know where to drive for cheaper fuel (what kind of areas are cheaper?), and when to fill up (should I wait until Thursday?).&lt;/p&gt;
@@ -34,9 +34,9 @@
 &lt;/ul&gt;
 &lt;p&gt;Instead of just showing results, these posts are very much about getting into the details of the R code to generate them. I will use &lt;code&gt;dplyr&lt;/code&gt;, &lt;code&gt;forcats&lt;/code&gt;, &lt;code&gt;ggplot2&lt;/code&gt;, &lt;code&gt;deldir&lt;/code&gt; (Voronoi polygons), &lt;code&gt;SDraw&lt;/code&gt; (better Voronoi polygons), &lt;code&gt;oz&lt;/code&gt; (quick maps of Australia), &lt;code&gt;rgeos&lt;/code&gt;, and &lt;code&gt;magicaxis&lt;/code&gt; throughout the code.&lt;/p&gt;
 &lt;p&gt;But before we get started, here is a taste of what’s to come:&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;/post/2018-01-24-fuelprices1_files/figure-html/figure1-1.png&#34; width=&#34;600px&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://www.remkoduursma.com/post/2018-01-24-fuelprices1_files/figure-html/figure1-1.png&#34; width=&#34;600px&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;The data show an interesting fluctuation in fuel prices, &lt;a href=&#34;https://www.accc.gov.au/consumers/petrol-diesel-lpg/petrol-price-cycles#petrol-prices-in-sydney&#34;&gt;which can be viewed on this official site as well&lt;/a&gt;, but the fluctuations are on much longer timescales than weekly. Zooming in on a two-month period in 2017, we see the peculiar pattern of a very sudden jump in fuel prices, followed by a gradual decline over the period of a month or so.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;/post/2018-01-24-fuelprices1_files/figure-html/unnamed-chunk-1-1.png&#34; width=&#34;400px&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://www.remkoduursma.com/post/2018-01-24-fuelprices1_files/figure-html/unnamed-chunk-1-1.png&#34; width=&#34;400px&#34; /&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;div id=&#34;getting-the-data&#34; class=&#34;section level1&#34;&gt;
 &lt;h1&gt;Getting the Data&lt;/h1&gt;
@@ -136,7 +136,7 @@ locs$dist_1 &amp;lt;- apply(geo_dist, 1, min2)&lt;/code&gt;&lt;/pre&gt;
      xlab=&amp;quot;Distance to nearest service station (m)&amp;quot;)
 magicaxis::magaxis(side=1, unlog=1)
 axis(2)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/post/2018-01-24-fuelprices1_files/figure-html/hist_dist_1-1.png&#34; width=&#34;500px&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://www.remkoduursma.com/post/2018-01-24-fuelprices1_files/figure-html/hist_dist_1-1.png&#34; width=&#34;500px&#34; /&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;div id=&#34;area-served-voronoi-polygons&#34; class=&#34;section level2&#34;&gt;
 &lt;h2&gt;Area served : Voronoi polygons&lt;/h2&gt;
@@ -149,7 +149,7 @@ plot(voro_plain, wlines=&amp;quot;tess&amp;quot;, wpoints=&amp;quot;real&amp;quo
      lty=1, col=c(&amp;quot;black&amp;quot;,&amp;quot;grey&amp;quot;,&amp;quot;red&amp;quot;,&amp;quot;black&amp;quot;,&amp;quot;black&amp;quot;),
      cex=0.6, xlab=&amp;quot;&amp;quot;, ylab=&amp;quot;&amp;quot;)
 box()&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/post/2018-01-24-fuelprices1_files/figure-html/voro_plain_fig-1.png&#34; width=&#34;700px&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://www.remkoduursma.com/post/2018-01-24-fuelprices1_files/figure-html/voro_plain_fig-1.png&#34; width=&#34;700px&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;Instead we will use the New South Wales border to trim the Voronoi polygons. This is not an ideal solution either, since stations will be competing with stations on the other side of each border (for which we have no data), but it is an improvement on the above.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# Make NSW polygon
 # Similar to oz::oz(), but coordinates are ordered by state.
@@ -201,7 +201,7 @@ for(i in 1:length(locs_sp))area[i] &amp;lt;- get_area(locs_sp[i,], spoly=voro_bu
 locs$area_voronoi &amp;lt;- area&lt;/code&gt;&lt;/pre&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;plot(voro_buffer, col=&amp;quot;lightgrey&amp;quot;)
 with(locs, points(lon, lat, pch=16, col=scales::alpha(&amp;quot;red&amp;quot;,0.5), cex=0.5))&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/post/2018-01-24-fuelprices1_files/figure-html/voro_plot1-1.png&#34; width=&#34;700px&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://www.remkoduursma.com/post/2018-01-24-fuelprices1_files/figure-html/voro_plot1-1.png&#34; width=&#34;700px&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;The figure below shows each service station, colored by the ‘area served’ (i.e. the area of the Voronoi polygon), with more yellow indicating smaller areas.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(ggmap)
 
@@ -214,7 +214,7 @@ nsw_map &amp;lt;- get_map(c(lon = 147.5, lat = -32.5),
   theme(legend.position = &amp;quot;none&amp;quot;) +
   geom_path(aes(x=long, y=lat), data=as.data.frame(nsw), col=&amp;quot;darkgrey&amp;quot;, lwd=0.6) +
   labs(x=&amp;quot;&amp;quot;, y=&amp;quot;&amp;quot;, caption=&amp;quot;Service stations coloured by area served (Voronoi polygons)&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/post/2018-01-24-fuelprices1_files/figure-html/buffer_voronoi_fig-1.png&#34; width=&#34;700px&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://www.remkoduursma.com/post/2018-01-24-fuelprices1_files/figure-html/buffer_voronoi_fig-1.png&#34; width=&#34;700px&#34; /&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;div id=&#34;remoteness-distance-to-coast&#34; class=&#34;section level2&#34;&gt;
 &lt;h2&gt;Remoteness, distance to coast&lt;/h2&gt;
@@ -260,7 +260,7 @@ with(locs,
             bg=cols[cut(log(remoteness+1), 10)]))
 title(main = &amp;quot;Darker colour = more remote&amp;quot;, line=1, cex.main=0.8, 
       adj=0, font.main=3)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/post/2018-01-24-fuelprices1_files/figure-html/remote_fig1-1.png&#34; width=&#34;600px&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://www.remkoduursma.com/post/2018-01-24-fuelprices1_files/figure-html/remote_fig1-1.png&#34; width=&#34;600px&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;Shares some features with the median fuel price, which I first calculate for each service station:&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;u91_mean_dat &amp;lt;- filter(fuel, FuelCode == &amp;quot;U91&amp;quot;) %&amp;gt;%
   group_by(Address) %&amp;gt;%
@@ -273,7 +273,7 @@ title(main = &amp;quot;Darker colour = more remote&amp;quot;, line=1, cex.main=0
                    ) %&amp;gt;%
   filter(Price &amp;lt; 160) %&amp;gt;%
   mutate(Brand = forcats::fct_lump(as.factor(Brand), 6))&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/post/2018-01-24-fuelprices1_files/figure-html/remote_fig2-1.png&#34; width=&#34;600px&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://www.remkoduursma.com/post/2018-01-24-fuelprices1_files/figure-html/remote_fig2-1.png&#34; width=&#34;600px&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;And finally we see some relationship between the median fuel price recorded for each station (for just U91 fuel, for now), and the remoteness index of the station. We also see some effect of the brand, with ‘Metro Fuel’ (which serves Sydney, Newcastle mostly) the cheaptes, and Coles Express quickly becoming expensive in slightly more remote locations.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;ggplot(u91_mean_dat, aes(x=remote, y=Price, group=Brand, col=Brand)) +
   geom_point() +
@@ -287,9 +287,9 @@ title(main = &amp;quot;Darker colour = more remote&amp;quot;, line=1, cex.main=0
   ) +
   scale_colour_manual(values=RColorBrewer::brewer.pal(7,&amp;quot;Set3&amp;quot;)) +
   labs(x=&amp;quot;Remoteness index&amp;quot;, y=&amp;quot;Median fuel price (U91) ($ cents)&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/post/2018-01-24-fuelprices1_files/figure-html/remote_price_fig-1.png&#34; width=&#34;600px&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://www.remkoduursma.com/post/2018-01-24-fuelprices1_files/figure-html/remote_price_fig-1.png&#34; width=&#34;600px&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;We see another interesting relationship with the number of service stations in a 5km radius; the fuel price drops quickly when more service stations are added. However, there is a lot of variation particularly for low number of stations. Presumably other factors like distance from the supplier, affluence of the region, will come into play as well.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;/post/2018-01-24-fuelprices1_files/figure-html/unnamed-chunk-3-1.png&#34; width=&#34;600px&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://www.remkoduursma.com/post/2018-01-24-fuelprices1_files/figure-html/unnamed-chunk-3-1.png&#34; width=&#34;600px&#34; /&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;div id=&#34;conclusions&#34; class=&#34;section level2&#34;&gt;
 &lt;h2&gt;Conclusions&lt;/h2&gt;

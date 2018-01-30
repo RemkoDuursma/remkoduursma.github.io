@@ -6,14 +6,14 @@
     <description>Recent content on Remko Duursma</description>
     <generator>Hugo, blogdown, rmarkdown</generator>
     <language>en-US</language>
-    <atom:link href="/pages/" rel="self" type="application/rss+xml" />
+    <atom:link href="http://www.remkoduursma.com/pages/" rel="self" type="application/rss+xml" />
     
     <item>
       <title>All Publications</title>
-      <link>/pages/publications_full/</link>
+      <link>http://www.remkoduursma.com/pages/publications_full/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>/pages/publications_full/</guid>
+      <guid>http://www.remkoduursma.com/pages/publications_full/</guid>
       <description>&lt;p&gt;&lt;a href=&#34;../pages/publications_full/&#34; class=&#34;button&#34;&gt;All Publications&lt;/a&gt;
 &lt;a href=&#34;../pages/publications_select/&#34; class=&#34;button&#34;&gt;Selected Publications&lt;/a&gt;&lt;/p&gt;
 
@@ -150,10 +150,10 @@ See my &lt;a href=&#34;https://scholar.google.com.au/citations?hl=en&amp;amp;use
     
     <item>
       <title>Selected Publications</title>
-      <link>/pages/publications_select/</link>
+      <link>http://www.remkoduursma.com/pages/publications_select/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>/pages/publications_select/</guid>
+      <guid>http://www.remkoduursma.com/pages/publications_select/</guid>
       <description>
 
 &lt;p&gt;&lt;a href=&#34;../pages/publications_full/&#34; class=&#34;button&#34;&gt;All Publications&lt;/a&gt;
