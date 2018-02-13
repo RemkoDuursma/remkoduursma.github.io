@@ -306,7 +306,7 @@ a.button {
   font-size: 16px;
   font-weight: 200;
 }
-@media (min-width: 48em) {
+@media (min-width: 36em) {
   .sidebar {
     position: fixed;
     top: 0;
@@ -322,11 +322,16 @@ a.button {
   color: #fff;
 }
 
+
+.sidebar ul {
+  list-style-type: square; 
+}
+
 /* About section */
-.sidebar-about h1 {
-  color: #fff;
-  display: inline-block;
-  margin-top: 40px;
+.sidebar-about {
+  color: #FFF00;
+  /*display: inline-block;
+  margin-top: 40px;*/
     font-family: 'Roboto', sans-serif;
     font-size: 18px;
     font-weight: 300;
