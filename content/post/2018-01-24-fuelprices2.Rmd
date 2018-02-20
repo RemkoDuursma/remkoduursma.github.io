@@ -1,0 +1,123 @@
+---
+title: "Fuel prices in New South Wales - Part 2"
+author: "Remko Duursma"
+date: 2018-01-24
+categories: ["R"]
+tags: ["spatial", "temporal"]
+description: "A closer look at the remarkable oscillation in fuel prices in Sydney"
+---
+
+
+```{r setup, include=FALSE, cache=FALSE}
+library(knitr)
+opts_chunk$set(echo = TRUE, eval=FALSE, dpi=300, warning = FALSE)
+```
+
+```{r loadpackages, eval=TRUE, include=FALSE, echo=F}
+pacman::p_load(dplyr, oz, magicaxis, deldir, rgeos, ggplot2, gridExtra)
+```
+
+
+It is no secret that gasoline and diesel prices at the pump vary from day to day and from one place to the next. Few people are aware though that a typical pattern in fuel prices looks like this:
+
+
+```{r}
+
+```
+
+Newspaper articles have written about this pattern, web services exist that show where you are on the cycle, and you can compare main cities across Australia. In Sydney, the cycle is about 30 days long (more about that later), and the timing of the spike increase in fuel (which takes only 2-3 days) varies little from pump to pump. Indeed this article briefly mentions that this price setting is based on agreements between retailers. Sounds like a lack of competition between service stations?
+
+I have lots of questions about this cycle, and I will answer a few of them in this second part of the analysis. Read my previous post about the dataset and some broad spatial patterns, and visit this github repos for an R package with the cleaned dataset (and spatial attributes of the stations).
+
+For the following I will focus only on stations in Sydney. Mostly because the reporting frequency is higher than remote NSW - usually daily -and because there are lots of service stations in Sydney alone (>750).  
+
+This is an R blog, so all the below will not just show results but also the code used to generate them. You can find this reproducible document by following this direct link.
+
+
+### The data
+
+The data are stored in this R package (not on CRAN), once installed we can do:
+
+```{r}
+library(fuelpricensw)
+library(dplyr)
+
+# Merge spatial attributes
+fuel <- left_join(fuel, fuelstations, by = "Address")
+```
+
+The first step is to select all Sydney stations. I did this by drawing an awkward polygon that captures most the of more densely populated bits (because 'Greater Sydney' shapefiles include lots of national parks), and deciding whether some station falls in the polygon.
+
+
+```{r, message=FALSE}
+library(ggmap)
+library(sp)
+
+# Map tile for background.
+syd_map <- ggmap::get_map(c(lon = 151, lat=-33.8), zoom=10)
+
+# Manually entered polygon for 'Sydney', excluding blue mountains etc.
+syd_vert <- read.table(text="
+                   lon lat
+                   150.65 -34.1
+                   150.65 -33.55
+                   150.9 -33.55
+                   151 -33.7
+                   151.35 -33.7
+                   151.27 -34.15
+                   150.95 -33.95
+                   150.8 -34.1",header=TRUE)
+
+
+# Select stations in this polygon
+in_syd <- sp::point.in.polygon(fuelstations$lon, fuelstations$lat,
+                           syd_vert$lon, syd_vert$lat)
+locsyd <- fuelstations[in_syd == 1,]
+
+# Sydney data
+fuelsyd <- filter(fuel, Address %in% locsyd$Address)
+
+
+
+ggmap(syd_map) + 
+  geom_polygon(aes(x=lon,y=lat), data=syd_vert, alpha=0.2) +
+  geom_point(aes(x=lon, y=lat), data=locsyd, size=0.8, col="red") +
+  labs(x="", y="")
+
+
+```
+
+
+### Summarizing the ups and downs in fuel prices
+
+
+Next we are going to summarize the fuel price cycles into timings of 'price hikes' (the sudden increase in price), the time between cycles (time to reach the minimum counting from the maximum), the time between the minimum and the maximumthe rate of decrease of price between the cycles
+
+- start date of price hike
+
+
+```{r}
+
+# ... U91 only
+fuelu91syd <- filter(fuelsyd, FuelCode == "U91")
+
+# List of dataframes. Easier to work with.
+fuelu91syds <- split(fuelu91syd, fuelu91syd$Address)
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
