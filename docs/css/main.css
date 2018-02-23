@@ -299,20 +299,20 @@ a.button {
 
 .sidebar {
   text-align: center;
-  padding: 2rem 1rem;
+  padding: 2em 1em;
   color: rgba(255,255,255,.5);
   background-color: #202020;
   font-family: 'Roboto', sans-serif;
   font-size: 16px;
   font-weight: 200;
 }
-@media (min-width: 48em) {
+@media (min-width: 36em) {
   .sidebar {
     position: fixed;
     top: 0;
     left: 0;
     bottom: 0;
-    width: 20rem;
+    width: 20em;
     text-align: left;
   }
 }
@@ -322,10 +322,16 @@ a.button {
   color: #fff;
 }
 
+
+.sidebar ul {
+  list-style-type: square; 
+}
+
 /* About section */
-.sidebar-about h1 {
-  color: #fff;
-  margin-top: 0;
+.sidebar-about {
+  color: #FFF00;
+  /*display: inline-block;
+  margin-top: 40px;*/
     font-family: 'Roboto', sans-serif;
     font-size: 18px;
     font-weight: 300;
