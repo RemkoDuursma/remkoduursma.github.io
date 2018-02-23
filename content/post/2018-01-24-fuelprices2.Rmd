@@ -10,7 +10,7 @@ description: "A closer look at the remarkable oscillation in fuel prices in Sydn
 
 ```{r setup, include=FALSE, cache=FALSE}
 library(knitr)
-opts_chunk$set(echo = TRUE, eval=FALSE, dpi=300, warning = FALSE)
+opts_chunk$set(echo = TRUE, eval=TRUE, dpi=300, warning = FALSE)
 ```
 
 ```{r loadpackages, eval=TRUE, include=FALSE, echo=F}
@@ -74,38 +74,209 @@ in_syd <- sp::point.in.polygon(fuelstations$lon, fuelstations$lat,
                            syd_vert$lon, syd_vert$lat)
 locsyd <- fuelstations[in_syd == 1,]
 
+# Also add Brand (BP, shell, etc) to the locations dataframe.
+fuelkey <- dplyr::select(fuel, Address, Brand, Postcode) %>% distinct
+locsyd <- left_join(locsyd, fuelkey, by="Address")
+
+
 # Sydney data
 fuelsyd <- filter(fuel, Address %in% locsyd$Address)
 
+```
 
+A simple map shows the service stations, using the excellent `ggmap`.
 
+```{r, fig.width=6, fig.height=6, out.width="600px"}
 ggmap(syd_map) + 
   geom_polygon(aes(x=lon,y=lat), data=syd_vert, alpha=0.2) +
   geom_point(aes(x=lon, y=lat), data=locsyd, size=0.8, col="red") +
   labs(x="", y="")
 
-
 ```
+
+
 
 
 ### Summarizing the ups and downs in fuel prices
 
 
-Next we are going to summarize the fuel price cycles into timings of 'price hikes' (the sudden increase in price), the time between cycles (time to reach the minimum counting from the maximum), the time between the minimum and the maximumthe rate of decrease of price between the cycles
+Next we are going to summarize the fuel price cycles into timings of 'price hikes' (the sudden increase in price), the time between cycles (time to reach the minimum counting from the maximum), the time between the minimum and the maximum, the rate of decrease of price between the cycles, and so on. 
 
-- start date of price hike
+To do this, I am going to approximate the fuel price timeseries by a saw pattern - by only considering the minimum and maximum fuel prices reached for each cycle. See the below figure for a few examples.
 
+The code I developed for this analysis is quite long, and pretty terrible. One issue is that the data have to be cleaned in a variety of ways (short spikes in the data mess up any simple approach).
+
+In the following I will only consider one of 11 fuel types, U91 (Unleaded petrol, 91 octane), the most commonly reported fuel in the database.
 
 ```{r}
-
 # ... U91 only
 fuelu91syd <- filter(fuelsyd, FuelCode == "U91")
 
-# List of dataframes. Easier to work with.
+# List of dataframes, one timeseries for each service station. 
+# I still prefer this approach over purrr or whatever.
 fuelu91syds <- split(fuelu91syd, fuelu91syd$Address)
+```
+
+
+
+```{r, echo=FALSE}
+
+# TRUE if x[i] > x[i-1] AND x[i] > x[i + 1]
+local_maximum <- function(x){
+  c(NA, x[2:length(x)] > x[1:(length(x)-1)]) &
+    c(x[1:(length(x)-1)] > x[2:length(x)], NA)
+}
+
+# TRUE if x[i-1] > x[i+1] AND x[i] < x[i-1] AND x[i] < x[i+1]
+local_minimum <- function(x){
+  c(x[2:length(x)] > x[1:(length(x)-1)], NA) & 
+    c(NA, x[2:length(x)] < x[1:(length(x)-1)])
+}
+
+
+# Convoluted, but hey it works!
+make_cycledf <- function(stationdata, plotit=FALSE){
+  
+  zall <- stationdata[order(stationdata$DateTime),]
+  
+  z <- group_by(zall, Date) %>% summarize(Price = last(Price)) %>%
+    as_data_frame
+  
+  l <- list()
+  
+  #incs <- c(NA, diff(z$Price))
+  #z <- z[incs <= 0 | incs > 4,]
+  
+  # steep sudden decrease; adds noise and likely glitches
+  spike_down <- which(diff(z$Price) < -10)
+  if(length(spike_down))z <- z[-spike_down,]
+  
+  #... again seems to proper fix it
+  spike_down <- which(diff(z$Price) < -10)
+  if(length(spike_down))z <- z[-spike_down,]
+  
+  # local minimum glitches when no price change
+  dzero <- which(diff(z$Price) == 0)
+  if(length(dzero))z <- z[-dzero,]
+  
+  # price increases of less than 1ct,
+  # perhaps artefact due to averaging by day?
+  d <- diff(z$Price)
+  dtiny <- which(d > 0 & d < 1)
+  if(length(dtiny))z <- z[-dtiny,]
+  
+  # not sure why, but needs one more go
+  d <- diff(z$Price)
+  dtiny <- which(d > 0 & d < 1)
+  if(length(dtiny))z <- z[-dtiny,]
+  
+  
+  if(nrow(z) < 20)return(invisible(NULL))
+  
+  imax <- which(local_maximum(z$Price))
+  imin <- which(local_minimum(z$Price))
+  
+  for(i in 1:length(imax)){
+    
+    # find next local minimum
+    next_imin <- suppressWarnings(min(imin[imin > imax[i]]))
+    if(!is.finite(next_imin))next
+    prev_imin <- suppressWarnings(max(imin[imin < imax[i]]))
+    if(!is.finite(prev_imin))prev_imin <- NA
+    
+    dat <- z[imax[i]:next_imin,]
+    
+    price_pre <- unique(z$Price[prev_imin])
+    price_peak <- dat$Price[1]
+    price_low <- dat$Price[nrow(dat)]
+    date_pre <- unique(z$Date[prev_imin])
+    date_peak <- dat$Date[1]
+    date_low <- dat$Date[nrow(dat)]
+    ndays <- as.numeric(date_low - date_peak)
+    ndata <- nrow(subset(z, Date >= date_peak & Date <= date_low))
+    
+    l[[i]] <- data.frame(Address = unique(zall$Address),
+                         price_pre = price_pre,
+                         price_peak = price_peak,
+                         price_hike = price_peak - price_pre,
+                         price_low = price_low,
+                         date_peak = date_peak,
+                         date_pre = date_pre,
+                         date_low = date_low,
+                         ndays_cycle = ndays,
+                         ndata_cycle = ndata,
+                         dpricedt = (price_low - price_peak) / ndays
+    )
+  }
+  
+  out <- bind_rows(l)
+  
+  if(plotit){
+    
+    with(z, plot(Date, Price, pch=19, col="grey"))  
+    
+    if(!is.null(out)){
+      with(out, points(date_peak, price_peak, pch=19, col="red"))  
+      with(out, points(date_pre, price_pre, pch=19, col="blue"))
+      
+      for(j in 1:nrow(out)){
+        xx <- c(out$date_peak[j], out$date_low[j])
+        yy <- c(out$price_peak[j], out$price_low[j])
+        lines(xx,yy)
+        
+        xx <- c(out$date_pre[j], out$date_peak[j])
+        yy <- c(out$price_pre[j], out$price_peak[j])
+        lines(xx,yy, lty=5)
+      }
+    }
+  } 
+  
+  return(invisible(out))
+  
+}
+```
+
+
+We then apply our custom magic function (but see the code here) to the timeseries for each of 773 service stations in Sydney.
+
+
+
+```{r, cache=TRUE}
+
+# Using dplyr we can write some seriously concise code.
+cycsyd <- lapply(fuelu91syds, make_cycledf) %>%
+  bind_rows %>% 
+  left_join(locsyd, by="Address") %>%
+  filter(ndata_cycle > 5, price_hike > 5) %>% 
+  mutate(Brand2 = forcats::fct_lump(as.factor(Brand), 6))
 
 ```
 
+Here's one of them:
+
+```{r, echo=FALSE, out.width="600px"}
+make_cycledf(fuelu91syds[["91 Glossop St, North St Marys NSW 2760"]], 
+             plotit=TRUE)
+```
+
+
+Finally I prepare a dataset with the cycles themselves summarized, simply by averaging price hikes, median prices at the minimum of the cycles, and so on.
+
+```{r}
+cycsyd_a <- group_by(cycsyd, Address) %>%
+  summarize(price_hike_median = median(price_hike, na.rm=T),
+            price_peak_median = median(price_peak, na.rm=T),
+            price_low_median = median(price_low, na.rm=T),
+            ndays_cycle_median = median(ndays_cycle),
+            dpricedt = mean(dpricedt),
+            lon = mean(lon), lat=mean(lat), 
+            nr_5km = mean(nr_5km),
+            Brand = first(Brand),
+            Brand2 = first(Brand2),
+            Postcode = first(Postcode)
+  )
+
+```
 
 
 
