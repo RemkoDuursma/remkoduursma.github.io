@@ -17,6 +17,20 @@ opts_chunk$set(echo = TRUE,
                warning = FALSE)
 ```
 
+# Links
+
+collective bargaining not allowed!
+
+https://www.accc.gov.au/business/pricing-surcharging/setting-prices
+https://www.accc.gov.au/business/anti-competitive-behaviour
+
+but is ok for small businesses
+
+https://www.accc.gov.au/publications/small-business-collective-bargaining-notifications-the-competition-and-consumer-act
+
+
+
+
 ```{r loadpackages, eval=TRUE, include=FALSE, echo=F}
 pacman::p_load(dplyr, oz, magicaxis, deldir, rgeos, ggplot2, gridExtra)
 library(fuelpricensw)
