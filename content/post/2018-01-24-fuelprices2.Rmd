@@ -17,6 +17,12 @@ opts_chunk$set(echo = TRUE,
                warning = FALSE)
 ```
 
+# Notes
+
+see github issue (fuelpricensw)
+reporting cycle might be interesting: unmanned stations perhaps only report after a price change (and reports that those stations keep the same price all month!) 
+therefore sd(price) should be correlated with reporting cycle
+
 # Links
 
 collective bargaining not allowed!
@@ -27,6 +33,19 @@ https://www.accc.gov.au/business/anti-competitive-behaviour
 but is ok for small businesses
 
 https://www.accc.gov.au/publications/small-business-collective-bargaining-notifications-the-competition-and-consumer-act
+
+# ok so a service station owner in McGrath Hill has a small business, but the vast majority is franchised by a large corporation (BP, Caltex, etc)
+# the exceptions are 'independent', 'budget' (?) and 'Metro' (?) - *the cheapest of the brands in sydney*.
+
+
+
+australians (NSW) spend $150 on fuel per month
+https://www.canstarblue.com.au/vehicles/how-much-we-pay-for-petrol/
+
+
+the automobile association does not even mention the cycles; monthly reports hide price setting:
+http://www.aaa.asn.au/latest-fuel-prices/
+
 
 
 
