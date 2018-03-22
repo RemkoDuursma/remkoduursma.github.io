@@ -3,179 +3,179 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>http://www.remkoduursma.com/post/2018-01-24-fuelprices1/</loc>
+    <loc>/post/2018-01-24-fuelprices1/</loc>
     <lastmod>2018-01-24T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://www.remkoduursma.com/post/2017-11-10-rpackages/</loc>
+    <loc>/post/2017-11-10-rpackages/</loc>
     <lastmod>2017-11-10T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://www.remkoduursma.com/post/2017-06-15-bootpredictlme4/</loc>
+    <loc>/post/2017-06-15-bootpredictlme4/</loc>
     <lastmod>2017-06-01T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://www.remkoduursma.com/post/2017-06-01-cherriestpick/</loc>
+    <loc>/post/2017-06-01-cherriestpick/</loc>
     <lastmod>2017-06-01T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://www.remkoduursma.com/post/2017-05-30-chloropleths/</loc>
+    <loc>/post/2017-05-30-chloropleths/</loc>
     <lastmod>2017-05-30T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://www.remkoduursma.com/post/2017-04-24-nlshelper/</loc>
+    <loc>/post/2017-04-24-nlshelper/</loc>
     <lastmod>2017-04-24T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://www.remkoduursma.com/post/2017-04-13-rworkshops/</loc>
+    <loc>/post/2017-04-13-rworkshops/</loc>
     <lastmod>2017-04-13T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://www.remkoduursma.com/post/2017-4-13-readingwebdata/</loc>
+    <loc>/post/2017-4-13-readingwebdata/</loc>
     <lastmod>2017-04-13T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://www.remkoduursma.com/about/</loc>
+    <loc>/about/</loc>
     <lastmod>2016-10-02T22:55:05-04:00</lastmod>
   </url>
   
   <url>
-    <loc>http://www.remkoduursma.com/categories/about/</loc>
-    <lastmod>2016-10-02T22:55:05-04:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>http://www.remkoduursma.com/tags/about/</loc>
+    <loc>/tags/about/</loc>
     <lastmod>2016-10-02T22:55:05-04:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>http://www.remkoduursma.com/about/</loc>
+    <loc>/categories/about/</loc>
     <lastmod>2016-10-02T22:55:05-04:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>http://www.remkoduursma.com/pages/publications_full/</loc>
-  </url>
-  
-  <url>
-    <loc>http://www.remkoduursma.com/categories/</loc>
+    <loc>/about/</loc>
     <lastmod>2016-10-02T22:55:05-04:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>http://www.remkoduursma.com/tags/ecology/</loc>
+    <loc>/pages/publications_full/</loc>
+  </url>
+  
+  <url>
+    <loc>/categories/</loc>
+    <lastmod>2016-10-02T22:55:05-04:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/tags/ecology/</loc>
     <lastmod>2017-06-01T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>http://www.remkoduursma.com/tags/journalclub/</loc>
+    <loc>/tags/journalclub/</loc>
     <lastmod>2017-06-01T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>http://www.remkoduursma.com/tags/lme4/</loc>
+    <loc>/tags/lme4/</loc>
     <lastmod>2017-06-01T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>http://www.remkoduursma.com/tags/maps/</loc>
+    <loc>/tags/maps/</loc>
     <lastmod>2017-05-30T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>http://www.remkoduursma.com/tags/mixedeffects/</loc>
+    <loc>/tags/mixedeffects/</loc>
     <lastmod>2017-04-13T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>http://www.remkoduursma.com/tags/multivariate/</loc>
+    <loc>/tags/multivariate/</loc>
     <lastmod>2017-04-13T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>http://www.remkoduursma.com/tags/nonlinear/</loc>
+    <loc>/tags/nonlinear/</loc>
     <lastmod>2017-04-24T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>http://www.remkoduursma.com/pages/</loc>
+    <loc>/pages/</loc>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>http://www.remkoduursma.com/tags/plot/</loc>
+    <loc>/tags/plot/</loc>
     <lastmod>2017-04-24T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>http://www.remkoduursma.com/post/</loc>
+    <loc>/post/</loc>
     <lastmod>2018-01-24T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>http://www.remkoduursma.com/categories/r/</loc>
+    <loc>/categories/r/</loc>
     <lastmod>2018-01-24T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>http://www.remkoduursma.com/tags/regression/</loc>
+    <loc>/tags/regression/</loc>
     <lastmod>2017-04-24T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>http://www.remkoduursma.com/</loc>
+    <loc>/</loc>
     <lastmod>2018-01-24T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>http://www.remkoduursma.com/pages/publications_select/</loc>
+    <loc>/pages/publications_select/</loc>
   </url>
   
   <url>
-    <loc>http://www.remkoduursma.com/tags/spatial/</loc>
+    <loc>/tags/spatial/</loc>
     <lastmod>2018-01-24T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>http://www.remkoduursma.com/tags/statistics/</loc>
+    <loc>/tags/statistics/</loc>
     <lastmod>2017-06-01T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>http://www.remkoduursma.com/tags/</loc>
+    <loc>/tags/</loc>
     <lastmod>2016-10-02T22:55:05-04:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>http://www.remkoduursma.com/tags/temporal/</loc>
+    <loc>/tags/temporal/</loc>
     <lastmod>2018-01-24T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>

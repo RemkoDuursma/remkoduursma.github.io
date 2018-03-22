@@ -7,122 +7,122 @@
     <generator>Hugo, blogdown, rmarkdown</generator>
     <language>en-US</language>
     <lastBuildDate>Sun, 02 Oct 2016 22:55:05 -0400</lastBuildDate>
-    <atom:link href="http://www.remkoduursma.com/tags/" rel="self" type="application/rss+xml" />
+    <atom:link href="/tags/" rel="self" type="application/rss+xml" />
     
     <item>
       <title>About</title>
-      <link>http://www.remkoduursma.com/tags/about/</link>
+      <link>/tags/about/</link>
       <pubDate>Sun, 02 Oct 2016 22:55:05 -0400</pubDate>
       
-      <guid>http://www.remkoduursma.com/tags/about/</guid>
+      <guid>/tags/about/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Ecology</title>
-      <link>http://www.remkoduursma.com/tags/ecology/</link>
+      <link>/tags/ecology/</link>
       <pubDate>Thu, 01 Jun 2017 00:00:00 +0000</pubDate>
       
-      <guid>http://www.remkoduursma.com/tags/ecology/</guid>
+      <guid>/tags/ecology/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Journalclub</title>
-      <link>http://www.remkoduursma.com/tags/journalclub/</link>
+      <link>/tags/journalclub/</link>
       <pubDate>Thu, 01 Jun 2017 00:00:00 +0000</pubDate>
       
-      <guid>http://www.remkoduursma.com/tags/journalclub/</guid>
+      <guid>/tags/journalclub/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Lme4</title>
-      <link>http://www.remkoduursma.com/tags/lme4/</link>
+      <link>/tags/lme4/</link>
       <pubDate>Thu, 01 Jun 2017 00:00:00 +0000</pubDate>
       
-      <guid>http://www.remkoduursma.com/tags/lme4/</guid>
+      <guid>/tags/lme4/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Maps</title>
-      <link>http://www.remkoduursma.com/tags/maps/</link>
+      <link>/tags/maps/</link>
       <pubDate>Tue, 30 May 2017 00:00:00 +0000</pubDate>
       
-      <guid>http://www.remkoduursma.com/tags/maps/</guid>
+      <guid>/tags/maps/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Mixedeffects</title>
-      <link>http://www.remkoduursma.com/tags/mixedeffects/</link>
+      <link>/tags/mixedeffects/</link>
       <pubDate>Thu, 13 Apr 2017 00:00:00 +0000</pubDate>
       
-      <guid>http://www.remkoduursma.com/tags/mixedeffects/</guid>
+      <guid>/tags/mixedeffects/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Multivariate</title>
-      <link>http://www.remkoduursma.com/tags/multivariate/</link>
+      <link>/tags/multivariate/</link>
       <pubDate>Thu, 13 Apr 2017 00:00:00 +0000</pubDate>
       
-      <guid>http://www.remkoduursma.com/tags/multivariate/</guid>
+      <guid>/tags/multivariate/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Nonlinear</title>
-      <link>http://www.remkoduursma.com/tags/nonlinear/</link>
+      <link>/tags/nonlinear/</link>
       <pubDate>Mon, 24 Apr 2017 00:00:00 +0000</pubDate>
       
-      <guid>http://www.remkoduursma.com/tags/nonlinear/</guid>
+      <guid>/tags/nonlinear/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Plot</title>
-      <link>http://www.remkoduursma.com/tags/plot/</link>
+      <link>/tags/plot/</link>
       <pubDate>Mon, 24 Apr 2017 00:00:00 +0000</pubDate>
       
-      <guid>http://www.remkoduursma.com/tags/plot/</guid>
+      <guid>/tags/plot/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Regression</title>
-      <link>http://www.remkoduursma.com/tags/regression/</link>
+      <link>/tags/regression/</link>
       <pubDate>Mon, 24 Apr 2017 00:00:00 +0000</pubDate>
       
-      <guid>http://www.remkoduursma.com/tags/regression/</guid>
+      <guid>/tags/regression/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Spatial</title>
-      <link>http://www.remkoduursma.com/tags/spatial/</link>
+      <link>/tags/spatial/</link>
       <pubDate>Wed, 24 Jan 2018 00:00:00 +0000</pubDate>
       
-      <guid>http://www.remkoduursma.com/tags/spatial/</guid>
+      <guid>/tags/spatial/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Statistics</title>
-      <link>http://www.remkoduursma.com/tags/statistics/</link>
+      <link>/tags/statistics/</link>
       <pubDate>Thu, 01 Jun 2017 00:00:00 +0000</pubDate>
       
-      <guid>http://www.remkoduursma.com/tags/statistics/</guid>
+      <guid>/tags/statistics/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Temporal</title>
-      <link>http://www.remkoduursma.com/tags/temporal/</link>
+      <link>/tags/temporal/</link>
       <pubDate>Wed, 24 Jan 2018 00:00:00 +0000</pubDate>
       
-      <guid>http://www.remkoduursma.com/tags/temporal/</guid>
+      <guid>/tags/temporal/</guid>
       <description></description>
     </item>
     
