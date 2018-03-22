@@ -21,6 +21,12 @@ Analysis of leaf gas exchange. Fit A-Ci curves, simulate from the coupled leaf g
 
 Analysis and visualization of plant hydraulics data. Fit PLC curves to estimate P50 and related parameters, report uncertainty via bootstrap resampling, incorporate random effects, and more. [Read open-access publication describing fitplc](http://jplanthydro.org/article/view/1541).
 
+## smatr
+
+[CRAN](https://cran.r-project.org/package=smatr) / [bitbucket](https://www.bitbucket.org/remkoduursma/smatr)
+
+A very popular R package, the methods were developed by [David Warton](http://web.maths.unsw.edu.au/~dwarton/) and described in [this publication](https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/j.2041-210X.2011.00153.x). Use the package to fit allometric relationships, used in many biological applications and even river networks on Mars.
+
 ## speciesmap
 
 [Website](https://remkoduursma.github.io/speciesmap) / [github](https://github.com/RemkoDuursma/speciesmap)
@@ -29,9 +35,9 @@ Obtain species occurrence data from one of two web services, download correspond
 
 ## YplantQMC
 
-[CRAN](https://cran.r-project.org/package=YplantQMC) / [bitbucket](https://www.bitbucket.org/RemkoDuursma/YplantQMC)
+[bitbucket](https://www.bitbucket.org/RemkoDuursma/YplantQMC)
 
-Implementation of a functional-structural plant model, coupling plant architecture (Y-Plant) to the QuasiMC ray-tracer (developed by Mik Cieslak). Calculate radiative transfer in 3D plant canopies, estimate photosynthesis and transpiration for each leaf.
+Implementation of a functional-structural plant model, coupling plant architecture (Y-Plant) to the QuasiMC ray-tracer (developed by Mik Cieslak). Calculate radiative transfer in 3D plant canopies, estimate photosynthesis and transpiration for each leaf. I used this package in this publication. The package was recently removed from CRAN, the registration of Fortran code in the package turned into a bit of an annoyance.
 
 ## Maeswrap
 
@@ -58,7 +64,7 @@ Calculate confidence intervals for predictions from linear mixed-effects models 
 Collection of tools to interface with the API of a data management system at the [HIE](https://www.westernsydney.edu.au/hie), the HIEv. Find and download files, upload files, tools for timeseries data, and more. 
 
 
-
+*Last edited 2018-03-22*
 
 
 
