@@ -299,5 +299,129 @@ title(main = &amp;quot;Darker colour = more remote&amp;quot;, line=1, cex.main=0
 </description>
     </item>
     
+    <item>
+      <title>Fuel prices in New South Wales - Part 2</title>
+      <link>/post/2018-01-24-fuelprices2/</link>
+      <pubDate>Wed, 24 Jan 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2018-01-24-fuelprices2/</guid>
+      <description>&lt;p&gt;It is no secret that gasoline and diesel prices at the pump vary from day to day and from one place to the next. Few people are aware though that a typical pattern in fuel prices looks like this:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2018-01-24-fuelprices2_files/figure-html/unnamed-chunk-1-1.png&#34; width=&#34;600px&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.9news.com.au/national/2018/01/10/19/51/the-reason-why-petrol-30-cents-more-expensive-in-some-sydney-suburbs&#34;&gt;Newspaper articles&lt;/a&gt; have written about this pattern, &lt;a href=&#34;https://www.accc.gov.au/consumers/petrol-diesel-lpg/petrol-price-cycles#petrol-prices-in-sydney&#34;&gt;web services&lt;/a&gt; exist that show where you are on the cycle, and you can compare main cities across Australia. In Sydney, the cycle is about 30 days long (more about that later), and the timing of the spike increase in fuel (which takes only 2-3 days) varies little from pump to pump.&lt;/p&gt;
+&lt;p&gt;I have lots of questions about this cycle! This post will take the next step in analyzing a large open source dataset on fuel prices across New South Wales. &lt;a href=&#34;http://www.remkoduursma.com/post/2018-01-24-fuelprices1/&#34;&gt;Read my previous post&lt;/a&gt; about obtaining and cleaning the dataset and some broad spatial patterns, and visit &lt;a href=&#34;https://github.com/remkoDuursma/fuelpricensw&#34;&gt;this github repository&lt;/a&gt; for an R package with the cleaned dataset (and some basic spatial attributes of the stations).&lt;/p&gt;
+&lt;p&gt;From this point on I will focus largely on service stations in the greater Sydney area. The reason is that the reporting frequency on fuel prices is higher than remote NSW - usually daily -and because there are lots of service stations in Sydney alone (&amp;gt;750). This analysis - that I work on in my free time - is still well in the exploratory data analysis stage. I have many ideas for follow-up analyses, modelling, and so on - but these will depend on how much time I will have to spend on this topic!&lt;/p&gt;
+&lt;p&gt;This is an R blog, so all the below will not just show results but also the code used to generate them. You can find this reproducible document by following &lt;a href=&#34;https://github.com/RemkoDuursma/remkoweb/blob/master/content/post/2018-01-24-fuelprices2.Rmd&#34;&gt;this direct link.&lt;/a&gt;.&lt;/p&gt;
+&lt;div id=&#34;the-data&#34; class=&#34;section level3&#34;&gt;
+&lt;h3&gt;The data&lt;/h3&gt;
+&lt;p&gt;The data are stored in &lt;a href=&#34;https://github.com/remkoduursma/fuelpricensw&#34;&gt;this R package&lt;/a&gt; (not on CRAN), once installed we can do:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(fuelpricensw)
+library(dplyr)
+
+# Merge spatial attributes
+fuel &amp;lt;- left_join(fuel, fuelstations, by = &amp;quot;Address&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The first step is to select all Sydney stations. I did this by drawing an awkward polygon that captures most the of more densely populated bits (because ‘Greater Sydney’ shapefiles include lots of national parks, many more remote areas, etc.), and deciding whether some station falls in the polygon.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(ggmap)
+library(sp)
+
+# Map tile for background.
+syd_map &amp;lt;- ggmap::get_map(c(lon = 151, lat=-33.8), zoom=10)
+
+# Manually entered polygon for &amp;#39;Sydney&amp;#39;, excluding blue mountains etc.
+syd_vert &amp;lt;- read.table(text=&amp;quot;
+                   lon lat
+                   150.65 -34.1
+                   150.65 -33.55
+                   150.9 -33.55
+                   151 -33.7
+                   151.35 -33.7
+                   151.27 -34.15
+                   150.95 -33.95
+                   150.8 -34.1&amp;quot;,header=TRUE)
+
+
+# Select stations in this polygon
+in_syd &amp;lt;- sp::point.in.polygon(fuelstations$lon, fuelstations$lat,
+                           syd_vert$lon, syd_vert$lat)
+locsyd &amp;lt;- fuelstations[in_syd == 1,]
+
+# Also add Brand (BP, shell, etc) to the locations dataframe.
+fuelkey &amp;lt;- dplyr::select(fuel, Address, Brand, Postcode) %&amp;gt;% distinct
+locsyd &amp;lt;- left_join(locsyd, fuelkey, by=&amp;quot;Address&amp;quot;)
+
+
+# Sydney data
+fuelsyd &amp;lt;- filter(fuel, Address %in% locsyd$Address)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;A simple map shows the service stations, using the excellent &lt;code&gt;ggmap&lt;/code&gt;.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;ggmap(syd_map) + 
+  geom_polygon(aes(x=lon,y=lat), data=syd_vert, alpha=0.2) +
+  geom_point(aes(x=lon, y=lat), data=locsyd, size=0.8, col=&amp;quot;red&amp;quot;) +
+  labs(x=&amp;quot;&amp;quot;, y=&amp;quot;&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2018-01-24-fuelprices2_files/figure-html/unnamed-chunk-4-1.png&#34; width=&#34;600px&#34; /&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;summarizing-the-ups-and-downs-in-fuel-prices&#34; class=&#34;section level3&#34;&gt;
+&lt;h3&gt;Summarizing the ups and downs in fuel prices&lt;/h3&gt;
+&lt;p&gt;Next we are going to summarize the fuel price cycles into timings of ‘price hikes’ (the sudden increase in price), the time between cycles (time to reach the minimum counting from the maximum), the time between the minimum and the maximum, the rate of decrease of price between the cycles, and so on.&lt;/p&gt;
+&lt;p&gt;To do this, I am going to approximate the fuel price timeseries by a saw pattern - by only considering the minimum and maximum fuel prices reached for each cycle. See the below figure for a few examples.&lt;/p&gt;
+&lt;p&gt;The code I developed for this analysis is quite long, and pretty terrible. One issue is that the data have to be cleaned in a variety of ways (short spikes in the data mess up any simple approach).&lt;/p&gt;
+&lt;p&gt;In the following I will only consider one of 11 fuel types, U91 (Unleaded petrol, 91 octane), the most commonly reported fuel in the database.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# ... U91 only
+fuelu91syd &amp;lt;- filter(fuelsyd, FuelCode == &amp;quot;U91&amp;quot;)
+
+# List of dataframes, one timeseries for each service station. 
+# I still prefer this approach over purrr or whatever.
+fuelu91syds &amp;lt;- split(fuelu91syd, fuelu91syd$Address)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;We then apply our custom magic function to the timeseries for each of 773 service stations in Sydney.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# Using dplyr we can write some seriously concise code.
+# Using fct_lump, combine rare brands into &amp;#39;Other&amp;#39;
+cycsyd &amp;lt;- lapply(fuelu91syds, make_cycledf) %&amp;gt;%
+  bind_rows %&amp;gt;% 
+  left_join(locsyd, by=&amp;quot;Address&amp;quot;) %&amp;gt;%
+  filter(ndata_cycle &amp;gt; 5, price_hike &amp;gt; 5) %&amp;gt;% 
+  mutate(Brand2 = forcats::fct_lump(as.factor(Brand), 6))&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Here’s one of them:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2018-01-24-fuelprices2_files/figure-html/unnamed-chunk-8-1.png&#34; width=&#34;600px&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;The red points are the peak prices, just after the price hike has occurred, the blue symbols the minimum price reached during this cycle - just before the price hike.&lt;/p&gt;
+&lt;p&gt;Finally I prepare a dataset with the cycles themselves summarized, simply by averaging price hikes, median prices at the minimum of the cycles, and so on.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;cycsyd_a &amp;lt;- group_by(cycsyd, Address) %&amp;gt;%
+  summarize(price_hike_median = median(price_hike, na.rm=T),
+            price_peak_median = median(price_peak, na.rm=T),
+            price_low_median = median(price_low, na.rm=T),
+            ndays_cycle_median = median(ndays_cycle),
+            dpricedt = mean(dpricedt),
+            lon = mean(lon), lat=mean(lat), 
+            nr_5km = mean(nr_5km),
+            Brand = first(Brand),
+            Brand2 = first(Brand2),
+            Postcode = first(Postcode)
+  )&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Now we can investigate the average ‘bottom prices’ (blue dots in the figure above), and the average ‘peak prices’ across Sydney, grouped by the different brands of service stations. Here I use the fun &lt;code&gt;ggridges&lt;/code&gt; packages to make semi-overlapping grouped density plots.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(reshape2)
+library(forcats)
+library(ggridges)
+
+brand_colours &amp;lt;- RColorBrewer::brewer.pal(7,&amp;quot;Set3&amp;quot;)
+
+datsub &amp;lt;- dplyr::select(cycsyd_a, Brand2, price_peak_median, price_low_median) %&amp;gt;%
+  melt(id.var = &amp;quot;Brand2&amp;quot;) %&amp;gt;%
+ mutate(variable = fct_recode(variable, &amp;quot;peak&amp;quot;=&amp;quot;price_peak_median&amp;quot;,
+                              &amp;quot;low&amp;quot;=&amp;quot;price_low_median&amp;quot;),
+        Brand2 = reorder(as.factor(Brand2), value, median))  
+                      
+ggplot(datsub, aes(y=Brand2)) +
+  geom_density_ridges(aes(x=value, fill=paste(Brand2, variable)),
+                      color=&amp;quot;dimgrey&amp;quot;, alpha=0.8) +
+  theme_tufte() + 
+  labs(x=&amp;quot;Price (c)&amp;quot;, y=&amp;quot;&amp;quot;) +
+  ggtitle(&amp;quot;Bottom price                                   Peak price&amp;quot;) +
+  theme(legend.position=&amp;quot;none&amp;quot;)  + 
+  scale_fill_manual(values=rep(brand_colours, each=2))&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## Picking joint bandwidth of 0.909&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2018-01-24-fuelprices2_files/figure-html/unnamed-chunk-10-1.png&#34; width=&#34;600px&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;The results quite clearly show that Metro Fuel is the cheapest of the lot, as well as Independent, which makes up a large chunk of the ‘Other’ category in the figure. Prices are otherwise remarkably similar between the brands associated with large corporations.&lt;/p&gt;
+&lt;p&gt;That’s it for now. Next up is a closer look at the &lt;em&gt;timing&lt;/em&gt; of price hikes. Stay tuned!&lt;/p&gt;
+&lt;/div&gt;
+</description>
+    </item>
+    
   </channel>
 </rss>
