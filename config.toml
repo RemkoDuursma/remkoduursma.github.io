@@ -23,8 +23,8 @@ enableRobotsTXT = true
 ## Site Settings
 [params]
 author = "Remko Duursma"
-intro = "Scientist with Data Skills"
-description = "Associate Professor in Modelling Vegetation Function and Structure  <br/> at the Hawkesbury Institute for the Environment, Western Sydney University."
+intro = "Data Scientist, searching..."
+description = "Previously at the Hawkesbury Institute for the Environment, now on long-term service leave and soon looking for a new direction."
 authorimage = "remko.jpg"
 dateformat = "Jan 2, 2006"
 
