@@ -1,0 +1,211 @@
+---
+title: "Plumbing R Code for the web"
+author: "Remko Duursma"
+date: 2018-06-06
+categories: ["R"]
+tags: ["web", "api", "plumber", "optparse"]
+description: "My experience with the plumber package to deploy a REST service in R."
+---
+
+
+```{r setup, include=FALSE, cache=FALSE}
+library(knitr)
+opts_chunk$set(echo = TRUE,
+               eval = FALSE, 
+               out.width="600px", 
+               dpi=400, 
+               warning = FALSE)
+```
+
+
+I recently had the pleasure to complete an assessment - as part of a job interview. The assessment was enjoyable exactly because I did not have much - if any - experience with what I was supposed to be assessed on. But, at least for me, that's the point: how quick can we learn new tools in the data science toolkit?
+
+Unfortunately I am not going to share the actual assessment (or even some part of it), but will talk about the `plumber` package which I used to deploy an API.
+
+The goal is to end up with a 'REST' service, which allows you to browse to an URL like this,
+
+```
+<server ip address>:8001/api/items/nr123/predict
+```
+
+where the IP address of the server is used, or 127.0.0.1 if you are running a 'local host'. Here we communicate via port 8001 - but this could be any open port on your system/server. Your browser will then return some text output (perhaps : "prediction: 15", if the service predicts the remaining lifetime of some item).
+
+The `plumber` package can be used to quickly and effectively deploy this kind of API, all from the comfort of your R code. 
+
+
+## Dynamic routes
+
+I am not going to repeat any of the introductory stuff of [the excellent plumber documentation](), just highlight some key points. We first make a file with the API definitions, using some special formatting. Suppose the file 'item_predictor_api_definition.R' contains the following:
+
+
+```{r}
+#* Predict item lifetime
+#* @param id
+#* @get /prediction
+function(item){
+  
+  my_prediction_function(item)
+  
+}
+```
+
+Here we define a single API endpoint - but not quite in the format that we wish to have, because the request to this endpoint will have to look like this:
+
+```
+<server ip address>:8001/prediction?item="nr123"
+```
+
+I suppose this is OK too, but a common recommendation is to allow a URL like `/api/item/nr123/prediction`. The key `nr123` (referring to some item ID) is therefore the dynamic bit of the URL. We can easily tell `plumber` what to do:
+
+```{r}
+#* Predict item lifetime
+#* @param id
+#* @get /api/item/<item>/prediction
+function(item){
+  
+  my_prediction_function(item)
+
+}
+  
+```
+
+Note how the Roxygen field calls the parameter `id`, not `item` as you would expect. I found it necessary in plumber version 0.4.5 to **not** use the same name as the function argument there - otherwise the service crashes with a weird message ([see this issue I openened]()).
+
+
+## Deploy time!
+
+With our API endpoint defined (of course we can add as many as we like), we can start the API via:
+
+```{r}
+library(plumber)
+
+# There are no other arguments besides a directory to find the file.
+p <- plumb('item_predictor_api_definition.R')
+
+# Deploy!
+p$run(port=8001)
+```
+
+Your R process will now be busy (until you close it), with a message like:
+
+```
+Starting server to listen on port 8001
+```
+
+And so our work is done. Next, it makes sense to save the API deployment code in a script, let's say it is called `item_predictor_deploy_api.R`. Then we can simply deploy our API from the command line with:
+
+```
+Rscript item_predictor_deploy_api.R
+```
+
+
+## Supplying command line arguments
+
+
+Better yet, it would be neat to pass the port to open up as an argument in the command line. To do this, I used the `optparse` package which is a bit verbose in its usage, but super effective.
+
+All we have to do is preface the API deploy script with some `optparse` code. We also want to make sure the user is told off when no port is defined (a potential security hazard).
+
+
+```{r}
+library(optparse)
+
+# Parse command line arguments and display help.
+option_list = list(
+  make_option(c("-p", "--port"), type="integer", default=NULL, 
+              help="Port number for REST API", metavar = "integer")
+)
+
+opt_parser <- OptionParser(option_list=option_list,
+                           description="Deploy API for item predictor.")
+opt <- parse_args(opt_parser)
+
+
+# If the user does not supply the port - 
+# fail with an error and a message, and display the help usage.
+if(is.null(opt$port)){
+  print_help(opt_parser)
+  stop("Must supply port to open for REST API.",
+       call. = FALSE)
+}
+
+
+# Now continue with the API.
+library(plumber)
+
+# Set the plumbing for the API.
+p <- plumb("R/api_definitions.R")
+
+# Deploy.
+# Note opt$port is the value read from the command line argument
+p$run(port = opt$port)
+```
+
+
+This is pretty neat because now we can do from the command line:
+
+```
+Rscript item_predictor_deploy_api.R --port 8001
+```
+
+This makes it very easy for your system admin to deploy this particular API on any port they wish, instead of poking around in our code.
+
+Also neat is what happens when the user does not define a port:
+
+```
+Usage: item_predictor_deploy_api.R [options]
+Deploy API for item predictor.
+
+Options:
+        -p INTEGER, --port=INTEGER
+                Port number for REST API
+
+        -h, --help
+                Show this help message and exit
+
+
+Error: Must supply port to open for REST API.
+Execution halted
+```
+
+We get not just an error message, but also a reminder how the script should be used. And all of this is outside R - this is a massive advantage when you are deploying a service for R-agnostics.
+
+
+## Conclusions
+
+Obviously this was no introduction to `plumber`, just a note on some settings I collected during my use of the package. The neat organization of the API definitions, and the code to deploy the API, together with `optparse` for command line options makes for a powerful (and easy to use) service to deploy a REST API. 
+
+For larger scale services, we of course wonder what happens if our single process we opened is busy - and another user sends a request. The `plumber` folks describe how Docker can be used for maintaining multiple processes, load balancing, etc. Certainly something to try for next time.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
