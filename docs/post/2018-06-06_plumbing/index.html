@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+<meta name="description" content="Simple minimalist theme">
+<meta name="keywords" content="minimalist,blog,goa,hugo,developer">
+
+<base href="/">
+
+<title>Remko Duursma</title>
+
+<meta name="generator" content="Hugo 0.31.1" />
+
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:300,400|Roboto+Slab:400,700|Roboto:300,300i,400,400i,500,500i,700,700i">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/favicon-16x16.png" sizes="16x16">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+<meta name="theme-color" content="#ffffff">
+
+</head>
+<body lang="en-US">
+<div class="container">
+
+
+<header class="row text-left title">
+  <h1 class="title">Plumbing R Code for the web</h1>
+</header>
+
+<section id="category-pane" class="row meta">
+  
+  <div class="col-md-12">
+    <h6 class="text-left meta">
+        PUBLISHED ON JUN 6, 2018 
+      
+      
+      
+      —
+      
+      
+      <a class="meta" href="/categories/r">R</a>
+      
+      
+      
+    </h6>
+  </div>
+  
+</section>
+
+
+<section id="content-pane" class="row">
+  <div class="col-md-12 text-justify content">
+    <p>I recently had the pleasure to complete an assessment - as part of a job interview. The assessment was enjoyable exactly because I did not have much - if any - experience with what I was supposed to be assessed on. But, at least for me, that’s the point: how quick can we learn new tools in the data science toolkit?</p>
+<p>Unfortunately I am not going to share the actual assessment (or even some part of it), but will talk about the <code>plumber</code> package which I used to deploy an API.</p>
+<p>The goal is to end up with a ‘REST’ service, which allows you to browse to a URL like this,</p>
+<pre><code>&lt;server ip address&gt;:8001/api/items/nr123/predict</code></pre>
+<p>where the IP address of the server is used, or 127.0.0.1 if you are running a ‘local host’. Here we communicate via port 8001 - but this could be any open port on your system/server. Your browser will then return some text output (perhaps : “prediction: 15”, if the service predicts the remaining lifetime of some item).</p>
+<p>The <code>plumber</code> package can be used to quickly and effectively deploy this kind of API, all from the comfort of your R code.</p>
+<div id="dynamic-routes" class="section level2">
+<h2>Dynamic routes</h2>
+<p>I am not going to repeat any of the introductory stuff of <a href="">the excellent plumber documentation</a>, just highlight some key points. We first make a file with the API definitions, using some special formatting. Suppose the file ‘item_predictor_api_definition.R’ contains the following:</p>
+<pre class="r"><code>#* Predict item lifetime
+#* @param id
+#* @get /prediction
+function(item){
+  
+  my_prediction_function(item)
+  
+}</code></pre>
+<p>Here we define a single API endpoint - but not quite in the format that we wish to have, because the request to this endpoint will have to look like this:</p>
+<pre><code>&lt;server ip address&gt;:8001/prediction?item=&quot;nr123&quot;</code></pre>
+<p>I suppose this is OK too, but a common recommendation is to allow a URL like <code>/api/item/nr123/prediction</code>. The key <code>nr123</code> (referring to some item ID) is therefore the dynamic bit of the URL. We can easily tell <code>plumber</code> what to do:</p>
+<pre class="r"><code>#* Predict item lifetime
+#* @param id
+#* @get /api/item/&lt;item&gt;/prediction
+function(item){
+  
+  my_prediction_function(item)
+
+}</code></pre>
+<p>Note how the Roxygen field calls the parameter <code>id</code>, not <code>item</code> as you would expect. I found it necessary in plumber version 0.4.5 to <strong>not</strong> use the same name as the function argument there - otherwise the service crashes with a weird message (<a href="https://github.com/trestletech/plumber/issues/267">see this issue I openened</a>).</p>
+</div>
+<div id="deploy-time" class="section level2">
+<h2>Deploy time!</h2>
+<p>With our API endpoint defined (of course we can add as many as we like), we can start the API via:</p>
+<pre class="r"><code>library(plumber)
+
+# There are no other arguments besides a directory to find the file.
+p &lt;- plumb(&#39;item_predictor_api_definition.R&#39;)
+
+# Deploy!
+p$run(port=8001)</code></pre>
+<p>Your R process will now be busy (until you close it), with a message like:</p>
+<pre><code>Starting server to listen on port 8001</code></pre>
+<p>And so our work is done. Next, it makes sense to save the API deployment code in a script, let’s say it is called <code>item_predictor_deploy_api.R</code>. Then we can simply deploy our API from the command line with:</p>
+<pre><code>Rscript item_predictor_deploy_api.R</code></pre>
+</div>
+<div id="supplying-command-line-arguments" class="section level2">
+<h2>Supplying command line arguments</h2>
+<p>Better yet, it would be neat to pass the port to open up as an argument in the command line. To do this, I used the <code>optparse</code> package which is a bit verbose in its usage, but super effective.</p>
+<p>All we have to do is preface the API deploy script with some <code>optparse</code> code. We also want to make sure the user is told off when no port is defined (a potential security hazard).</p>
+<pre class="r"><code>library(optparse)
+
+# Parse command line arguments and display help.
+option_list = list(
+  make_option(c(&quot;-p&quot;, &quot;--port&quot;), type=&quot;integer&quot;, default=NULL, 
+              help=&quot;Port number for REST API&quot;, metavar = &quot;integer&quot;)
+)
+
+opt_parser &lt;- OptionParser(option_list=option_list,
+                           description=&quot;Deploy API for item predictor.&quot;)
+opt &lt;- parse_args(opt_parser)
+
+
+# If the user does not supply the port - 
+# fail with an error and a message, and display the help usage.
+if(is.null(opt$port)){
+  print_help(opt_parser)
+  stop(&quot;Must supply port to open for REST API.&quot;,
+       call. = FALSE)
+}
+
+
+# Now continue with the API.
+library(plumber)
+
+# Set the plumbing for the API.
+p &lt;- plumb(&quot;R/api_definitions.R&quot;)
+
+# Deploy.
+# Note opt$port is the value read from the command line argument
+p$run(port = opt$port)</code></pre>
+<p>This is pretty neat because now we can do from the command line:</p>
+<pre><code>Rscript item_predictor_deploy_api.R --port 8001</code></pre>
+<p>This makes it very easy for your system admin to deploy this particular API on any port they wish, instead of needing to poke around in our code.</p>
+<p>Also neat is what happens when the user does not define a port:</p>
+<pre><code>Usage: item_predictor_deploy_api.R [options]
+Deploy API for item predictor.
+
+Options:
+        -p INTEGER, --port=INTEGER
+                Port number for REST API
+
+        -h, --help
+                Show this help message and exit
+
+
+Error: Must supply port to open for REST API.
+Execution halted</code></pre>
+<p>We get not just an error message, but also a reminder how the script should be used. And all of this is outside R - this is a massive advantage when you are deploying a service for R-agnostics.</p>
+</div>
+<div id="conclusions" class="section level2">
+<h2>Conclusions</h2>
+<p>Obviously this was no introduction to <code>plumber</code>, just a note on some settings I collected during my use of the package. The neat organization of the API definitions, and the code to deploy the API, together with <code>optparse</code> for command line options makes for an easy to use service to deploy a REST API.</p>
+<p>For larger scale services, we of course wonder what happens if our single process we opened is busy - and another user sends a request. The <code>plumber</code> folks describe <a href="https://www.rplumber.io/docs/hosting.html#hosting">how Docker can be used for maintaining multiple processes, load balancing, etc.</a> Certainly something to try for next time.</p>
+</div>
+
+  </div>
+</section>
+
+
+
+<section id="tag-pane" class="row meta">
+  
+  <div class="col-md-12">
+    <h6 class="text-right meta">
+      
+      
+      
+      TAGS:
+      
+      
+      <a class="meta" href="/tags/api">API</a>, 
+      
+      <a class="meta" href="/tags/optparse">OPTPARSE</a>, 
+      
+      <a class="meta" href="/tags/plumber">PLUMBER</a>, 
+      
+      <a class="meta" href="/tags/web">WEB</a>
+      
+      
+      
+    </h6>
+  </div>
+  
+</section>
+
+
+
+
+
+
+
+
+
+
+<section id="menu-pane" class="row menu text-center">
+  
+  
+  <span><a class="menu-item" href="/post/2018-01-24-fuelprices1/">&lt; prev | </a></span>
+  
+  
+  <span><a class="menu-item" href="/post">post</a></span>
+  
+  
+  
+  <h4 class="text-center"><a class="menu-item" href="/">home</a></h4>
+</section>
+
+
+
+<footer class="row text-center footer">
+  <hr />
+  
+  <h6 class="text-center copyright">© 2017. Remko Duursma.</h6>
+  
+  <h6 class="text-center powered"> <a href="https://gohugo.io/">Hugo</a> + <a href="https://github.com/shenoybr/hugo-goa">Goa</a> + <a href="https://github.com/rstudio/blogdown">blogdown</a> + <a href="https://github.com/RemkoDuursma/remkoweb">github</a></h6>
+  
+  
+</footer>
+
+</div>
+
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  
+
+<script type="text/javascript">
+hljs.initHighlightingOnLoad();
+</script>
+
+
+
+
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-10108116-1', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
+
+

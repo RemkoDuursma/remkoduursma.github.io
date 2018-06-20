@@ -22,7 +22,7 @@ I recently had the pleasure to complete an assessment - as part of a job intervi
 
 Unfortunately I am not going to share the actual assessment (or even some part of it), but will talk about the `plumber` package which I used to deploy an API.
 
-The goal is to end up with a 'REST' service, which allows you to browse to an URL like this,
+The goal is to end up with a 'REST' service, which allows you to browse to a URL like this,
 
 ```
 <server ip address>:8001/api/items/nr123/predict
@@ -69,7 +69,7 @@ function(item){
   
 ```
 
-Note how the Roxygen field calls the parameter `id`, not `item` as you would expect. I found it necessary in plumber version 0.4.5 to **not** use the same name as the function argument there - otherwise the service crashes with a weird message ([see this issue I openened]()).
+Note how the Roxygen field calls the parameter `id`, not `item` as you would expect. I found it necessary in plumber version 0.4.5 to **not** use the same name as the function argument there - otherwise the service crashes with a weird message ([see this issue I openened](https://github.com/trestletech/plumber/issues/267)).
 
 
 ## Deploy time!
@@ -148,7 +148,7 @@ This is pretty neat because now we can do from the command line:
 Rscript item_predictor_deploy_api.R --port 8001
 ```
 
-This makes it very easy for your system admin to deploy this particular API on any port they wish, instead of poking around in our code.
+This makes it very easy for your system admin to deploy this particular API on any port they wish, instead of needing to poke around in our code.
 
 Also neat is what happens when the user does not define a port:
 
@@ -173,9 +173,9 @@ We get not just an error message, but also a reminder how the script should be u
 
 ## Conclusions
 
-Obviously this was no introduction to `plumber`, just a note on some settings I collected during my use of the package. The neat organization of the API definitions, and the code to deploy the API, together with `optparse` for command line options makes for a powerful (and easy to use) service to deploy a REST API. 
+Obviously this was no introduction to `plumber`, just a note on some settings I collected during my use of the package. The neat organization of the API definitions, and the code to deploy the API, together with `optparse` for command line options makes for an easy to use service to deploy a REST API. 
 
-For larger scale services, we of course wonder what happens if our single process we opened is busy - and another user sends a request. The `plumber` folks describe how Docker can be used for maintaining multiple processes, load balancing, etc. Certainly something to try for next time.
+For larger scale services, we of course wonder what happens if our single process we opened is busy - and another user sends a request. The `plumber` folks describe [how Docker can be used for maintaining multiple processes, load balancing, etc.](https://www.rplumber.io/docs/hosting.html#hosting) Certainly something to try for next time.
 
 
 
