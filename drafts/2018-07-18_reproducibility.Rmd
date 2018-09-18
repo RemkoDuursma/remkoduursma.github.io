@@ -1,0 +1,20 @@
+---
+title: "Notes on reproducible research"
+author: "Remko Duursma"
+date: 2018-07-18
+categories: ["R"]
+tags: ["reproducibility", "workflow"]
+description: "Some notes on making fully reproducible workflows. Do's, don'ts, problems."
+output: html_document
+---
+  
+
+- intro and reference to my reproducible manuscripts
+- packages : pacman, minimize number packages used, avoid packages that are obviously 'in flux', only use packages on CRAN (where possible). Load ALL packages in one place, at the top of the workflow. 
+- code organization: show my project structure. We can go more complex like this package, but I have not needed it.
+- remake/makefile/that other new thing: very cool, yes. Especially when one component of the analysis takes a long time to complete. Otherwise: don't use when not needed.
+- KISS.
+- Manuscript: use rmarkdown not LaTeX unless you are suicidal
+- References
+- Collaborating with non-programmers: rmarkdown is OK but we have to add changes into the manuscript manually
+

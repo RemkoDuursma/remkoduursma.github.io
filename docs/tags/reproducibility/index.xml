@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Reproducibility on Remko Duursma</title>
+    <link>http://www.remkoduursma.com/post</link>
+    <description>Recent content on Remko Duursma</description>
+    <generator>Hugo, blogdown, rmarkdown</generator>
+    <language>en-US</language>
+    <lastBuildDate>Wed, 18 Jul 2018 00:00:00 +0000</lastBuildDate>
+    <atom:link href="/tags/reproducibility/" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Notes on reproducible research</title>
+      <link>/post/2018-07-18_reproducibility/</link>
+      <pubDate>Wed, 18 Jul 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2018-07-18_reproducibility/</guid>
+      <description>&lt;ul&gt;
+&lt;li&gt;intro and reference to my reproducible manuscripts&lt;/li&gt;
+&lt;li&gt;packages : pacman, minimize number packages used, avoid packages that are obviously ‘in flux’, only use packages on CRAN (where possible). Load ALL packages in one place, at the top of the workflow.&lt;/li&gt;
+&lt;li&gt;code organization: show my project structure. We can go more complex like this package, but I have not needed it.&lt;/li&gt;
+&lt;li&gt;remake/makefile/that other new thing: very cool, yes. Especially when one component of the analysis takes a long time to complete. Otherwise: don’t use when not needed.&lt;/li&gt;
+&lt;li&gt;KISS.&lt;/li&gt;
+&lt;li&gt;Manuscript: use rmarkdown not LaTeX unless you are suicidal&lt;/li&gt;
+&lt;li&gt;References&lt;/li&gt;
+&lt;li&gt;Collaborating with non-programmers: rmarkdown is OK but we have to add changes into the manuscript manually&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

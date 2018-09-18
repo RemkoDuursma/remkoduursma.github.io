@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+<meta name="description" content="Simple minimalist theme">
+<meta name="keywords" content="minimalist,blog,goa,hugo,developer">
+
+<base href="/">
+
+<title>Remko Duursma</title>
+
+<meta name="generator" content="Hugo 0.31.1" />
+
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:300,400|Roboto+Slab:400,700|Roboto:300,300i,400,400i,500,500i,700,700i">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/favicon-16x16.png" sizes="16x16">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+<meta name="theme-color" content="#ffffff">
+
+</head>
+<body lang="en-US">
+<div class="container">
+
+
+<header class="row text-left title">
+  <h1 class="title">Walk the Plank!</h1>
+</header>
+
+<section id="category-pane" class="row meta">
+  
+  <div class="col-md-12">
+    <h6 class="text-left meta">
+        PUBLISHED ON JUN 20, 2018 
+      
+      
+      
+      —
+      
+      
+      <a class="meta" href="/categories/r">R</a>
+      
+      
+      
+    </h6>
+  </div>
+  
+</section>
+
+
+<section id="content-pane" class="row">
+  <div class="col-md-12 text-justify content">
+    <figure>
+<img src="img/walktheplank.jpg" style="width:80%; border: 1px solid #000">
+<figcaption>
+<i>The game of Pirate Plank. My 6yr-old wins most of the time. Why?</i>
+</figcaption>
+</figure>
+<p><br>
+<br></p>
+<p>There are some benefits to being unemployed - I have the time to figure out the best strategy at a board game I like to play with my 6 year old. The game is <a href="https://brickset.com/sets/3848-1/Pirate-Plank">Pirate Plank</a>, made by LEGO, and it is interesting because there’s some decision making involved.</p>
+<p>The game starts with each of the pirates at the start of a plank, and an empty die. When you roll the die, and the side is empty (as it is at the start), you can place a tile with your opponent’s color on that side. If you roll the die to a side that has at least one of your opponent’s tiles on it, you can either decide to a) make your opponent walk the plank, with the number of steps equal to the number of tiles on that side of the die, or b) place another tile on that side.</p>
+<p>When you reach the end of the plank first, you lose! Sharkbait.</p>
+<p>We have two simple strategies to start with, either:</p>
+<ol style="list-style-type: decimal">
+<li>Always make opponent walk the plank, when possible.</li>
+<li>Always place another tile, when possible (a max of 4 tiles per side).</li>
+</ol>
+<p>Strategy 2 is probably pretty terrible, since that way we can only ever have one opponent tile on each side (but our opponent has room for three). I suppose it also depends on the length of the plank - since a longer plank will mean more chance for our opponent to fill up each side and make us walk quickly.</p>
+<p>We can think of more strategies: what if we switch from always placing tiles to always walking when we have already two tiles on that side of the die?</p>
+<div id="setting-up-the-simulation" class="section level2">
+<h2>Setting up the simulation</h2>
+<p>It’s time to set up the basic game so we can test different strategies.</p>
+<p>Unlike other posts in this blog, I won’t show the code - it is all pretty straightforward, and can be <a href="https://github.com/remkoduursma/remkoweb">read in full in this repository</a>. We simply simulate a game of Pirate Plank by taking turns rolling the die, and employing one of four strategies. These are either the two strategies above, or one of two ‘switch’ strategies (always place when 1 or less tiles on the side, walk otherwise; or the same but place when 2 or less tiles on the side).</p>
+<p>The figure below shows an example game of a player employing an “always place” strategy (the red player - thus the blue player does not walk until some sides have filled up), and a player with an “always walk” strategy (the blue player - thus the red player walks many small steps).</p>
+<p><img src="/post/2018-06-20_walktheplank_files/figure-html/unnamed-chunk-3-1.png" width="500px" /></p>
+<p>In this case the blue player wins, because the red player reaches the deadly tenth step into the ocean below.</p>
+</div>
+<div id="evaluating-the-best-strategy" class="section level2">
+<h2>Evaluating the best strategy</h2>
+<p>Next I set up a simulation, pitting each of the four strategies against each other, playing each game a thousand times, and tallying the winners. It turns out that the best strategy depends on your opponnent’s strategy, which makes sense because the two players share the die (tiles placed by one player take away spots for the other player). The results are shown in the next figure:</p>
+<p><img src="/post/2018-06-20_walktheplank_files/figure-html/unnamed-chunk-7-1.png" width="600px" /></p>
+<p>The results are shown from the perspective of Player 2, who has a massive disadvantage because Player 1 starts the game. Only if Player 1 adopts the worst strategy (always place a tile if a spot is available), does Player 2 win most games (the blue bars). Otherwise (except for the ‘switch2’ strategy), Player 1 wins about 80% of the games!</p>
+<p>When Player 2 uses the switch2 strategy (switch from placing to walking when 2 tiles are on the side), win chances are between 40-65%, thus this is the best strategy to use. For Player 1, it is also the best strategy, since the win chances for Player 2 drop to just over 40% when Player 1 also uses ‘switch2’.</p>
+</div>
+<div id="conclusions" class="section level2">
+<h2>Conclusions</h2>
+<p>In many board games, one of the rules reads “the youngest player always starts the game”. In the game of pirate plank, starting first gives a massive advantage: when both players adopt the same strategy, player 1 wins 60-80% of the time (depending on the strategy chosen).</p>
+<p>Clearly the best way to beat my 6-yr old at this game is to remove that rule and start first!</p>
+<p>Otherwise, the best strategy - out of what I tested - is to switch from placing tiles to making your opponent walk when there are at least 2 opponent’s tiles on the die side.</p>
+</div>
+
+  </div>
+</section>
+
+
+
+<section id="tag-pane" class="row meta">
+  
+  <div class="col-md-12">
+    <h6 class="text-right meta">
+      
+      
+      
+      TAGS:
+      
+      
+      <a class="meta" href="/tags/game">GAME</a>, 
+      
+      <a class="meta" href="/tags/simulation">SIMULATION</a>
+      
+      
+      
+    </h6>
+  </div>
+  
+</section>
+
+
+
+
+
+
+
+
+
+
+<section id="menu-pane" class="row menu text-center">
+  
+  
+  <span><a class="menu-item" href="/post/2018-06-06_plumbing/">&lt; prev | </a></span>
+  
+  
+  <span><a class="menu-item" href="/post">post</a></span>
+  
+  
+  
+  <h4 class="text-center"><a class="menu-item" href="/">home</a></h4>
+</section>
+
+
+
+<footer class="row text-center footer">
+  <hr />
+  
+  <h6 class="text-center copyright">© 2017. Remko Duursma.</h6>
+  
+  <h6 class="text-center powered"> <a href="https://gohugo.io/">Hugo</a> + <a href="https://github.com/shenoybr/hugo-goa">Goa</a> + <a href="https://github.com/rstudio/blogdown">blogdown</a> + <a href="https://github.com/RemkoDuursma/remkoweb">github</a></h6>
+  
+  
+</footer>
+
+</div>
+
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  
+
+<script type="text/javascript">
+hljs.initHighlightingOnLoad();
+</script>
+
+
+
+
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-10108116-1', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
+
+

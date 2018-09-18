@@ -1,0 +1,53 @@
+---
+title: "Walk the Plank!"
+author: "Remko Duursma"
+date: 2018-06-20
+categories: ["R"]
+tags: ["simulation", "game"]
+description: "Using simulation to beat my 6-yr old at a board game"
+output:
+  html_document:
+    code_fold: hide
+---
+
+
+
+<figure>
+<img src="img/walktheplank.jpg" style="width:80%; border: 1px solid #000">
+<figcaption>
+<i>The game of Pirate Plank. My 6yr-old wins most of the time. Why?</i>
+</figcaption>
+</figure>
+<p><br>
+<br></p>
+<p>There are some benefits to being unemployed - I have the time to figure out the best strategy at a board game I like to play with my 6 year old. The game is <a href="https://brickset.com/sets/3848-1/Pirate-Plank">Pirate Plank</a>, made by LEGO, and it is interesting because there’s some decision making involved.</p>
+<p>The game starts with each of the pirates at the start of a plank, and an empty die. When you roll the die, and the side is empty (as it is at the start), you can place a tile with your opponent’s color on that side. If you roll the die to a side that has at least one of your opponent’s tiles on it, you can either decide to a) make your opponent walk the plank, with the number of steps equal to the number of tiles on that side of the die, or b) place another tile on that side.</p>
+<p>When you reach the end of the plank first, you lose! Sharkbait.</p>
+<p>We have two simple strategies to start with, either:</p>
+<ol style="list-style-type: decimal">
+<li>Always make opponent walk the plank, when possible.</li>
+<li>Always place another tile, when possible (a max of 4 tiles per side).</li>
+</ol>
+<p>Strategy 2 is probably pretty terrible, since that way we can only ever have one opponent tile on each side (but our opponent has room for three). I suppose it also depends on the length of the plank - since a longer plank will mean more chance for our opponent to fill up each side and make us walk quickly.</p>
+<p>We can think of more strategies: what if we switch from always placing tiles to always walking when we have already two tiles on that side of the die?</p>
+<div id="setting-up-the-simulation" class="section level2">
+<h2>Setting up the simulation</h2>
+<p>It’s time to set up the basic game so we can test different strategies.</p>
+<p>Unlike other posts in this blog, I won’t show the code - it is all pretty straightforward, and can be <a href="https://github.com/remkoduursma/remkoweb">read in full in this repository</a>. We simply simulate a game of Pirate Plank by taking turns rolling the die, and employing one of four strategies. These are either the two strategies above, or one of two ‘switch’ strategies (always place when 1 or less tiles on the side, walk otherwise; or the same but place when 2 or less tiles on the side).</p>
+<p>The figure below shows an example game of a player employing an “always place” strategy (the red player - thus the blue player does not walk until some sides have filled up), and a player with an “always walk” strategy (the blue player - thus the red player walks many small steps).</p>
+<p><img src="/post/2018-06-20_walktheplank_files/figure-html/unnamed-chunk-3-1.png" width="500px" /></p>
+<p>In this case the blue player wins, because the red player reaches the deadly tenth step into the ocean below.</p>
+</div>
+<div id="evaluating-the-best-strategy" class="section level2">
+<h2>Evaluating the best strategy</h2>
+<p>Next I set up a simulation, pitting each of the four strategies against each other, playing each game a thousand times, and tallying the winners. It turns out that the best strategy depends on your opponnent’s strategy, which makes sense because the two players share the die (tiles placed by one player take away spots for the other player). The results are shown in the next figure:</p>
+<p><img src="/post/2018-06-20_walktheplank_files/figure-html/unnamed-chunk-7-1.png" width="600px" /></p>
+<p>The results are shown from the perspective of Player 2, who has a massive disadvantage because Player 1 starts the game. Only if Player 1 adopts the worst strategy (always place a tile if a spot is available), does Player 2 win most games (the blue bars). Otherwise (except for the ‘switch2’ strategy), Player 1 wins about 80% of the games!</p>
+<p>When Player 2 uses the switch2 strategy (switch from placing to walking when 2 tiles are on the side), win chances are between 40-65%, thus this is the best strategy to use. For Player 1, it is also the best strategy, since the win chances for Player 2 drop to just over 40% when Player 1 also uses ‘switch2’.</p>
+</div>
+<div id="conclusions" class="section level2">
+<h2>Conclusions</h2>
+<p>In many board games, one of the rules reads “the youngest player always starts the game”. In the game of pirate plank, starting first gives a massive advantage: when both players adopt the same strategy, player 1 wins 60-80% of the time (depending on the strategy chosen).</p>
+<p>Clearly the best way to beat my 6-yr old at this game is to remove that rule and start first!</p>
+<p>Otherwise, the best strategy - out of what I tested - is to switch from placing tiles to making your opponent walk when there are at least 2 opponent’s tiles on the die side.</p>
+</div>

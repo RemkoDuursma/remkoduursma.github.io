@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Data on Remko Duursma</title>
+    <link>http://www.remkoduursma.com/post</link>
+    <description>Recent content on Remko Duursma</description>
+    <generator>Hugo, blogdown, rmarkdown</generator>
+    <language>en-US</language>
+    <atom:link href="/tags/data/" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>&lt;TITLE&gt;</title>
+      <link>/post/2018-mm-dd_template/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2018-mm-dd_template/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>

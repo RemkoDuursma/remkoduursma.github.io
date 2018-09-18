@@ -1,0 +1,288 @@
+---
+title: "Walk the Plank!"
+author: "Remko Duursma"
+date: 2018-06-20
+categories: ["R"]
+tags: ["simulation", "game"]
+description: "Using simulation to beat my 6-yr old at a board game"
+output:
+  html_document:
+    code_fold: hide
+---
+
+
+```{r setup, include=FALSE, cache=FALSE}
+library(knitr)
+opts_chunk$set(echo = FALSE,
+               eval = FALSE, 
+               out.width="600px", 
+               dpi=400, 
+               warning = FALSE)
+
+library(ggplot2)
+library(ggthemes)
+library(dplyr)
+```
+
+
+```{r}
+#TODO
+
+#- theme_tufte text too small, font sucks
+#- other ideas section
+#- some key R code. replicate()
+```
+
+
+<figure>
+  <img src="img/walktheplank.jpg" style="width:80%; border: 1px solid #000">
+  <figcaption><i>The game of Pirate Plank. My 6yr-old wins most of the time. Why?</i></figcaption>
+</figure>
+<br>
+<br>
+
+There are some benefits to being unemployed - I have the time to figure out the best strategy at a board game I like to play with my 6 year old. The game is [Pirate Plank](https://brickset.com/sets/3848-1/Pirate-Plank), made by LEGO, and it is interesting because there's some decision making involved.
+
+The game starts with each of the pirates at the start of a plank, and an empty die. When you roll the die, and the side is empty (as it is at the start), you can place a tile with your opponent's color on that side. If you roll the die to a side that has at least one of your opponent's tiles on it, you can either decide to a) make your opponent walk the plank, with the number of steps equal to the number of tiles on that side of the die, or b) place another tile on that side. 
+
+When you reach the end of the plank first, you lose! Sharkbait.
+
+We have two simple strategies to start with, either:
+
+1. Always make opponent walk the plank, when possible.
+2. Always place another tile, when possible (a max of 4 tiles per side).
+
+Strategy 2 is probably pretty terrible, since that way we can only ever have one opponent tile on each side (but our opponent has room for three). I suppose it also depends on the length of the plank - since a longer plank will mean more chance for our opponent to fill up each side and make us walk quickly. 
+
+We can think of more strategies: what if we switch from always placing tiles to always walking when we have already two tiles on that side of the die?
+
+
+## Setting up the simulation
+
+It's time to set up the basic game so we can test different strategies. 
+
+Unlike other posts in this blog, I won't show the code - it is all pretty straightforward, and can be [read in full in this repository](https://github.com/remkoduursma/remkoweb). We simply simulate a game of Pirate Plank by taking turns rolling the die, and employing one of four strategies. These are either the two strategies above, or one of two 'switch' strategies (always place when 1 or less tiles on the side, walk otherwise; or the same but place when 2 or less tiles on the side). 
+
+```{r, eval=TRUE}
+
+roll_die <- function(){
+  sample(1:6, 1)
+}
+
+
+walk <- function(players, k, steps){
+  
+  players[k] <- players[k] + steps
+  
+return(players)
+}
+
+# n = number tiles to add
+# k = player
+# side = die side
+add_tile <- function(n, k, side, die){
+
+  die[[side]][k] <- die[[side]][k] + n
+  
+return(die)
+}
+
+
+
+play_game <- function(planklength = 10, maxtiles = 4, 
+                      strategy=c("walk","place"),
+                      cutoff = 2  # only used for 'switch' strategy
+                      ){
+  
+  if(length(strategy) != 2)stop("Strategy must be vector of two (walk or place)")
+  
+  # Init
+  die <- rep(list(c(0,0)), 6)
+  players <- c(0,0)
+  out <- list()
+  
+  while(max(players) < planklength){
+    
+    for(k in 1:2){
+      
+      other_player <- setdiff(1:2, k)
+      
+      side <- roll_die()
+      tiles <- die[[side]]
+      
+      # No tiles for opponent - always add a tile.
+      if(tiles[other_player] == 0 && tiles[k] < maxtiles){
+        die <- add_tile(1, other_player, side, die)
+      }
+      
+      # Side maxed out - always walk.
+      if(sum(tiles) == maxtiles){
+        
+        # Always walk
+        players <- walk(players, other_player, tiles[other_player])
+        
+      # Otherwise, 
+      # If tiles present from other player, decide!
+      } else if(tiles[other_player] > 0){
+        
+        # - Always walk
+        if(strategy[k] == "walk"){
+          players <- walk(players, other_player, tiles[other_player])
+        }
+        
+        # - Always place
+        if(strategy[k] == "place"){
+          die <- add_tile(1, other_player, side, die)
+        }
+        
+        if(strategy[k] == "switch1"){
+          strategy[k] <- "switch"
+          cutoff <- 1
+        }
+        if(strategy[k] == "switch2"){
+          strategy[k] <- "switch"
+          cutoff <- 2
+        }
+        
+        # - Switch from placing to walking if tiles >= cutoff
+        if(strategy[k] == "switch"){
+          
+          if(tiles[other_player] >= cutoff){
+            players <- walk(players, other_player, tiles[other_player])
+          } else {
+            die <- add_tile(1, other_player, side, die)  
+          }
+          
+        }
+      }
+      
+     out <- c(out, list(players)) 
+    }
+      
+  }
+  
+  out <- as.data.frame(do.call(rbind, out))
+  #print(die)
+  return(out)
+}
+```
+
+
+The figure below shows an example game of a player employing an "always place" strategy (the red player - thus the blue player does not walk until some sides have filled up), and a player with an "always walk" strategy (the blue player - thus the red player walks many small steps).
+
+```{r, fig.caption="A sample game.", out.width="500px", echo=FALSE, eval=TRUE}
+set.seed(2)
+game <- play_game(strategy=c("place","walk"))
+game$turn <- 1:nrow(game)
+
+ggplot(game, aes(x=turn, y=V1)) + 
+  geom_line(col="red2") +
+  geom_line(aes(x=turn, y=V2), col="blue2") +
+  ggthemes::theme_tufte(base_size=13) +
+  geom_hline(yintercept=10, lty=2) +
+  labs(x="Turn", y="Steps") + 
+  scale_y_continuous(breaks=1:10)
+
+```
+
+In this case the blue player wins, because the red player reaches the deadly tenth step into the ocean below. 
+
+
+## Evaluating the best strategy
+
+
+```{r, eval=TRUE}
+strategies <- c("walk","place","switch1","switch2")
+strat_df <- as.matrix(expand.grid(strategies, strategies))
+
+n <- 1000
+
+out <- vector(mode = "list", length=nrow(strat_df))
+for(i in 1:nrow(strat_df)){
+  out[[i]] <- replicate(n, play_game(strategy=strat_df[i,]), simplify=FALSE)
+}
+
+# With unequal strategies, who wins?
+winner <- function(game){
+  unname(which.min(game[nrow(game),]))
+}
+
+win_table <- function(games){
+  wins <- sapply(games, winner)
+  table(wins, dnn = "Win%") * 100 / length(wins)
+}
+
+result <- cbind(strat_df,
+                data.frame(do.call(rbind, lapply(out, win_table))),
+                stringsAsFactors=FALSE
+                ) %>% 
+  rename(Strategy_player1 = Var1, 
+                 Strategy_player2 = Var2,
+                 Win_player1 = X1,
+                 Win_player2 = X2) %>% 
+  mutate(Strategy_player1 = factor(Strategy_player1, levels=c("place","walk","switch1","switch2")),
+         Strategy_player2 = factor(Strategy_player2, levels=c("place","walk","switch1","switch2")))
+         
+
+```
+
+
+```{r, eval=FALSE}
+ggplot(result, aes(x=Strategy_player1, y=Strategy_player2)) +
+  geom_tile(aes(fill=Win_player1)) +
+  scale_fill_gradient(low = "red", high="forestgreen")
+
+```
+
+```{r, eval=FALSE}
+ggplot(result, aes(Strategy_player1, Win_player1)) +
+  geom_bar(aes(fill=Strategy_player2), stat="identity", position="dodge") +
+  ggthemes::theme_tufte(base_size=13) +
+  labs(x="Strategy Player 1", y="Win % Player 1", fill="Strategy Player 2")
+```
+
+
+
+Next I set up a simulation, pitting each of the four strategies against each other, playing each game a thousand times, and tallying the winners. It turns out that the best strategy depends on your opponnent's strategy, which makes sense because the two players share the die (tiles placed by one player take away spots for the other player). The results are shown in the next figure:
+
+```{r, eval=TRUE, echo=FALSE}
+cols <- c("#375E97","#FB6542","#FFBB00","#3F681C")
+ggplot(result, aes(Strategy_player2, Win_player2)) +
+  geom_bar(aes(fill=Strategy_player1), stat="identity", position="dodge") +
+  scale_fill_manual(values=cols) +
+  ggthemes::theme_tufte(base_size=13)  +
+  geom_hline(yintercept=50, lty=2) +
+  labs(x="Strategy Player 2", y="Win % Player 2", fill="Strategy Player 1")
+```
+
+
+The results are shown from the perspective of Player 2, who has a massive disadvantage because Player 1 starts the game. Only if Player 1 adopts the worst strategy (always place a tile if a spot is available), does Player 2 win most games (the blue bars). Otherwise (except for the 'switch2' strategy), Player 1 wins about 80% of the games! 
+
+When Player 2 uses the switch2 strategy (switch from placing to walking when 2 tiles are on the side), win chances are between 40-65%, thus this is the best strategy to use. For Player 1, it is also the best strategy, since the win chances for Player 2 drop to just over 40% when Player 1 also uses 'switch2'.
+
+
+## Conclusions
+
+In many board games, one of the rules reads "the youngest player always starts the game". In the game of pirate plank, starting first gives a massive advantage: when both players adopt the same strategy, player 1 wins 60-80% of the time (depending on the strategy chosen). 
+
+Clearly the best way to beat my 6-yr old at this game is to remove that rule and start first!
+
+Otherwise, the best strategy - out of what I tested - is to switch from placing tiles to making your opponent walk when there are at least 2 opponent's tiles on the die side. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

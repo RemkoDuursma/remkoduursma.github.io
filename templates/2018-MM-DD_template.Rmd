@@ -1,0 +1,47 @@
+---
+title: "<TITLE>"
+author: "Remko Duursma"
+date: 2018-MM-DD
+categories: ["R"]
+tags: ["data", "api"]
+description: "<DESCRIPTION>"
+---
+
+
+```{r setup, include=FALSE, cache=FALSE}
+library(knitr)
+opts_chunk$set(echo = TRUE,
+               eval = FALSE, 
+               out.width="600px", 
+               dpi=400, 
+               warning = FALSE)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
