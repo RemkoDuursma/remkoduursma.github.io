@@ -9,12 +9,112 @@ output: html_document
 ---
   
 
-- intro and reference to my reproducible manuscripts
-- packages : pacman, minimize number packages used, avoid packages that are obviously 'in flux', only use packages on CRAN (where possible). Load ALL packages in one place, at the top of the workflow. 
-- code organization: show my project structure. We can go more complex like this package, but I have not needed it.
-- remake/makefile/that other new thing: very cool, yes. Especially when one component of the analysis takes a long time to complete. Otherwise: don't use when not needed.
-- KISS.
-- Manuscript: use rmarkdown not LaTeX unless you are suicidal
-- References
-- Collaborating with non-programmers: rmarkdown is OK but we have to add changes into the manuscript manually
+It is such a nice ideal: research that can be fully reproduced by the click of a button. Wonder how those figures were made, where those p-values come from? Just look up the code repository for the article, rerun the analysis, and voila: you understand everything. In practice, however, you might run into quite a few hurdles when implementing a reproducible workflow. The web is full of guides, introductions, books, etc. - and for R users CRAN even has a [task view on reproducible research](https://cran.r-project.org/web/views/ReproducibleResearch.html), but usually the sticky points are avoided or ignored.
+
+This post is a collection of my own notes, problems I have run into and found solutions for (or not), some do's and don't's, basically anything I can think of at the time of writing. It is not intended as any sort of how-to guide or what-have-you, you can find many of those on the web (for example, from the folks at [Ropensci](http://ropensci.github.io/reproducibility-guide/sections/introduction/)).
+
+
+# My reproducible publications
+
+Here is a list of papers that I have authored that are (supposedly) fully reproducible. I am only listing those where I was the first author.
+
+1 - *Plantecophys - An R Package for Analysing and Modelling Leaf Gas Exchange Data*, 2015, PlosONE. [[Code](https://github.com/remkoduursma/duursma2015plosone)] [[Article](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0143346)]
+
+2 - *Leaf mass per area, not total leaf area, drives differences in above‐ground biomass distribution among woody plant functional types*, 2016, New Phytologist. [[Code](https://github.com/RemkoDuursma/baadanalysis)] [[Article](https://nph.onlinelibrary.wiley.com/doi/10.1111/nph.14033)]
+
+3 - *Canopy leaf area of a mature evergreen Eucalyptus woodland does not respond to elevated atmospheric [CO2] but tracks water availability*, 2016, Global Change Biology. [[Code](https://github.com/RemkoDuursma/eucfacelaipaper)] [[Article](https://onlinelibrary.wiley.com/doi/abs/10.1111/gcb.13151)]
+
+4 - *fitplc - an R package to fit hydraulic vulnerability curves*, 2017, Journal of Plant Hydraulics. [[Code](https://bitbucket.org/remkoduursma/fitplcpaper)] [[Article](https://jplanthydro.org/article/view/1541)]
+
+5 - *On the minimum leaf conductance: its role in models of plant water use, and ecological and environmental controls*, 2018, New Phytologist. [[Code](https://github.com/remkoduursma/g0paper)] [[Article](https://nph.onlinelibrary.wiley.com/doi/10.1111/nph.15395)]
+
+
+For each of these papers, you should be able to download the code (in each case, a git repository), read the README.md file, and run a simple command (usually in R) to generate all figures, tables, and manuscript (as pdf or docx). The necessary data are either packaged in the repository, or (often) downloaded from remote locations.
+
+
+## 1. KISS
+
+In reproducible research, you are trying to make it as easy as possible for others to run your code. The more complex you make the workflow (and the dependencies), the more likely it is that something just goes wrong. Keep It Simple, Stupid. Your workflow does not need to do more than what it is supposed to do: reproduce your analysis. This idea applies to some points below, especially (2) and (3).
+
+
+
+## 2. Minimize dependencies
+
+In any R-based workflow, you will be using quite many R packages. In your daily routine, who cares how many packages you load! Just do all of them. But in reproducible research, you need to keep in mind the following points:
+
+- Some R package may not be available in the future (the maintainer can choose to archive a package if the demands from CRAN are just too much - yes this happens frequently). 
+- Some function in an R package may change its interface, behaviour, or just be renamed. Packages change over time, and not all maintainers care very much about reverse compatibility (and in many cases, there are [good reasons to break compatibility](http://r-pkgs.had.co.nz/release.html#compatibility)).
+
+There are tools to combat these problems (more on that below), but an important point is to simply reduce the number of packages used as much as possible. The fewer packages you use, the less likely it is that things will break. Some more points:
+
+- If you use a package only for one simple function, maybe **copy that function into your own code** instead of loading the entire package (make sure to add some attribution though). 
+- **Write your own functions** for basic operations that perhaps exist in some package somewhere (such as a function for the standard error of the mean). 
+- **Use packages that are used frequently**, and have been around for quite some time. On CRAN, you can inspect the 'ReverseDependencies' field to have some indication of the usage of the package. Bonus points if the package was described in a publication, this indicates that some quality threshold was reached (and maintainers are less likely to deviate from the publication). 
+- **Use only packages that are on CRAN**. The main reason to do this is that even if the maintainer chooses to archive the package, it will still be available forever in CRAN's archive. If you keep relying on packages hosted on github (which really should be a temporary option for developers!), these can be deleted any time. You also run into installation problems (especially on Windows), which bring more dependencies (which we hate). Because of these reasons I strictly only rely on CRAN packages.
+
+
+Finally, you can also **use tools to set the version of the R package used**, in particular `packrat` (which bloats your repository by copying all the package files, this is potentially debilitating), or `checkpoint` (which downloads the required version from Microsoft's CRAN timemachine). But even then, less is more!
+
+
+## 2b. Loading packages
+
+Still on the topic of R packages, a simple trick that should be more common solves the following problem. Here is a script that typically loads all the packages at the top of the script:
+
+```{r, eval = FALSE}
+library(gplots)
+library(geometry)
+library(plantecophys)
+library(rgl)
+
+# Do stuff
+# ...
+```
+
+This script only works if you already did `install.packages` on each of these packages. But you don't know which are already available until you run the script (and it fails). My favorite solution is the `pacman` package:
+
+```{r, eval = FALSE}
+if(!require(pacman))install.packages("pacman")
+pacman::p_load(gplots, geometry, plantecophys, rgl)
+```
+
+The `p_load` function loads the package if available, and otherwise installs it from CRAN (or Bioconductor). Of course, this does not work for the `pacman` package itself, hence we need the first line.
+
+
+## 3. Use object-caching workflows only when needed
+
+An object-caching workflow is one where intermediate steps in an analysis are *cached* (saved) and only recomputed when any of its dependencies have changed. This way, steps that take a long time (for example, fitting models) are only executed when needed, avoiding lengthy computations when all you did is add a reference to your manuscript file.
+
+This is an old idea, and has since the beginning of time been available with the [Makefile](https://en.wikipedia.org/wiki/Makefile). A more modern approach that can be used seemlessly with R is the [`remake` package](https://github.com/richfitz/remake) (which I used in manuscript nr. 2 in the list above). Unfortunately development on `remake` is stagnant, but the [`drake` package](https://github.com/ropensci/drake) is a very promising successor under active development. 
+
+Whatever tool you choose here - my point is simply to state that you only need these tools when at least one step in your analysis takes a painfully long time to compute. Otherwise, the effort is really, really just not worth it. In many cases you are better off to just write a script (or scripts! see point (5)) that executes all steps in succession. Again, KISS!
+
+
+## 4. Organize your code
+
+Yes, it is possible to cram everything into one giant script. After all, simpler is better, right? You really, really do not want to do this, and instead find a logical way to organize your repository. I have written a chapter on project management in the book 'A Learning Guide to R' (freely available from [this direct link (PDF)](http://www.hiercourse.com/docs/Rnotes_20180905_web.pdf), or from www.hiercourse.com) that discusses this topic in detail. However a few points are useful:
+
+- Keep inputs, outputs, and code **separate**. This is an important point, and avoids problems with trying to figure out what is generated from where with what. I tend to have directories `data`, `R`, and `output` (and `output/figures`, `output/data` etc.).
+
+- Write many functions. Even if you don't repeatedly use a function, it is useful to organize your code that way to make it very easy to understand what is being done. For example, you could have:
+
+```{r, eval = FALSE}
+
+# Collect data from online source
+mydata <- retrieve_data()
+
+# Fit model
+mymodel1 <- fit_gam_model(mydata)
+
+```
+
+where those two functions are defined separately (and could be very long). Avoiding long definitions helps clarify which steps you are taking in your analysis.
+
+- Keep scripts (code that does things) separate from function definitions (code that only defines, but does nothing). Again, in the example above, having your functions in a script (`myfunctions.R`), and then adding the line `source("myfunctions.R")`.
+
+
+## 5. Use markdown
+
+
+
+
 

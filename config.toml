@@ -24,14 +24,14 @@ enableRobotsTXT = true
 [params]
 author = "Remko Duursma"
 intro = "Data Scientist, searching..."
-description = "Previously at the Hawkesbury Institute for the Environment, now on long-term service leave and soon looking for a new direction."
+description = "Looking for a new challenge."
 authorimage = "remko.jpg"
 dateformat = "Jan 2, 2006"
 
 ## Site Meta Settings
 [params.meta]
-description = "Simple minimalist theme"
-keywords = "minimalist,blog,goa,hugo,developer"
+description = "Remko Duursma's Homepage"
+keywords = "data science, R, programming, data analysis, blog"
 
 ## Social Accounts
 [params.social]
@@ -44,7 +44,7 @@ bitbucket = "remkoduursma"
 
 ## Extras
 [params.extra]
-copyright = "© 2017. Remko Duursma." 
+copyright = "© 2017-2018. Remko Duursma." 
 poweredby = true
 highlightjs = true
 

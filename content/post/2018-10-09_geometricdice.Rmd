@@ -1,0 +1,128 @@
+---
+title: "Geometric dice"
+author: "Remko Duursma"
+date: 2018-10-09
+categories: ["R"]
+tags: ["boardgame", "game", "simulation"]
+description: "A simple dice problem, straight from a board game"
+---
+
+
+```{r setup, include=FALSE, cache=FALSE}
+library(knitr)
+opts_chunk$set(echo = TRUE,
+               eval = FALSE, 
+               out.width="600px", 
+               dpi=400, 
+               warning = FALSE)
+
+library(magicaxis)
+```
+
+
+As a child, I loved playing Jumbojet (from the publisher Jumbo) - basically a Monopoly knock-off but with quite a few changes. Recently my son and I found a pristine copy of this 1975 game in [a second-hand store](https://rataplan.nl/rataplan-almere-stad/), and it made me all nostalgic. 
+
+I might write more about the game later-  as I am working on a simulator - but here just want to think about dice. What good probability problem doesn't have dice in it? 
+
+<figure>
+  <img src="img/jumbojet.jpg" style="width:40%; border: 1px solid #000; margin-right: auto; display: block; margin-left: auto;">
+  <figcaption><i>The board game Jumbojet, published in 1975, and receives a <a href="https://boardgamegeek.com/boardgame/2740/jumbo-jet">solid rating of 4.8/10 on Boardgamegeek.com</a>, which such reviews as "Hilariously random and repetitive."</i></figcaption>
+</figure>
+<br>
+<br>
+
+In Jumbojet, you use two dice to advance the board; if you toss double digits, you can use the dice again and keep walking (well, flying), and so on. Unlike in Monopoly, [where you go to jail on three successive double digit tosses](http://koaning.io/monopoly-simulations.html), you can keep going *ad infinitum*. 
+
+The expected value of the total of two dice is of course 3.5 + 3.5 = 7, how much does the double-digit rule add to the expected value? And, given that one die has a simple uniform distribution, what is the probability distribution for the total of all tosses, including subsequent tosses on double digits?
+
+It turns out that this is simply a geometric distribution, because the expected value arises from a geometric series:
+
+$$E(Y) = 7 + \frac{1}{6} \cdot 7 + \frac{1}{6^2} \cdot 7 + ... + \frac{1}{6^N} \cdot 7$$
+
+Because you have a 1/6 chance to toss double digits, each time adding an average of 7 to the total toss.
+
+The expected value of a geometric series can be found with the text book equation
+
+$$E(Y) = \frac{a}{1 - r}$$
+
+where in our case *a* = 7 (the base value), and *r* = 1/6 (the probability of the next event), giving an expected value of 8.4 for the grand total of tosses. So basically the **double digit rule adds only 1.4 to the expected distance walked on the board in a single turn**.
+
+I also want to look at the complete probability distribution, not just the first moment (the mean). 
+
+First a simple simulation, always nice to start with so we don't have to think hard (*Computers are cheap, thinking is hard*).
+
+```{r, eval=TRUE}
+# Grand total of two dice, including all subsequent tosses on double digits
+roll_dice <- function(){
+
+  dice <- sample(1:6, 2, replace = TRUE)
+  move <- sum(dice)
+  
+  i <- 0
+  while(dice[1] == dice[2]){
+    dice <- sample(1:6, 2, replace = TRUE)
+    move <- move + sum(dice)
+    i <- i + 1
+  }    
+  
+return(move)
+}
+
+# Then we can simulate a million tosses:
+set.seed(1)
+toss <- replicate(10^6, roll_dice())
+```
+
+
+If we were to make a histogram of the probability density for each grand total (which we can imagine diminishes very quickly for larger totals!), it should correspond to the density function for the geometric distribution. The latter can be found in `dgeom` in R. 
+
+Here is also makes sense to plot the logarithmic density, since there is a lot of information in the tails that is otherwise not visible.
+
+```{r, eval=TRUE}
+library(magicaxis)
+
+# histogram of simulated values
+h <- hist(toss, breaks=50, plot=FALSE)
+par(cex.axis=0.7)
+plot(h$mids, log(h$density), 
+     axes=FALSE,
+     xlab = "Grand total dice",
+     ylab = "Proability density")
+magaxis(side=2, unlog=2)
+box()
+par(cex.axis=1)
+axis(1)
+
+
+# A straight line from the geometric distribution.
+# The slope of this line is -1/6, by the way.
+x <- 1:80
+g <- dgeom(x, prob = 1/6)
+lines(x, log(g))
+
+```
+
+As expected, the geometric distribution (solid line) agrees well enough with the simulated values - but not quite since the dice simulation is that of a discrete event, while the geometric distribution is continuous.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

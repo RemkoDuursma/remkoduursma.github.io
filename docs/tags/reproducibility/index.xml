@@ -15,16 +15,79 @@
       <pubDate>Wed, 18 Jul 2018 00:00:00 +0000</pubDate>
       
       <guid>/post/2018-07-18_reproducibility/</guid>
-      <description>&lt;ul&gt;
-&lt;li&gt;intro and reference to my reproducible manuscripts&lt;/li&gt;
-&lt;li&gt;packages : pacman, minimize number packages used, avoid packages that are obviously ‘in flux’, only use packages on CRAN (where possible). Load ALL packages in one place, at the top of the workflow.&lt;/li&gt;
-&lt;li&gt;code organization: show my project structure. We can go more complex like this package, but I have not needed it.&lt;/li&gt;
-&lt;li&gt;remake/makefile/that other new thing: very cool, yes. Especially when one component of the analysis takes a long time to complete. Otherwise: don’t use when not needed.&lt;/li&gt;
-&lt;li&gt;KISS.&lt;/li&gt;
-&lt;li&gt;Manuscript: use rmarkdown not LaTeX unless you are suicidal&lt;/li&gt;
-&lt;li&gt;References&lt;/li&gt;
-&lt;li&gt;Collaborating with non-programmers: rmarkdown is OK but we have to add changes into the manuscript manually&lt;/li&gt;
+      <description>&lt;p&gt;It is such a nice ideal: research that can be fully reproduced by the click of a button. Wonder how those figures were made, where those p-values come from? Just look up the code repository for the article, rerun the analysis, and voila: you understand everything. In practice, however, you might run into quite a few hurdles when implementing a reproducible workflow. The web is full of guides, introductions, books, etc. - and for R users CRAN even has a &lt;a href=&#34;https://cran.r-project.org/web/views/ReproducibleResearch.html&#34;&gt;task view on reproducible research&lt;/a&gt;, but usually the sticky points are avoided or ignored.&lt;/p&gt;
+&lt;p&gt;This post is a collection of my own notes, problems I have run into and found solutions for (or not), some do’s and don’t’s, basically anything I can think of at the time of writing. It is not intended as any sort of how-to guide or what-have-you, you can find many of those on the web (for example, from the folks at &lt;a href=&#34;http://ropensci.github.io/reproducibility-guide/sections/introduction/&#34;&gt;Ropensci&lt;/a&gt;).&lt;/p&gt;
+&lt;div id=&#34;my-reproducible-publications&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;My reproducible publications&lt;/h1&gt;
+&lt;p&gt;Here is a list of papers that I have authored that are (supposedly) fully reproducible. I am only listing those where I was the first author.&lt;/p&gt;
+&lt;p&gt;1 - &lt;em&gt;Plantecophys - An R Package for Analysing and Modelling Leaf Gas Exchange Data&lt;/em&gt;, 2015, PlosONE. [&lt;a href=&#34;https://github.com/remkoduursma/duursma2015plosone&#34;&gt;Code&lt;/a&gt;] [&lt;a href=&#34;https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0143346&#34;&gt;Article&lt;/a&gt;]&lt;/p&gt;
+&lt;p&gt;2 - &lt;em&gt;Leaf mass per area, not total leaf area, drives differences in above‐ground biomass distribution among woody plant functional types&lt;/em&gt;, 2016, New Phytologist. [&lt;a href=&#34;https://github.com/RemkoDuursma/baadanalysis&#34;&gt;Code&lt;/a&gt;] [&lt;a href=&#34;https://nph.onlinelibrary.wiley.com/doi/10.1111/nph.14033&#34;&gt;Article&lt;/a&gt;]&lt;/p&gt;
+&lt;p&gt;3 - &lt;em&gt;Canopy leaf area of a mature evergreen Eucalyptus woodland does not respond to elevated atmospheric [CO2] but tracks water availability&lt;/em&gt;, 2016, Global Change Biology. [&lt;a href=&#34;https://github.com/RemkoDuursma/eucfacelaipaper&#34;&gt;Code&lt;/a&gt;] [&lt;a href=&#34;https://onlinelibrary.wiley.com/doi/abs/10.1111/gcb.13151&#34;&gt;Article&lt;/a&gt;]&lt;/p&gt;
+&lt;p&gt;4 - &lt;em&gt;fitplc - an R package to fit hydraulic vulnerability curves&lt;/em&gt;, 2017, Journal of Plant Hydraulics. [&lt;a href=&#34;https://bitbucket.org/remkoduursma/fitplcpaper&#34;&gt;Code&lt;/a&gt;] [&lt;a href=&#34;https://jplanthydro.org/article/view/1541&#34;&gt;Article&lt;/a&gt;]&lt;/p&gt;
+&lt;p&gt;5 - &lt;em&gt;On the minimum leaf conductance: its role in models of plant water use, and ecological and environmental controls&lt;/em&gt;, 2018, New Phytologist. [&lt;a href=&#34;https://github.com/remkoduursma/g0paper&#34;&gt;Code&lt;/a&gt;] [&lt;a href=&#34;https://nph.onlinelibrary.wiley.com/doi/10.1111/nph.15395&#34;&gt;Article&lt;/a&gt;]&lt;/p&gt;
+&lt;p&gt;For each of these papers, you should be able to download the code (in each case, a git repository), read the README.md file, and run a simple command (usually in R) to generate all figures, tables, and manuscript (as pdf or docx). The necessary data are either packaged in the repository, or (often) downloaded from remote locations.&lt;/p&gt;
+&lt;div id=&#34;kiss&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;1. KISS&lt;/h2&gt;
+&lt;p&gt;In reproducible research, you are trying to make it as easy as possible for others to run your code. The more complex you make the workflow (and the dependencies), the more likely it is that something just goes wrong. Keep It Simple, Stupid. Your workflow does not need to do more than what it is supposed to do: reproduce your analysis. This idea applies to some points below, especially (2) and (3).&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;minimize-dependencies&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;2. Minimize dependencies&lt;/h2&gt;
+&lt;p&gt;In any R-based workflow, you will be using quite many R packages. In your daily routine, who cares how many packages you load! Just do all of them. But in reproducible research, you need to keep in mind the following points:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Some R package may not be available in the future (the maintainer can choose to archive a package if the demands from CRAN are just too much - yes this happens frequently).&lt;/li&gt;
+&lt;li&gt;Some function in an R package may change its interface, behaviour, or just be renamed. Packages change over time, and not all maintainers care very much about reverse compatibility (and in many cases, there are &lt;a href=&#34;http://r-pkgs.had.co.nz/release.html#compatibility&#34;&gt;good reasons to break compatibility&lt;/a&gt;).&lt;/li&gt;
 &lt;/ul&gt;
+&lt;p&gt;There are tools to combat these problems (more on that below), but an important point is to simply reduce the number of packages used as much as possible. The fewer packages you use, the less likely it is that things will break. Some more points:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;If you use a package only for one simple function, maybe &lt;strong&gt;copy that function into your own code&lt;/strong&gt; instead of loading the entire package (make sure to add some attribution though).&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Write your own functions&lt;/strong&gt; for basic operations that perhaps exist in some package somewhere (such as a function for the standard error of the mean).&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Use packages that are used frequently&lt;/strong&gt;, and have been around for quite some time. On CRAN, you can inspect the ‘ReverseDependencies’ field to have some indication of the usage of the package. Bonus points if the package was described in a publication, this indicates that some quality threshold was reached (and maintainers are less likely to deviate from the publication).&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Use only packages that are on CRAN&lt;/strong&gt;. The main reason to do this is that even if the maintainer chooses to archive the package, it will still be available forever in CRAN’s archive. If you keep relying on packages hosted on github (which really should be a temporary option for developers!), these can be deleted any time. You also run into installation problems (especially on Windows), which bring more dependencies (which we hate). Because of these reasons I strictly only rely on CRAN packages.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Finally, you can also &lt;strong&gt;use tools to set the version of the R package used&lt;/strong&gt;, in particular &lt;code&gt;packrat&lt;/code&gt; (which bloats your repository by copying all the package files, this is potentially debilitating), or &lt;code&gt;checkpoint&lt;/code&gt; (which downloads the required version from Microsoft’s CRAN timemachine). But even then, less is more!&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;b.-loading-packages&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;2b. Loading packages&lt;/h2&gt;
+&lt;p&gt;Still on the topic of R packages, a simple trick that should be more common solves the following problem. Here is a script that typically loads all the packages at the top of the script:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(gplots)
+library(geometry)
+library(plantecophys)
+library(rgl)
+
+# Do stuff
+# ...&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;This script only works if you already did &lt;code&gt;install.packages&lt;/code&gt; on each of these packages. But you don’t know which are already available until you run the script (and it fails). My favorite solution is the &lt;code&gt;pacman&lt;/code&gt; package:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;if(!require(pacman))install.packages(&amp;quot;pacman&amp;quot;)
+pacman::p_load(gplots, geometry, plantecophys, rgl)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The &lt;code&gt;p_load&lt;/code&gt; function loads the package if available, and otherwise installs it from CRAN (or Bioconductor). Of course, this does not work for the &lt;code&gt;pacman&lt;/code&gt; package itself, hence we need the first line.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;use-object-caching-workflows-only-when-needed&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;3. Use object-caching workflows only when needed&lt;/h2&gt;
+&lt;p&gt;An object-caching workflow is one where intermediate steps in an analysis are &lt;em&gt;cached&lt;/em&gt; (saved) and only recomputed when any of its dependencies have changed. This way, steps that take a long time (for example, fitting models) are only executed when needed, avoiding lengthy computations when all you did is add a reference to your manuscript file.&lt;/p&gt;
+&lt;p&gt;This is an old idea, and has since the beginning of time been available with the &lt;a href=&#34;https://en.wikipedia.org/wiki/Makefile&#34;&gt;Makefile&lt;/a&gt;. A more modern approach that can be used seemlessly with R is the &lt;a href=&#34;https://github.com/richfitz/remake&#34;&gt;&lt;code&gt;remake&lt;/code&gt; package&lt;/a&gt; (which I used in manuscript nr. 2 in the list above). Unfortunately development on &lt;code&gt;remake&lt;/code&gt; is stagnant, but the &lt;a href=&#34;https://github.com/ropensci/drake&#34;&gt;&lt;code&gt;drake&lt;/code&gt; package&lt;/a&gt; is a very promising successor under active development.&lt;/p&gt;
+&lt;p&gt;Whatever tool you choose here - my point is simply to state that you only need these tools when at least one step in your analysis takes a painfully long time to compute. Otherwise, the effort is really, really just not worth it. In many cases you are better off to just write a script (or scripts! see point (5)) that executes all steps in succession. Again, KISS!&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;organize-your-code&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;4. Organize your code&lt;/h2&gt;
+&lt;p&gt;Yes, it is possible to cram everything into one giant script. After all, simpler is better, right? You really, really do not want to do this, and instead find a logical way to organize your repository. I have written a chapter on project management in the book ‘A Learning Guide to R’ (freely available from &lt;a href=&#34;http://www.hiercourse.com/docs/Rnotes_20180905_web.pdf&#34;&gt;this direct link (PDF)&lt;/a&gt;, or from www.hiercourse.com) that discusses this topic in detail. However a few points are useful:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Keep inputs, outputs, and code &lt;strong&gt;separate&lt;/strong&gt;. This is an important point, and avoids problems with trying to figure out what is generated from where with what. I tend to have directories &lt;code&gt;data&lt;/code&gt;, &lt;code&gt;R&lt;/code&gt;, and &lt;code&gt;output&lt;/code&gt; (and &lt;code&gt;output/figures&lt;/code&gt;, &lt;code&gt;output/data&lt;/code&gt; etc.).&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Write many functions. Even if you don’t repeatedly use a function, it is useful to organize your code that way to make it very easy to understand what is being done. For example, you could have:&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# Collect data from online source
+mydata &amp;lt;- retrieve_data()
+
+# Fit model
+mymodel1 &amp;lt;- fit_gam_model(mydata)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;where those two functions are defined separately (and could be very long). Avoiding long definitions helps clarify which steps you are taking in your analysis.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Keep scripts (code that does things) separate from function definitions (code that only defines, but does nothing). Again, in the example above, having your functions in a script (&lt;code&gt;myfunctions.R&lt;/code&gt;), and then adding the line &lt;code&gt;source(&amp;quot;myfunctions.R&amp;quot;)&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div id=&#34;use-markdown&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;5. Use markdown&lt;/h2&gt;
+&lt;/div&gt;
+&lt;/div&gt;
 </description>
     </item>
     

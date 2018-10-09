@@ -6,8 +6,80 @@
     <description>Recent content on Remko Duursma</description>
     <generator>Hugo, blogdown, rmarkdown</generator>
     <language>en-US</language>
-    <lastBuildDate>Wed, 20 Jun 2018 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 09 Oct 2018 00:00:00 +0000</lastBuildDate>
     <atom:link href="/tags/simulation/" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Geometric dice</title>
+      <link>/post/2018-10-09_geometricdice/</link>
+      <pubDate>Tue, 09 Oct 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2018-10-09_geometricdice/</guid>
+      <description>&lt;p&gt;As a child, I loved playing Jumbojet (from the publisher Jumbo) - basically a Monopoly knock-off but with quite a few changes. Recently my son and I found a pristine copy of this 1975 game in &lt;a href=&#34;https://rataplan.nl/rataplan-almere-stad/&#34;&gt;a second-hand store&lt;/a&gt;, and it made me all nostalgic.&lt;/p&gt;
+&lt;p&gt;I might write more about the game later- as I am working on a simulator - but here just want to think about dice. What good probability problem doesn’t have dice in it?&lt;/p&gt;
+&lt;figure&gt;
+&lt;img src=&#34;img/jumbojet.jpg&#34; style=&#34;width:40%; border: 1px solid #000; margin-right: auto; display: block; margin-left: auto;&#34;&gt;
+&lt;figcaption&gt;
+&lt;i&gt;The board game Jumbojet, published in 1975, and receives a &lt;a href=&#34;https://boardgamegeek.com/boardgame/2740/jumbo-jet&#34;&gt;solid rating of 4.8/10 on Boardgamegeek.com&lt;/a&gt;, which such reviews as “Hilariously random and repetitive.”&lt;/i&gt;
+&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;p&gt;&lt;br&gt;
+&lt;br&gt;&lt;/p&gt;
+&lt;p&gt;In Jumbojet, you use two dice to advance the board; if you toss double digits, you can use the dice again and keep walking (well, flying), and so on. Unlike in Monopoly, &lt;a href=&#34;http://koaning.io/monopoly-simulations.html&#34;&gt;where you go to jail on three successive double digit tosses&lt;/a&gt;, you can keep going &lt;em&gt;ad infinitum&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;The expected value of the total of two dice is of course 3.5 + 3.5 = 7, how much does the double-digit rule add to the expected value? And, given that one die has a simple uniform distribution, what is the probability distribution for the total of all tosses, including subsequent tosses on double digits?&lt;/p&gt;
+&lt;p&gt;It turns out that this is simply a geometric distribution, because the expected value arises from a geometric series:&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[E(Y) = 7 + \frac{1}{6} \cdot 7 + \frac{1}{6^2} \cdot 7 + ... + \frac{1}{6^N} \cdot 7\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;Because you have a 1/6 chance to toss double digits, each time adding an average of 7 to the total toss.&lt;/p&gt;
+&lt;p&gt;The expected value of a geometric series can be found with the text book equation&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[E(Y) = \frac{a}{1 - r}\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;where in our case &lt;em&gt;a&lt;/em&gt; = 7 (the base value), and &lt;em&gt;r&lt;/em&gt; = 1/6 (the probability of the next event), giving an expected value of 8.4 for the grand total of tosses. So basically the &lt;strong&gt;double digit rule adds only 1.4 to the expected distance walked on the board in a single turn&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;I also want to look at the complete probability distribution, not just the first moment (the mean).&lt;/p&gt;
+&lt;p&gt;First a simple simulation, always nice to start with so we don’t have to think hard (&lt;em&gt;Computers are cheap, thinking is hard&lt;/em&gt;).&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# Grand total of two dice, including all subsequent tosses on double digits
+roll_dice &amp;lt;- function(){
+
+  dice &amp;lt;- sample(1:6, 2, replace = TRUE)
+  move &amp;lt;- sum(dice)
+  
+  i &amp;lt;- 0
+  while(dice[1] == dice[2]){
+    dice &amp;lt;- sample(1:6, 2, replace = TRUE)
+    move &amp;lt;- move + sum(dice)
+    i &amp;lt;- i + 1
+  }    
+  
+return(move)
+}
+
+# Then we can simulate a million tosses:
+set.seed(1)
+toss &amp;lt;- replicate(10^6, roll_dice())&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;If we were to make a histogram of the probability density for each grand total (which we can imagine diminishes very quickly for larger totals!), it should correspond to the density function for the geometric distribution. The latter can be found in &lt;code&gt;dgeom&lt;/code&gt; in R.&lt;/p&gt;
+&lt;p&gt;Here is also makes sense to plot the logarithmic density, since there is a lot of information in the tails that is otherwise not visible.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(magicaxis)
+
+# histogram of simulated values
+h &amp;lt;- hist(toss, breaks=50, plot=FALSE)
+par(cex.axis=0.7)
+plot(h$mids, log(h$density), 
+     axes=FALSE,
+     xlab = &amp;quot;Grand total dice&amp;quot;,
+     ylab = &amp;quot;Proability density&amp;quot;)
+magaxis(side=2, unlog=2)
+box()
+par(cex.axis=1)
+axis(1)
+
+
+# A straight line from the geometric distribution.
+# The slope of this line is -1/6, by the way.
+x &amp;lt;- 1:80
+g &amp;lt;- dgeom(x, prob = 1/6)
+lines(x, log(g))&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2018-10-09_geometricdice_files/figure-html/unnamed-chunk-2-1.png&#34; width=&#34;600px&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;As expected, the geometric distribution (solid line) agrees well enough with the simulated values - but not quite since the dice simulation is that of a discrete event, while the geometric distribution is continuous.&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>Walk the Plank!</title>
