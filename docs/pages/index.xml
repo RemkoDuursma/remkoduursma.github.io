@@ -2,11 +2,13 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Pages on Remko Duursma</title>
-    <link>http://www.remkoduursma.com/post</link>
-    <description>Recent content on Remko Duursma</description>
-    <generator>Hugo, blogdown, rmarkdown</generator>
+    <link>/pages/</link>
+    <description>Recent content in Pages on Remko Duursma</description>
+    <generator>Hugo -- gohugo.io</generator>
     <language>en-US</language>
-    <atom:link href="/pages/" rel="self" type="application/rss+xml" />
+    
+	<atom:link href="/pages/index.xml" rel="self" type="application/rss+xml" />
+    
     
     <item>
       <title>All Publications</title>
@@ -14,138 +16,29 @@
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>/pages/publications_full/</guid>
-      <description>&lt;p&gt;&lt;a href=&#34;../pages/publications_full/&#34; class=&#34;button&#34;&gt;All Publications&lt;/a&gt;
-&lt;a href=&#34;../pages/publications_select/&#34; class=&#34;button&#34;&gt;Selected Publications&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;My complete list of peer-reviewed scientific articles (2003-2017).
-See my &lt;a href=&#34;https://scholar.google.com.au/citations?hl=en&amp;amp;user=qGSIWxcAAAAJ&#34;&gt;Google Scholar&lt;/a&gt; for citations and sources.&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;&lt;p&gt;Charbonnier, F., Roupsard, O., le Maire, G., Guillemot, J., Casanoves, F., Lacointe, A., Vaast, P., Allinne, C., Audebert, L., Cambou, A., Clement-Vidal, A., Defrenet, E., &lt;strong&gt;Duursma&lt;/strong&gt;, R.A., Jarri, L., Jourdan, C., Khac, E., Leandro, P., Medlyn, B.E., Saint-Andre, L., Thaler, P., Van Den Meersche, K., Barquero Aguilar, A., Lehner, P., Dreyer, E. 2017. Increased light-use efficiency sustains net primary productivity of shaded coffee plants in agroforestry system. &lt;em&gt;Plant, Cell &amp;amp; Environment&lt;/em&gt;, 40, 1592-1608 .&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;Campany, C.E., Medlyn, B.E., &lt;strong&gt;Duursma&lt;/strong&gt;, R.A. 2017. Reduced growth due to belowground sink limitation is not fully explained by reduced photosynthesis. &lt;em&gt;Tree Physiology&lt;/em&gt;, 37, 1042-1054 .&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;Drigo, B., Nielsen, U.N., Jeffries, T.C., Curlevski, N.J.A., Singh, B.K., &lt;strong&gt;Duursma&lt;/strong&gt;, R.A., Anderson, I.C. 2017. Interactive effects of seasonal drought and elevated atmospheric carbon dioxide concentration on prokaryotic rhizosphere communities. &lt;em&gt;Environmental Microbiology&lt;/em&gt;, 19, 3175-3185 .&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;Medlyn, B.E., De Kauwe, M.G., Lin, Y., Knauer, J., &lt;strong&gt;Duursma&lt;/strong&gt;, R.A., Williams, C.A., Arneth, A., Clement, R., Isaac, P., Limousin, J., Linderson, M., Meir, P., Martin-StPaul, N., Wingate, L. 2017. How do leaf and ecosystem measures of water-use efficiency compare?. &lt;em&gt;New Phytologist&lt;/em&gt;, 216, 758-770 .&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;Broughton, K.J., Bange, M.P., &lt;strong&gt;Duursma&lt;/strong&gt;, R.A., Payton, P., Smith, R.A., Tan, D.K.Y., Tissue, D.T. 2017. The effect of elevated atmospheric [CO2] and increased temperatures on an older and modern cotton cultivar. &lt;em&gt;Functional Plant Biology&lt;/em&gt;, 44, 1207-1218 .&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;Drake, J.E., Power, S.A., &lt;strong&gt;Duursma&lt;/strong&gt;, R.A., Medlyn, B.E., Aspinwall, M.J., Choat, B., Creek, D., Eamus, D., Maier, C., Pfautsch, S., Smith, R.A., Tjoelker, M.G., Tissue, D.T. 2017. Stomatal and non-stomatal limitations of photosynthesis for four tree species under drought: A comparison of model formulations. &lt;em&gt;Agricultural and Forest Meteorology&lt;/em&gt;, 247, 454-466 .&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;Broughton, K.J., Smith, R.A., &lt;strong&gt;Duursma&lt;/strong&gt;, R.A., Tan, D.K., Payton, P., Bange, M.P., Tissue, D.T. 2017. Warming alters the positive impact of elevated CO2 concentration on cotton growth and physiology during soil water deficit. &lt;em&gt;Functional Plant Biology&lt;/em&gt;, 44, 267-278 .&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;&lt;strong&gt;Duursma&lt;/strong&gt;, R., Choat, B. 2017. fitplc - an R package to fit hydraulic vulnerability curves. &lt;em&gt;Journal of Plant Hydraulics&lt;/em&gt;, 4, 002 .&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;Campany, C.E., Tjoelker, M.G., Caemmerer, S., &lt;strong&gt;Duursma&lt;/strong&gt;, R.A. 2016. Coupled response of stomatal and mesophyll conductance to light enhances photosynthesis of shade leaves under sunflecks. &lt;em&gt;Plant, Cell &amp;amp; Environment&lt;/em&gt;, 39, 2762-2773 .&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;Lu, Y., &lt;strong&gt;Duursma&lt;/strong&gt;, R.A., Medlyn, B.E. 2016. Optimal stomatal behaviour under stochastic rainfall. &lt;em&gt;Journal of Theoretical Biology&lt;/em&gt;, 394, 160-171 .&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;Gherlenda, A.N., Esveld, J.L., Hall, A.A., &lt;strong&gt;Duursma&lt;/strong&gt;, R.A., Riegler, M. 2016. Boom and bust: rapid feedback responses between insect outbreak dynamics and canopy leaf area impacted by rainfall and CO2. &lt;em&gt;Global change biology&lt;/em&gt;, 22, 3632-3641 .&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;Whitley, R., Beringer, J., Hutley, L.B., Abramowitz, G., De Kauwe, M.G., &lt;strong&gt;Duursma&lt;/strong&gt;, R., Evans, B., Haverd, V., Li, L., Ryu, Y., Smith, B., Wang, Y., Williams, M., Yu, Q. 2016. A model inter-comparison study to examine limiting factors in modelling Australian tropical savannas. &lt;em&gt;Biogeosciences&lt;/em&gt;, 13, 3245-3265 .&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;Mitchell, P.J., O&amp;rsquo;Grady, A.P., Pinkard, E.A., Brodribb, T.J., Arndt, S.K., Blackman, C.J., &lt;strong&gt;Duursma&lt;/strong&gt;, R.A., Fensham, R.J., Hilbert, D.W., Nitschke, C.R., Norris, J., Roxburgh, S.H., Ruthrof, K.X., Tissue, D.T. 2016. An ecoclimatic framework for evaluating the resilience of vegetation to water deficit. &lt;em&gt;Global Change Biology&lt;/em&gt;, 22, 1677-1689 .&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;Moore, C.E., Brown, T., Keenan, T.F., &lt;strong&gt;Duursma&lt;/strong&gt;, R.A., van Dijk, A.I.J.M., Beringer, J., Culvenor, D., Evans, B., Huete, A., Hutley, L.B., Maier, S., Restrepo-Coupe, N., Sonnentag, O., Specht, A., Taylor, J.R., van Gorsel, E., Liddell, M.J. 2016. Reviews and syntheses: Australian vegetation phenology: new insights from satellite remote sensing and digital repeat photography. &lt;em&gt;Biogeosciences&lt;/em&gt;, 13, 5085-5102 .&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;Medlyn, B.E., De Kauwe, M.G., &lt;strong&gt;Duursma&lt;/strong&gt;, R.A. 2016. New developments in the effort to model ecosystems under water stress. &lt;em&gt;New Phytologist&lt;/em&gt;, 212, 5-7 .&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;&lt;strong&gt;Duursma&lt;/strong&gt;, R.A., Gimeno, T.E., Boer, M.M., Crous, K.Y., Tjoelker, M.G., Ellsworth, D.S. 2016. Canopy leaf area of a mature evergreen Eucalyptus woodland does not respond to elevated atmospheric [CO2] but tracks water availability. &lt;em&gt;Global Change Biology&lt;/em&gt;, 22, 1666-1676 .&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;Medlyn, B.E., De Kauwe, M.G., Zaehle, S., Walker, A.P., &lt;strong&gt;Duursma&lt;/strong&gt;, R.A., Luus, K., Mishurov, M., Pak, B., Smith, B., Wang, Y., Yang, X., Crous, K.Y., Drake, J.E., Gimeno, T.E., Macdonald, C.A., Norby, R.J., Power, S.A., Tjoelker, M.G., Ellsworth, D.S. 2016. Using models to guide field experiments: a priori predictions for the CO2 response of a nutrient- and water-limited native Eucalypt woodland. &lt;em&gt;Global Change Biology&lt;/em&gt;, , 2834-2851 .&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;&lt;strong&gt;Duursma&lt;/strong&gt;, R.A., Falster, D.S. 2016. Leaf mass per area, not total leaf area, drives differences in above-ground biomass distribution among woody plant functional types. &lt;em&gt;New Phytologist&lt;/em&gt;, 212, 368-376 .&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;Drake, J.E., Tjoelker, M.G., Aspinwall, M.J., Reich, P.B., Barton, C.V.M., Medlyn, B.E., &lt;strong&gt;Duursma&lt;/strong&gt;, R.A. 2016. Does physiological acclimation to climate warming stabilize the ratio of canopy respiration to photosynthesis?. &lt;em&gt;New Phytologist&lt;/em&gt;, 211, 850-863 .&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;Blackman, C.J., Pfautsch, S., Choat, B., Delzon, S., Gleason, S.M., &lt;strong&gt;Duursma&lt;/strong&gt;, R.A. 2016. Toward an index of desiccation time to tree mortality under drought. &lt;em&gt;Plant, Cell &amp;amp; Environment&lt;/em&gt;, 39, 2342-2345 .&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;Norby, R.J., De Kauwe, M.G., Domingues, T.F., &lt;strong&gt;Duursma&lt;/strong&gt;, R.A., Ellsworth, D.S., Goll, D.S., Lapola, D.M., Luus, K.A., MacKenzie, A.R., Medlyn, B.E., Pavlick, R., Rammig, A., Smith, B., Thomas, R., Thonicke, K., Walker, A.P., Yang, X., Zaehle, S. 2016. Model-data synthesis for the next generation of forest free-air CO2 enrichment (FACE) experiments. &lt;em&gt;New Phytologist&lt;/em&gt;, 209, 17-28 .&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;Kelly, J.W.G., &lt;strong&gt;Duursma&lt;/strong&gt;, R.A., Atwell, B.J., Tissue, D.T., Medlyn, B.E. 2016. Drought x CO2 interactions in trees: a test of the low-intercellular CO2 concentration (Ci) mechanism. &lt;em&gt;New Phytologist&lt;/em&gt;, 209, 1600-1612 .&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;Nolf, M., Creek, D., &lt;strong&gt;Duursma&lt;/strong&gt;, R., Holtum, J., Mayr, S., Choat, B. 2015. Stem and leaf hydraulic properties are finely coordinated in three tropical rain forest tree species. &lt;em&gt;Plant, Cell &amp;amp; Environment&lt;/em&gt;, 38, 2652-2661 .&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;Lin, Y., Medlyn, B.E., &lt;strong&gt;Duursma&lt;/strong&gt;, R.A., Prentice, I.C., Wang, H., Baig, S., Eamus, D., de Dios, V.R., Mitchell, P., Ellsworth, D.S., de Beeck, M.O., Wallin, G., Uddling, J., Tarvainen, L., Linderson, M., Cernusak, L.A., Nippert, J.B., Ocheltree, T.W., Tissue, D.T., Martin-StPaul, N.K., Rogers, A., Warren, J.M., De Angelis, P., Hikosaka, K., Han, Q., Onoda, Y., Gimeno, T.E., Barton, C.V.M., Bennie, J., Bonal, D., Bosc, A., L&amp;ouml;w, M., Macinins-Ng, C., Rey, A., Rowland, L., Setterfield, S.A., Tausz-Posch, S., Zaragoza-Castells, J., Broadmeadow, M.S.J., Drake, J.E., Freeman, M., Ghannoum, O., Hutley, L.B., Kelly, J.W., Kikuzawa, K., Kolari, P., Koyama, K., Limousin, J., Meir, P., Lola da Costa, A.C., Mikkelsen, T.N., Salinas, N., Sun, W., Wingate, L. 2015. Optimal stomatal behaviour around the world. &lt;em&gt;Nature Climate Change&lt;/em&gt;, 5, 459-464 .&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;Duan, H., O&amp;rsquo;Grady, A.P., &lt;strong&gt;Duursma&lt;/strong&gt;, R.A., Choat, B., Huang, G., Smith, R.A., Jiang, Y., Tissue, D.T. 2015. Drought responses of two gymnosperm species with contrasting stomatal regulation strategies under elevated [CO2] and temperature. &lt;em&gt;Tree Physiology&lt;/em&gt;, , tpv047 .&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;&lt;strong&gt;Duursma&lt;/strong&gt;, R.A. 2015. Plantecophys - An R Package for Analysing and Modelling Leaf Gas Exchange Data. &lt;em&gt;PLoS ONE&lt;/em&gt;, 10, e0143346 .&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;Falster, D.S., &lt;strong&gt;Duursma&lt;/strong&gt;, R.A., Ishihara, M.I., Barneche, D.R., FitzJohn, R.G., V\aarhammar, A., Aiba, M., Ando, M., Anten, N., Aspinwall, M.J., Baltzer, J.L., Baraloto, C., Battaglia, M., Battles, J.J., Bond-Lamberty, B., van Breugel, M., Camac, J., Claveau, Y., Coll, L., Dannoura, M., Delagrange, S., Domec, J., Fatemi, F., Feng, W., Gargaglione, V., Goto, Y., Hagihara, A., Hall, J.S., Hamilton, S., Harja, D., Hiura, T., Holdaway, R., Hutley, L.S., Ichie, T., Jokela, E.J., Kantola, A., Kelly, J.W.G., Kenzo, T., King, D., Kloeppel, B.D., Kohyama, T., Komiyama, A., Laclau, J., Lusk, C.H., Maguire, D.A., le Maire, G., M&amp;auml;kel&amp;auml;, A., Markesteijn, L., Marshall, J., McCulloh, K., Miyata, I., Mokany, K., Mori, S., Myster, R.W., Nagano, M., Naidu, S.L., Nouvellon, Y., O&amp;rsquo;Grady, A.P., O&amp;rsquo;Hara, K.L., Ohtsuka, T., Osada, N., Osunkoya, O.O., Peri, P.L., Petritan, A.M., Poorter, L., Portsmuth, A., Potvin, C., Ransijn, J., Reid, D., Ribeiro, S.C., Roberts, S.D., Rodr\&amp;rsquo;\iguez, R., Salda&amp;ntilde;a-Acosta, A., Santa-Regina, I., Sasa, K., Selaya, N.G., Sillett, S.C., Sterck, F., Takagi, K., Tange, T., Tanouchi, H., Tissue, D., Umehara, T., Utsugi, H., Vadeboncoeur, M.A., Valladares, F., Vanninen, P., Wang, J.R., Wenk, E., Williams, R., de Aquino Ximenes, F., Yamaba, A., Yamada, T., Yamakura, T., Yanai, R.D., York, R.A. 2015. BAAD: a Biomass And Allometry Database for woody plants. &lt;em&gt;Ecology&lt;/em&gt;, 96, 1445-1445 .&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;De Kauwe, M.G., Kala, J., Lin, Y., Pitman, A.J., Medlyn, B.E., &lt;strong&gt;Duursma&lt;/strong&gt;, R.A., Abramowitz, G., Wang, Y., Miralles, D.G. 2015. A test of an optimal stomatal conductance scheme within the CABLE land surface model. &lt;em&gt;Geoscientific Model Development&lt;/em&gt;, 8, 431-452 .&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;Pangle, R., Kavanagh, K., &lt;strong&gt;Duursma&lt;/strong&gt;, R. 2015. Decline in canopy gas exchange with increasing tree height, atmospheric evaporative demand, and seasonal drought in co-occurring inland Pacific Northwest conifer species. &lt;em&gt;Canadian Journal of Forest Research&lt;/em&gt;, 45, 1086-1101 .&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;&lt;strong&gt;Duursma&lt;/strong&gt;, R.A., Barton, C.V.M., Lin, Y., Medlyn, B.E., Eamus, D., Tissue, D.T., Ellsworth, D.S., McMurtrie, R.E. 2014. The peaked response of transpiration rate to vapour pressure deficit in field conditions can be explained by the temperature optimum of photosynthesis. &lt;em&gt;Agricultural and Forest Meteorology&lt;/em&gt;, 189-190, 2-10 .&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;Duan, H., &lt;strong&gt;Duursma&lt;/strong&gt;, R.A., Huang, G., Smith, R.A., Choat, B., O&amp;rsquo;grady, A.P., Tissue, D.T. 2014. Elevated [CO2] does not ameliorate the negative effects of elevated temperature on drought-induced mortality in Eucalyptus radiata seedlings. &lt;em&gt;Plant, Cell &amp;amp; Environment&lt;/em&gt;, 37, 1598-1613 .&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;Duan, H., Amthor, J.S., &lt;strong&gt;Duursma&lt;/strong&gt;, R.A., O&amp;rsquo;Grady, A.P., Choat, B., Tissue, D.T. 2013. Carbon dynamics of eucalypt seedlings exposed to progressive drought in elevated [CO2] and elevated temperature. &lt;em&gt;Tree Physiology&lt;/em&gt;, 33, 779-792 .&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;&lt;strong&gt;Duursma&lt;/strong&gt;, R.A., Payton, P., Bange, M.P., Broughton, K.J., Smith, R.A., Medlyn, B.E., Tissue, D.T. 2013. Near-optimal response of instantaneous transpiration efficiency to vapour pressure deficit, temperature and [CO2] in cotton (Gossypium hirsutum L.). &lt;em&gt;Agricultural and Forest Meteorology&lt;/em&gt;, 168, 168-176 .&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;Medlyn, B.E., &lt;strong&gt;Duursma&lt;/strong&gt;, R.A., De Kauwe, M.G., Prentice, I.C. 2013. The optimal stomatal response to atmospheric CO2 concentration: Alternative solutions, alternative interpretations. &lt;em&gt;Agricultural and Forest Meteorology&lt;/em&gt;, 182-183, 200-203 .&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;Sterck, F.J., &lt;strong&gt;Duursma&lt;/strong&gt;, R.A., Pearcy, R.W., Valladares, F., Cieslak, M., Weemstra, M. 2013. Plasticity influencing the light compensation point offsets the specialization for light niches across shrub species in a tropical forest understorey. &lt;em&gt;Journal of Ecology&lt;/em&gt;, 101, 971-980 .&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;Zhou, S., &lt;strong&gt;Duursma&lt;/strong&gt;, R.A., Medlyn, B.E., Kelly, J.W., Prentice, I.C. 2013. How should we model plant responses to drought? An analysis of stomatal and non-stomatal responses to water stress. &lt;em&gt;Agricultural and Forest Meteorology&lt;/em&gt;, 182-183, 204-214 .&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;Barton, C.V.M., &lt;strong&gt;Duursma&lt;/strong&gt;, R.A., Medlyn, B.E., Ellsworth, D.S., Eamus, D., Tissue, D.T., Adams, M.A., Conroy, J., Crous, K.Y., Liberloo, M., Löw, M., Linder, S., McMurtrie, R.E. 2012. Effects of elevated atmospheric [CO2] on instantaneous transpiration efficiency at leaf and canopy scales in Eucalyptus saligna. &lt;em&gt;Global Change Biology&lt;/em&gt;, 18, 585-595 .&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;Peltoniemi, M., Pulkkinen, M., Kolari, P., &lt;strong&gt;Duursma&lt;/strong&gt;, R.A., Montagnani, L., Wharton, S., Lagergren, F., Takagi, K., Verbeeck, H., Christensen, T., Vesala, T., Falk, M., Loustau, D., M&amp;auml;kel&amp;auml;, A. 2012. Does canopy mean nitrogen concentration explain variation in canopy light use efficiency across 14 contrasting forest sites?. &lt;em&gt;Tree Physiology&lt;/em&gt;, 32, 200-218 .&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;Peltoniemi, M.S., &lt;strong&gt;Duursma&lt;/strong&gt;, R.A., Medlyn, B.E. 2012. Co-optimal distribution of leaf nitrogen and hydraulic conductance in plant canopies. &lt;em&gt;Tree Physiology&lt;/em&gt;, 32, 510-519 .&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;&lt;strong&gt;Duursma&lt;/strong&gt;, R.A., Medlyn, B.E. 2012. MAESPA: a model to study interactions between water limitation, environmental drivers and vegetation function at tree and stand levels, with an example application to [CO2] x drought interactions. &lt;em&gt;Geoscientific Model Development&lt;/em&gt;, 5, 919-940 .&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;&lt;strong&gt;Duursma&lt;/strong&gt;, R.A., Falster, D.S., Valladares, F., Sterck, F.J., Pearcy, R.W., Lusk, C.H., Sendall, K.M., Nordenstahl, M., Houter, N.C., Atwell, B.J., others, . 2012. Light interception efficiency explained by two simple variables: a test using a diversity of small-to medium-sized woody plants. &lt;em&gt;New Phytologist&lt;/em&gt;, 193, 397-408 .&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;Crous, K.Y., Zaragoza-Castells, J., Ellsworth, D.S., &lt;strong&gt;Duursma&lt;/strong&gt;, R.A., L&amp;ouml;w, M., Tissue, D.T., Atkin, O.K. 2012. Light inhibition of leaf respiration in field-grown Eucalyptus saligna in whole-tree chambers under elevated atmospheric CO2 and summer drought. &lt;em&gt;Plant, Cell &amp;amp; Environment&lt;/em&gt;, 35, 966-981 .&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;Warton, D.I., &lt;strong&gt;Duursma&lt;/strong&gt;, R.A., Falster, D.S., Taskinen, S. 2012. smatr 3&amp;ndash; an R package for estimation and inference about allometric lines. &lt;em&gt;Methods in Ecology and Evolution&lt;/em&gt;, 3, 257-259 .&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;Medlyn, B.E., &lt;strong&gt;Duursma&lt;/strong&gt;, R.A., Zeppel, M.J.B. 2011. Forest productivity under climate change: a checklist for evaluating model studies. &lt;em&gt;Wiley Interdisciplinary Reviews: Climate Change&lt;/em&gt;, 2, 332-355 .&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;&lt;strong&gt;Duursma&lt;/strong&gt;, R.A., Barton, C.V., Eamus, D., Medlyn, B.E., Ellsworth, D.S., Forster, M.A., Tissue, D.T., Linder, S., McMurtrie, R.E. 2011. Rooting depth explains [CO2] x drought interaction in Eucalyptus saligna. &lt;em&gt;Tree Physiology&lt;/em&gt;, 31, 922-931 .&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;Zeppel, M.J.B., Lewis, J.D., Medlyn, B., Barton, C.V.M., &lt;strong&gt;Duursma&lt;/strong&gt;, R.A., Eamus, D., Adams, M.A., Phillips, N., Ellsworth, D.S., Forster, M.A., Tissue, D.T. 2011. Interactive effects of elevated CO2 and drought on nocturnal water fluxes in Eucalyptus saligna. &lt;em&gt;Tree Physiology&lt;/em&gt;, 31, 932-944 .&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;Medlyn, B., &lt;strong&gt;Duursma&lt;/strong&gt;, R., Eamus, D., Ellsworth, D., Prentice, I., Barton, C., Crous, K., De Angelis, P., Freeman, M., Wingate, L. 2011. Reconciling the optimal and empirical approaches to modelling stomatal conductance. &lt;em&gt;Global Change Biology&lt;/em&gt;, 17, 2134-2144 .&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;H&amp;auml;rk&amp;ouml;nen, S., Pulkkinen, M., &lt;strong&gt;Duursma&lt;/strong&gt;, R., M&amp;auml;kel&amp;auml;, A. 2010. Estimating annual GPP, NPP and stem growth in Finland using summary models. &lt;em&gt;Forest Ecology and Management&lt;/em&gt;, 259, 524-533 .&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;Ilvesniemi, H., Pumpanen, J., &lt;strong&gt;Duursma&lt;/strong&gt;, R., Hari, P., Ker&amp;ouml;nen, P., Kolari, P., Kulmala, M., Mammarella, I., Nikinmaa, E., Rannie, U., Pohja, T., Siivola, E., Vesala, T. 2010. Water balance of a boreal Scots pine forest. &lt;em&gt;Boreal Environment Research&lt;/em&gt;, 15, 375-396 .&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;&lt;strong&gt;Duursma&lt;/strong&gt;, R.A., M&amp;auml;kel&amp;auml;, A., Reid, D.E.B., Jokela, E.J., Porte, A.J., Roberts, S.D. 2010. Self-shading affects allometric scaling in trees. &lt;em&gt;Functional Ecology&lt;/em&gt;, 24, 723-730 .&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;Barton, C.V.M., Ellsworth, D.S., Medlyn, B.E., &lt;strong&gt;Duursma&lt;/strong&gt;, R.A., Tissue, D.T., Adams, M.A., Eamus, D., Conroy, J.P., McMurtrie, R.E., Parsby, J., Linder, S. 2010. Whole-tree chambers for elevated atmospheric CO2 experimentation and tree scale flux measurements in south-eastern Australia: The Hawkesbury Forest Experiment. &lt;em&gt;Agricultural and Forest Meteorology&lt;/em&gt;, 150, 941-951 .&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;&lt;strong&gt;Duursma&lt;/strong&gt;, R., Kolari, P., Per&amp;auml;m&amp;auml;ki, M., Pulkkinen, M., M&amp;auml;kel&amp;auml;, A., Nikinmaa, E., Hari, P., Aurela, M., Berbigier, P., Bernhofer, C., Gr&amp;uuml;nwald, T., Loustau, D., M&amp;ouml;lder, M., Verbeeck, H., Vesala, T. 2009. Contributions of climate, leaf area index and leaf physiology to variation in gross primary production of six coniferous forests across Europe: a model-based analysis. &lt;em&gt;Tree Physiology&lt;/em&gt;, 29, 621-639 .&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;&lt;strong&gt;Duursma&lt;/strong&gt;, R.A., Kolari, P., Per&amp;auml;m&amp;auml;ki, M., Nikinmaa, E., Hari, P., Delzon, S., Loustau, D., Ilvesniemi, H., Pumpanen, J., M&amp;auml;kel&amp;auml;, A. 2008. Predicting the decline in daily maximum transpiration rate of two pine stands during drought based on constant minimum leaf water potential and plant hydraulic conductance. &lt;em&gt;Tree Physiology&lt;/em&gt;, 28, 265-276 .&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;&lt;strong&gt;Duursma&lt;/strong&gt;, R.A., M&amp;auml;kel&amp;auml;, A. 2007. Summary models for light interception and light-use efficiency of non-homogeneous canopies. &lt;em&gt;Tree Physiology&lt;/em&gt;, 27, 859-870 .&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;&lt;strong&gt;Duursma&lt;/strong&gt;, R.A., Marshall, J.D., Robinson, A.P., Pangle, R.E. 2007. Description and test of a simple process-based model of forest growth for mixed-species stands. &lt;em&gt;Ecological Modelling&lt;/em&gt;, 203, 297-311 .&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;&lt;strong&gt;Duursma&lt;/strong&gt;, R., Marshall, J. 2006. Vertical canopy gradients in d13C correspond with leaf nitrogen content in a mixed-species conifer forest. &lt;em&gt;Trees&lt;/em&gt;, 20, 496-506 .&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;Robinson, A.P., &lt;strong&gt;Duursma&lt;/strong&gt;, R.A., Marshall, J.D. 2005. A regression-based equivalence test for model validation: shifting the burden of proof. &lt;em&gt;Tree Physiology&lt;/em&gt;, 25, 903-913 .&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;Harlow, B.A., &lt;strong&gt;Duursma&lt;/strong&gt;, R.A., Marshall, J.D. 2005. Leaf longevity of western red cedar (Thuja plicata) increases with depth in the canopy. &lt;em&gt;Tree Physiology&lt;/em&gt;, 25, 557-562 .&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;&lt;strong&gt;Duursma&lt;/strong&gt;, R.A., Marshall, J.D., Nippert, J.B., Chambers, C.C., Robinson, A.P. 2005. Estimating leaf-level parameters for ecosystem process models: a study in mixed conifer canopies on complex terrain. &lt;em&gt;Tree Physiology&lt;/em&gt;, 25, 1347-1359 .&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;Nippert, J.B., &lt;strong&gt;Duursma&lt;/strong&gt;, R.A., Marshall, J.D. 2004. Seasonal variation in photosynthetic capacity of montane conifers. &lt;em&gt;Functional Ecology&lt;/em&gt;, 18, 876-886 .&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;&lt;strong&gt;Duursma&lt;/strong&gt;, R.A., Marshall, J.D., Robinson, A.P. 2003. Leaf area index inferred from solar beam transmission in mixed conifer forests on complex terrain. &lt;em&gt;Agricultural and Forest Meteorology&lt;/em&gt;, 118, 221-236 .&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;&lt;strong&gt;Duursma&lt;/strong&gt;, R.A., Robinson, A.P. 2003. Bias in the mean tree model as a consequence of Jensen&amp;rsquo;s Inequality. &lt;em&gt;Forest Ecology and Management&lt;/em&gt;, 186, 373-380 .&lt;/p&gt;&lt;/li&gt;
-&lt;/ol&gt;
-</description>
+      <description>All Publications Selected Publications
+My complete list of peer-reviewed scientific articles (2003-2017). See my Google Scholar for citations and sources.
+ Charbonnier, F., Roupsard, O., le Maire, G., Guillemot, J., Casanoves, F., Lacointe, A., Vaast, P., Allinne, C., Audebert, L., Cambou, A., Clement-Vidal, A., Defrenet, E., Duursma, R.A., Jarri, L., Jourdan, C., Khac, E., Leandro, P., Medlyn, B.E., Saint-Andre, L., Thaler, P., Van Den Meersche, K., Barquero Aguilar, A., Lehner, P.</description>
+    </item>
+    
+    <item>
+      <title>Bio</title>
+      <link>/pages/bio/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/pages/bio/</guid>
+      <description>This is me!</description>
+    </item>
+    
+    <item>
+      <title>R Code</title>
+      <link>/pages/rcode/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/pages/rcode/</guid>
+      <description>I have been writing R code since 2001. Since a few years, a lot of this can be found on either github or bitbucket.
+Sometimes I write a blog where I use R to solve unimportant (but nagging) problems. Topics include board games, the price of petrol in Sydney, or setting up an API for your R code.
+Over the years I have developed over a dozen R packages, often implementing more challenging analytical methods with a nice R-friendly interface.</description>
     </item>
     
     <item>
@@ -154,72 +47,10 @@ See my &lt;a href=&#34;https://scholar.google.com.au/citations?hl=en&amp;amp;use
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>/pages/publications_select/</guid>
-      <description>
-
-&lt;p&gt;&lt;a href=&#34;../pages/publications_full/&#34; class=&#34;button&#34;&gt;All Publications&lt;/a&gt;
-&lt;a href=&#34;../pages/publications_select/&#34; class=&#34;button&#34;&gt;Selected Publications&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;Selected peer-reviewed publications, 2003 - 2017.
-See my &lt;a href=&#34;https://scholar.google.com.au/citations?hl=en&amp;amp;user=qGSIWxcAAAAJ&#34;&gt;Google Scholar&lt;/a&gt; for citations and sources.&lt;/p&gt;
-
-&lt;h2 id=&#34;canopy-structure-allometry-and-plant-architecture&#34;&gt;Canopy structure, allometry and plant architecture&lt;/h2&gt;
-
-&lt;ol&gt;
-&lt;li&gt;&lt;p&gt;&lt;strong&gt;Duursma&lt;/strong&gt;, R.A., Gimeno, T.E., Boer, M.M., Crous, K.Y., Tjoelker, M.G., Ellsworth, D.S. 2016. Canopy leaf area of a mature evergreen Eucalyptus woodland does not respond to elevated atmospheric [CO2] but tracks water availability. &lt;em&gt;Global Change Biology&lt;/em&gt;, 22, 1666-1676 .&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;&lt;strong&gt;Duursma&lt;/strong&gt;, R.A., Falster, D.S. 2016. Leaf mass per area, not total leaf area, drives differences in above-ground biomass distribution among woody plant functional types. &lt;em&gt;New Phytologist&lt;/em&gt;, 212, 368-376 .&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;&lt;strong&gt;Duursma&lt;/strong&gt;, R.A., Falster, D.S., Valladares, F., Sterck, F.J., Pearcy, R.W., Lusk, C.H., Sendall, K.M., Nordenstahl, M., Houter, N.C., Atwell, B.J., others, . 2012. Light interception efficiency explained by two simple variables: a test using a diversity of small-to medium-sized woody plants. &lt;em&gt;New Phytologist&lt;/em&gt;, 193, 397-408 .&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;&lt;strong&gt;Duursma&lt;/strong&gt;, R.A., M&amp;auml;kel&amp;auml;, A. 2007. Summary models for light interception and light-use efficiency of non-homogeneous canopies. &lt;em&gt;Tree Physiology&lt;/em&gt;, 27, 859-870 .&lt;/p&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h2 id=&#34;plant-responses-to-drought&#34;&gt;Plant responses to drought&lt;/h2&gt;
-
-&lt;ol&gt;
-&lt;li&gt;&lt;p&gt;Blackman, C.J., Pfautsch, S., Choat, B., Delzon, S., Gleason, S.M., &lt;strong&gt;Duursma&lt;/strong&gt;, R.A. 2016. Toward an index of desiccation time to tree mortality under drought. &lt;em&gt;Plant, Cell &amp;amp; Environment&lt;/em&gt;, 39, 2342-2345 .&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;Zhou, S., &lt;strong&gt;Duursma&lt;/strong&gt;, R.A., Medlyn, B.E., Kelly, J.W., Prentice, I.C. 2013. How should we model plant responses to drought? An analysis of stomatal and non-stomatal responses to water stress. &lt;em&gt;Agricultural and Forest Meteorology&lt;/em&gt;, 182-183, 204-214 .&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;&lt;strong&gt;Duursma&lt;/strong&gt;, R.A., Kolari, P., Per&amp;auml;m&amp;auml;ki, M., Nikinmaa, E., Hari, P., Delzon, S., Loustau, D., Ilvesniemi, H., Pumpanen, J., M&amp;auml;kel&amp;auml;, A. 2008. Predicting the decline in daily maximum transpiration rate of two pine stands during drought based on constant minimum leaf water potential and plant hydraulic conductance. &lt;em&gt;Tree Physiology&lt;/em&gt;, 28, 265-276 .&lt;/p&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h2 id=&#34;modelling&#34;&gt;Modelling&lt;/h2&gt;
-
-&lt;ol&gt;
-&lt;li&gt;&lt;p&gt;Lu, Y., &lt;strong&gt;Duursma&lt;/strong&gt;, R.A., Medlyn, B.E. 2016. Optimal stomatal behaviour under stochastic rainfall. &lt;em&gt;Journal of Theoretical Biology&lt;/em&gt;, 394, 160-171 .&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;&lt;strong&gt;Duursma&lt;/strong&gt;, R.A., Medlyn, B.E. 2012. MAESPA: a model to study interactions between water limitation, environmental drivers and vegetation function at tree and stand levels, with an example application to [CO2] x drought interactions. &lt;em&gt;Geoscientific Model Development&lt;/em&gt;, 5, 919-940 .&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;Medlyn, B.E., &lt;strong&gt;Duursma&lt;/strong&gt;, R.A., Zeppel, M.J.B. 2011. Forest productivity under climate change: a checklist for evaluating model studies. &lt;em&gt;Wiley Interdisciplinary Reviews: Climate Change&lt;/em&gt;, 2, 332-355 .&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;&lt;strong&gt;Duursma&lt;/strong&gt;, R.A., Marshall, J.D., Robinson, A.P., Pangle, R.E. 2007. Description and test of a simple process-based model of forest growth for mixed-species stands. &lt;em&gt;Ecological Modelling&lt;/em&gt;, 203, 297-311 .&lt;/p&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h2 id=&#34;tools-methods-and-data&#34;&gt;Tools, Methods and Data&lt;/h2&gt;
-
-&lt;ol&gt;
-&lt;li&gt;&lt;p&gt;&lt;strong&gt;Duursma&lt;/strong&gt;, R., Choat, B. 2017. fitplc - an R package to fit hydraulic vulnerability curves. &lt;em&gt;Journal of Plant Hydraulics&lt;/em&gt;, 4, 002 .&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;&lt;strong&gt;Duursma&lt;/strong&gt;, R.A. 2015. Plantecophys - An R Package for Analysing and Modelling Leaf Gas Exchange Data. &lt;em&gt;PLoS ONE&lt;/em&gt;, 10, e0143346 .&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;Falster, D.S., &lt;strong&gt;Duursma&lt;/strong&gt;, R.A., Ishihara, M.I., Barneche, D.R., FitzJohn, R.G., V\aarhammar, A., Aiba, M., Ando, M., Anten, N., Aspinwall, M.J., Baltzer, J.L., Baraloto, C., Battaglia, M., Battles, J.J., Bond-Lamberty, B., van Breugel, M., Camac, J., Claveau, Y., Coll, L., Dannoura, M., Delagrange, S., Domec, J., Fatemi, F., Feng, W., Gargaglione, V., Goto, Y., Hagihara, A., Hall, J.S., Hamilton, S., Harja, D., Hiura, T., Holdaway, R., Hutley, L.S., Ichie, T., Jokela, E.J., Kantola, A., Kelly, J.W.G., Kenzo, T., King, D., Kloeppel, B.D., Kohyama, T., Komiyama, A., Laclau, J., Lusk, C.H., Maguire, D.A., le Maire, G., M&amp;auml;kel&amp;auml;, A., Markesteijn, L., Marshall, J., McCulloh, K., Miyata, I., Mokany, K., Mori, S., Myster, R.W., Nagano, M., Naidu, S.L., Nouvellon, Y., O&amp;rsquo;Grady, A.P., O&amp;rsquo;Hara, K.L., Ohtsuka, T., Osada, N., Osunkoya, O.O., Peri, P.L., Petritan, A.M., Poorter, L., Portsmuth, A., Potvin, C., Ransijn, J., Reid, D., Ribeiro, S.C., Roberts, S.D., Rodr\&amp;rsquo;\iguez, R., Salda&amp;ntilde;a-Acosta, A., Santa-Regina, I., Sasa, K., Selaya, N.G., Sillett, S.C., Sterck, F., Takagi, K., Tange, T., Tanouchi, H., Tissue, D., Umehara, T., Utsugi, H., Vadeboncoeur, M.A., Valladares, F., Vanninen, P., Wang, J.R., Wenk, E., Williams, R., de Aquino Ximenes, F., Yamaba, A., Yamada, T., Yamakura, T., Yanai, R.D., York, R.A. 2015. BAAD: a Biomass And Allometry Database for woody plants. &lt;em&gt;Ecology&lt;/em&gt;, 96, 1445-1445 .&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;Warton, D.I., &lt;strong&gt;Duursma&lt;/strong&gt;, R.A., Falster, D.S., Taskinen, S. 2012. smatr 3&amp;ndash; an R package for estimation and inference about allometric lines. &lt;em&gt;Methods in Ecology and Evolution&lt;/em&gt;, 3, 257-259 .&lt;/p&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h2 id=&#34;stomatal-behaviour-linking-photosynthesis-and-transpiration&#34;&gt;Stomatal behaviour : linking photosynthesis and transpiration&lt;/h2&gt;
-
-&lt;ol&gt;
-&lt;li&gt;&lt;p&gt;Lin, Y., Medlyn, B.E., &lt;strong&gt;Duursma&lt;/strong&gt;, R.A., Prentice, I.C., Wang, H., Baig, S., Eamus, D., de Dios, V.R., Mitchell, P., Ellsworth, D.S., de Beeck, M.O., Wallin, G., Uddling, J., Tarvainen, L., Linderson, M., Cernusak, L.A., Nippert, J.B., Ocheltree, T.W., Tissue, D.T., Martin-StPaul, N.K., Rogers, A., Warren, J.M., De Angelis, P., Hikosaka, K., Han, Q., Onoda, Y., Gimeno, T.E., Barton, C.V.M., Bennie, J., Bonal, D., Bosc, A., L&amp;ouml;w, M., Macinins-Ng, C., Rey, A., Rowland, L., Setterfield, S.A., Tausz-Posch, S., Zaragoza-Castells, J., Broadmeadow, M.S.J., Drake, J.E., Freeman, M., Ghannoum, O., Hutley, L.B., Kelly, J.W., Kikuzawa, K., Kolari, P., Koyama, K., Limousin, J., Meir, P., Lola da Costa, A.C., Mikkelsen, T.N., Salinas, N., Sun, W., Wingate, L. 2015. Optimal stomatal behaviour around the world. &lt;em&gt;Nature Climate Change&lt;/em&gt;, 5, 459-464 .&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;&lt;strong&gt;Duursma&lt;/strong&gt;, R.A., Payton, P., Bange, M.P., Broughton, K.J., Smith, R.A., Medlyn, B.E., Tissue, D.T. 2013. Near-optimal response of instantaneous transpiration efficiency to vapour pressure deficit, temperature and [CO2] in cotton (Gossypium hirsutum L.). &lt;em&gt;Agricultural and Forest Meteorology&lt;/em&gt;, 168, 168-176 .&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;Barton, C.V.M., &lt;strong&gt;Duursma&lt;/strong&gt;, R.A., Medlyn, B.E., Ellsworth, D.S., Eamus, D., Tissue, D.T., Adams, M.A., Conroy, J., Crous, K.Y., Liberloo, M., Löw, M., Linder, S., McMurtrie, R.E. 2012. Effects of elevated atmospheric [CO2] on instantaneous transpiration efficiency at leaf and canopy scales in Eucalyptus saligna. &lt;em&gt;Global Change Biology&lt;/em&gt;, 18, 585-595 .&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;Medlyn, B., &lt;strong&gt;Duursma&lt;/strong&gt;, R., Eamus, D., Ellsworth, D., Prentice, I., Barton, C., Crous, K., De Angelis, P., Freeman, M., Wingate, L. 2011. Reconciling the optimal and empirical approaches to modelling stomatal conductance. &lt;em&gt;Global Change Biology&lt;/em&gt;, 17, 2134-2144 .&lt;/p&gt;&lt;/li&gt;
-&lt;/ol&gt;
-</description>
+      <description>All Publications Selected Publications
+Selected peer-reviewed publications, 2003 - 2017. See my Google Scholar for citations and sources.
+Canopy structure, allometry and plant architecture  Duursma, R.A., Gimeno, T.E., Boer, M.M., Crous, K.Y., Tjoelker, M.G., Ellsworth, D.S. 2016. Canopy leaf area of a mature evergreen Eucalyptus woodland does not respond to elevated atmospheric [CO2] but tracks water availability. Global Change Biology, 22, 1666-1676 .
+ Duursma, R.A., Falster, D.S. 2016.</description>
     </item>
     
   </channel>

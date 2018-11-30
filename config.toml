@@ -23,15 +23,15 @@ enableRobotsTXT = true
 ## Site Settings
 [params]
 author = "Remko Duursma"
-intro = "Data Scientist, searching..."
-description = "Looking for a new challenge."
+intro = "Freelance R Trainer & Consultant"
+description = "Data Analyst & Scientist, R Programmer, Educator and Birdwatcher"
 authorimage = "remko.jpg"
 dateformat = "Jan 2, 2006"
 
 ## Site Meta Settings
 [params.meta]
 description = "Remko Duursma's Homepage"
-keywords = "data science, R, programming, data analysis, blog"
+keywords = "data science, R, programming, training, data analysis, blog"
 
 ## Social Accounts
 [params.social]
@@ -39,7 +39,7 @@ github = "RemkoDuursma"
 linkedin = "remkoduursma"
 stackoverflow = "1758082"
 email = "remkoduursma@gmail.com"
-gscholar = "qGSIWxcAAAAJ"
+##gscholar = "qGSIWxcAAAAJ"
 bitbucket = "remkoduursma"
 
 ## Extras
@@ -57,25 +57,19 @@ highlightjs = true
 #    url = "/about/"
 
 [[menu.main]]
-    name = "Publications"
-    identifier = "publications"
-    weight = 200
-    url = "/pages/publications_full/"
+    name = "Available Training and Services"
+    identifier = "training"
+	weight = 1
+	url ="/training/index.html"
+#[[menu.main]]
+#    name = "Bio"
+#    identifier = "bio"
+#    weight = 3
+#    url = "/pages/bio/"
 [[menu.main]]
-    name = "R Blog"
-    weight = 100
-    identifier = "blog"
-    url = "/post/"
-[[menu.main]]
-    name = "R Course"
-    identifier = "rcourse"
-    weight = 200
-    url = "http://www.hiercourse.com"
-[[menu.main]]
-    name = "R Packages"
-    identifier = "rpackages"
-    weight = 200
-    url = "/post/2017-11-10-rpackages/index.html"
-
+    name = "R Packages, R code, and R Blog"
+    weight = 2
+    identifier = "rcode"
+    url = "/pages/rcode/"
 
 

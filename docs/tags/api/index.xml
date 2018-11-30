@@ -2,12 +2,14 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Api on Remko Duursma</title>
-    <link>http://www.remkoduursma.com/post</link>
-    <description>Recent content on Remko Duursma</description>
-    <generator>Hugo, blogdown, rmarkdown</generator>
+    <link>/tags/api/</link>
+    <description>Recent content in Api on Remko Duursma</description>
+    <generator>Hugo -- gohugo.io</generator>
     <language>en-US</language>
     <lastBuildDate>Wed, 06 Jun 2018 00:00:00 +0000</lastBuildDate>
-    <atom:link href="/tags/api/" rel="self" type="application/rss+xml" />
+    
+	<atom:link href="/tags/api/index.xml" rel="self" type="application/rss+xml" />
+    
     
     <item>
       <title>Plumbing R Code for the web</title>
@@ -15,111 +17,8 @@
       <pubDate>Wed, 06 Jun 2018 00:00:00 +0000</pubDate>
       
       <guid>/post/2018-06-06_plumbing/</guid>
-      <description>&lt;p&gt;I recently had the pleasure to complete an assessment - as part of a job interview. The assessment was enjoyable exactly because I did not have much - if any - experience with what I was supposed to be assessed on. But, at least for me, that’s the point: how quick can we learn new tools in the data science toolkit?&lt;/p&gt;
-&lt;p&gt;Unfortunately I am not going to share the actual assessment (or even some part of it), but will talk about the &lt;code&gt;plumber&lt;/code&gt; package which I used to deploy an API.&lt;/p&gt;
-&lt;p&gt;The goal is to end up with a ‘REST’ service, which allows you to browse to a URL like this,&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;&amp;lt;server ip address&amp;gt;:8001/api/items/nr123/predict&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;where the IP address of the server is used, or 127.0.0.1 if you are running a ‘local host’. Here we communicate via port 8001 - but this could be any open port on your system/server. Your browser will then return some text output (perhaps : “prediction: 15”, if the service predicts the remaining lifetime of some item).&lt;/p&gt;
-&lt;p&gt;The &lt;code&gt;plumber&lt;/code&gt; package can be used to quickly and effectively deploy this kind of API, all from the comfort of your R code.&lt;/p&gt;
-&lt;div id=&#34;dynamic-routes&#34; class=&#34;section level2&#34;&gt;
-&lt;h2&gt;Dynamic routes&lt;/h2&gt;
-&lt;p&gt;I am not going to repeat any of the introductory stuff of &lt;a href=&#34;&#34;&gt;the excellent plumber documentation&lt;/a&gt;, just highlight some key points. We first make a file with the API definitions, using some special formatting. Suppose the file ‘item_predictor_api_definition.R’ contains the following:&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;#* Predict item lifetime
-#* @param id
-#* @get /prediction
-function(item){
-  
-  my_prediction_function(item)
-  
-}&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;Here we define a single API endpoint - but not quite in the format that we wish to have, because the request to this endpoint will have to look like this:&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;&amp;lt;server ip address&amp;gt;:8001/prediction?item=&amp;quot;nr123&amp;quot;&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;I suppose this is OK too, but a common recommendation is to allow a URL like &lt;code&gt;/api/item/nr123/prediction&lt;/code&gt;. The key &lt;code&gt;nr123&lt;/code&gt; (referring to some item ID) is therefore the dynamic bit of the URL. We can easily tell &lt;code&gt;plumber&lt;/code&gt; what to do:&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;#* Predict item lifetime
-#* @param id
-#* @get /api/item/&amp;lt;item&amp;gt;/prediction
-function(item){
-  
-  my_prediction_function(item)
-
-}&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;Note how the Roxygen field calls the parameter &lt;code&gt;id&lt;/code&gt;, not &lt;code&gt;item&lt;/code&gt; as you would expect. I found it necessary in plumber version 0.4.5 to &lt;strong&gt;not&lt;/strong&gt; use the same name as the function argument there - otherwise the service crashes with a weird message (&lt;a href=&#34;https://github.com/trestletech/plumber/issues/267&#34;&gt;see this issue I openened&lt;/a&gt;).&lt;/p&gt;
-&lt;/div&gt;
-&lt;div id=&#34;deploy-time&#34; class=&#34;section level2&#34;&gt;
-&lt;h2&gt;Deploy time!&lt;/h2&gt;
-&lt;p&gt;With our API endpoint defined (of course we can add as many as we like), we can start the API via:&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(plumber)
-
-# There are no other arguments besides a directory to find the file.
-p &amp;lt;- plumb(&amp;#39;item_predictor_api_definition.R&amp;#39;)
-
-# Deploy!
-p$run(port=8001)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;Your R process will now be busy (until you close it), with a message like:&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;Starting server to listen on port 8001&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;And so our work is done. Next, it makes sense to save the API deployment code in a script, let’s say it is called &lt;code&gt;item_predictor_deploy_api.R&lt;/code&gt;. Then we can simply deploy our API from the command line with:&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;Rscript item_predictor_deploy_api.R&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;div id=&#34;supplying-command-line-arguments&#34; class=&#34;section level2&#34;&gt;
-&lt;h2&gt;Supplying command line arguments&lt;/h2&gt;
-&lt;p&gt;Better yet, it would be neat to pass the port to open up as an argument in the command line. To do this, I used the &lt;code&gt;optparse&lt;/code&gt; package which is a bit verbose in its usage, but super effective.&lt;/p&gt;
-&lt;p&gt;All we have to do is preface the API deploy script with some &lt;code&gt;optparse&lt;/code&gt; code. We also want to make sure the user is told off when no port is defined (a potential security hazard).&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(optparse)
-
-# Parse command line arguments and display help.
-option_list = list(
-  make_option(c(&amp;quot;-p&amp;quot;, &amp;quot;--port&amp;quot;), type=&amp;quot;integer&amp;quot;, default=NULL, 
-              help=&amp;quot;Port number for REST API&amp;quot;, metavar = &amp;quot;integer&amp;quot;)
-)
-
-opt_parser &amp;lt;- OptionParser(option_list=option_list,
-                           description=&amp;quot;Deploy API for item predictor.&amp;quot;)
-opt &amp;lt;- parse_args(opt_parser)
-
-
-# If the user does not supply the port - 
-# fail with an error and a message, and display the help usage.
-if(is.null(opt$port)){
-  print_help(opt_parser)
-  stop(&amp;quot;Must supply port to open for REST API.&amp;quot;,
-       call. = FALSE)
-}
-
-
-# Now continue with the API.
-library(plumber)
-
-# Set the plumbing for the API.
-p &amp;lt;- plumb(&amp;quot;R/api_definitions.R&amp;quot;)
-
-# Deploy.
-# Note opt$port is the value read from the command line argument
-p$run(port = opt$port)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;This is pretty neat because now we can do from the command line:&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;Rscript item_predictor_deploy_api.R --port 8001&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;This makes it very easy for your system admin to deploy this particular API on any port they wish, instead of needing to poke around in our code.&lt;/p&gt;
-&lt;p&gt;Also neat is what happens when the user does not define a port:&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;Usage: item_predictor_deploy_api.R [options]
-Deploy API for item predictor.
-
-Options:
-        -p INTEGER, --port=INTEGER
-                Port number for REST API
-
-        -h, --help
-                Show this help message and exit
-
-
-Error: Must supply port to open for REST API.
-Execution halted&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;We get not just an error message, but also a reminder how the script should be used. And all of this is outside R - this is a massive advantage when you are deploying a service for R-agnostics.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div id=&#34;conclusions&#34; class=&#34;section level2&#34;&gt;
-&lt;h2&gt;Conclusions&lt;/h2&gt;
-&lt;p&gt;Obviously this was no introduction to &lt;code&gt;plumber&lt;/code&gt;, just a note on some settings I collected during my use of the package. The neat organization of the API definitions, and the code to deploy the API, together with &lt;code&gt;optparse&lt;/code&gt; for command line options makes for an easy to use service to deploy a REST API.&lt;/p&gt;
-&lt;p&gt;For larger scale services, we of course wonder what happens if our single process we opened is busy - and another user sends a request. The &lt;code&gt;plumber&lt;/code&gt; folks describe &lt;a href=&#34;https://www.rplumber.io/docs/hosting.html#hosting&#34;&gt;how Docker can be used for maintaining multiple processes, load balancing, etc.&lt;/a&gt; Certainly something to try for next time.&lt;/p&gt;
-&lt;/div&gt;
-</description>
+      <description>I recently had the pleasure to complete an assessment - as part of a job interview. The assessment was enjoyable exactly because I did not have much - if any - experience with what I was supposed to be assessed on. But, at least for me, that’s the point: how quick can we learn new tools in the data science toolkit?
+Unfortunately I am not going to share the actual assessment (or even some part of it), but will talk about the plumber package which I used to deploy an API.</description>
     </item>
     
   </channel>

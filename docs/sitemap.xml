@@ -80,12 +80,6 @@
   </url>
   
   <url>
-    <loc>/about/</loc>
-    <lastmod>2016-10-02T22:55:05-04:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
     <loc>/pages/publications_full/</loc>
   </url>
   
@@ -93,6 +87,10 @@
     <loc>/tags/api/</loc>
     <lastmod>2018-06-06T00:00:00+00:00</lastmod>
     <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/pages/bio/</loc>
   </url>
   
   <url>
@@ -188,6 +186,10 @@
     <loc>/categories/r/</loc>
     <lastmod>2018-10-09T00:00:00+00:00</lastmod>
     <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/pages/rcode/</loc>
   </url>
   
   <url>

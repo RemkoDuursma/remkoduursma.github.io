@@ -2,12 +2,14 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Plot on Remko Duursma</title>
-    <link>http://www.remkoduursma.com/post</link>
-    <description>Recent content on Remko Duursma</description>
-    <generator>Hugo, blogdown, rmarkdown</generator>
+    <link>/tags/plot/</link>
+    <description>Recent content in Plot on Remko Duursma</description>
+    <generator>Hugo -- gohugo.io</generator>
     <language>en-US</language>
     <lastBuildDate>Mon, 24 Apr 2017 00:00:00 +0000</lastBuildDate>
-    <atom:link href="/tags/plot/" rel="self" type="application/rss+xml" />
+    
+	<atom:link href="/tags/plot/index.xml" rel="self" type="application/rss+xml" />
+    
     
     <item>
       <title>Introducing the nlshelper package</title>
@@ -15,111 +17,7 @@
       <pubDate>Mon, 24 Apr 2017 00:00:00 +0000</pubDate>
       
       <guid>/post/2017-04-24-nlshelper/</guid>
-      <description>&lt;p&gt;I recently organized a workshop on non-linear regression with R, covering the fundamentals and a few extras. When preparing the handout (which is &lt;a href=&#34;http://www.hiercourse.com/nonlinear&#34;&gt;available here&lt;/a&gt; as a PDF), I realized it is actually quite cumbersome to plot a fitted model with &lt;code&gt;nls&lt;/code&gt;, together with the data. To make this process easier, I wrote a simple package - &lt;code&gt;nlshelper&lt;/code&gt; - which does just that and a few other things. Read on for a simple demonstration, or visit the &lt;a href=&#34;https://github.com/remkoduursma/nlshelper&#34;&gt;Github repository&lt;/a&gt; here, or read the full chapter in the link above. The package is also on CRAN.&lt;/p&gt;
-&lt;div id=&#34;plotting-a-single-fitted-curve&#34; class=&#34;section level1&#34;&gt;
-&lt;h1&gt;Plotting a single fitted curve&lt;/h1&gt;
-&lt;p&gt;The main motivation for writing this package was to quickly be able to plot a fitted curve on top of the data, but has since grown to include a few extra tools. The &lt;code&gt;nlstools&lt;/code&gt; package can already be used for plotting, with &lt;code&gt;plotfit&lt;/code&gt;, but it is a little inflexible, and it also does not accept models fit with &lt;code&gt;nlsList&lt;/code&gt; (more on that below).&lt;/p&gt;
-&lt;p&gt;The following example fits the Chapman-Richards equation to the &lt;code&gt;Loblolly&lt;/code&gt; dataset, and plot the fitted curve with the data. With the &lt;code&gt;extrapolate=TRUE&lt;/code&gt; argument, &lt;code&gt;plot_nls&lt;/code&gt; plots the fitted curve to the X-axis limits (as specified with &lt;code&gt;xlim&lt;/code&gt;).&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# Define function to fit
-chapm &amp;lt;- function(x,Asym,b,c)Asym*(1-exp(-b*x))^c
-
-# Fit model
-# Note the specification of the starting values.
-nls_lob &amp;lt;- nls(height ~ chapm(age, Asym, b,c),
-               data=Loblolly,
-               start=list(Asym=100, b=0.1, c=2.5))
-
-# Plot fitted curve
-library(nlshelper)
-plot_nls(nls_lob, pch=16, points.col=&amp;quot;cornflowerblue&amp;quot;, 
-         xlim=c(0,40), ylim=c(0,80), extrapolate=TRUE)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/post/2017-04-24-nlshelper_files/figure-html/unnamed-chunk-1-1.png&#34; width=&#34;576&#34; /&gt;&lt;/p&gt;
-&lt;/div&gt;
-&lt;div id=&#34;plotting-nlslist-models&#34; class=&#34;section level1&#34;&gt;
-&lt;h1&gt;Plotting nlsList models&lt;/h1&gt;
-&lt;p&gt;It is straightforward to fit a non-linear regression by each group in a dataframe with &lt;code&gt;nlsList&lt;/code&gt; from &lt;code&gt;nlme&lt;/code&gt;, but it is much harder than it should be to plot the data with the fitted curves plotted on top. The &lt;code&gt;plot_nls&lt;/code&gt; function also accepts objects returned by &lt;code&gt;nlsList&lt;/code&gt;. The following example fits the Gompertz growth model to the &lt;code&gt;ChickWeight&lt;/code&gt; data, for each &lt;code&gt;Diet&lt;/code&gt;, and plots the curves with the data.&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(nlshelper)
-library(nlme)
-
-fit1 &amp;lt;- nlsList(weight ~ SSgompertz(Time, Asym, b2, b3)|Diet, 
-                data=ChickWeight)
-
-palette(c(&amp;quot;#EAC435&amp;quot;,&amp;quot;#345995&amp;quot;,&amp;quot;#E40066&amp;quot;,&amp;quot;#03CEA4&amp;quot;))
-plot_nls(fit1, pch=16, cex=0.5, lwd=2)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/post/2017-04-24-nlshelper_files/figure-html/unnamed-chunk-2-1.png&#34; width=&#34;576&#34; /&gt;&lt;/p&gt;
-&lt;/div&gt;
-&lt;div id=&#34;plotting-loess-and-non-linear-quantile-regression-models&#34; class=&#34;section level1&#34;&gt;
-&lt;h1&gt;Plotting loess and non-linear quantile regression models&lt;/h1&gt;
-&lt;p&gt;After having implemented the simple &lt;code&gt;plot_nls&lt;/code&gt; function, it turned out that it can be used (or at least was easily modified) for some other objects, including those fit with &lt;code&gt;loess&lt;/code&gt; and non-linear quantile regression (&lt;code&gt;nlrq&lt;/code&gt; from &lt;code&gt;quantreg&lt;/code&gt;).&lt;/p&gt;
-&lt;p&gt;The following example fits a non-linear quantile regression model to the &lt;code&gt;ChickWeight&lt;/code&gt; data, for three quantiles, and plots the fitted curves with the data. To plot multiple quantiles, it is convenient to wrap the fit in a function, accepting only &lt;code&gt;.tau&lt;/code&gt; as an argument.&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(quantreg)
-
-fit_quan &amp;lt;- function(.tau){
-  nlrq(weight ~ SSgompertz(Time, Asym, b2, b3), 
-             tau=.tau,
-              data=ChickWeight)
-}
-
-f &amp;lt;- fit_quan(0.1)
-plot_nls(fit_quan(0.1), pch=16, cex=0.5, points.col=&amp;quot;dimgrey&amp;quot;, lines.col=&amp;quot;firebrick&amp;quot;, lty=3)
-plot_nls(fit_quan(0.9), add=TRUE, lines.col=&amp;quot;firebrick&amp;quot;, lty=3)
-plot_nls(fit_quan(0.5), add=TRUE, lines.col=&amp;quot;black&amp;quot;, lwd=2)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/post/2017-04-24-nlshelper_files/figure-html/unnamed-chunk-3-1.png&#34; width=&#34;576&#34; /&gt;&lt;/p&gt;
-&lt;/div&gt;
-&lt;div id=&#34;testing-a-grouping-variable-in-non-linear-regression&#34; class=&#34;section level1&#34;&gt;
-&lt;h1&gt;Testing a grouping variable in non-linear regression&lt;/h1&gt;
-&lt;p&gt;A question that frequently arises in non-linear regression is whether the fitted curve differs ‘somehow’ between groups. There are some rather cumbersome solutions to this problem, using indexing, but we’d like a simple function that gives an overall p-value for the contribution of the group to the fit. The &lt;code&gt;nlshelper&lt;/code&gt; package provides &lt;code&gt;anova_nlslist&lt;/code&gt; for this purpose. It simply performs an F-test of a model fit with &lt;code&gt;nlsList&lt;/code&gt;, which includes the grouping variable, and the equivalent model fit with &lt;code&gt;nls&lt;/code&gt;. It calculates the appropriate degrees of freedom, and prints a familiar &lt;code&gt;anova&lt;/code&gt;-like table.&lt;/p&gt;
-&lt;p&gt;The following example uses the built-in &lt;code&gt;Puromycin&lt;/code&gt; data. The data include reaction velocity () versus subtrate concentration in an enzymatic reaction for cells treated with the antibiotic Puromycin, or an untreated control. For enzymatic reactions that depend on the concentration of the substrate, the Michaelis-Menten model is often used, and follows from simple assumptions on the reaction rate versus the concentration of the substrate and enzyme.&lt;/p&gt;
-&lt;p&gt;The following example performs an F-test of a model including a grouping variable, versus one without.&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# Fit the vanilla model without grouping
-pur0 &amp;lt;- nls(rate ~ SSmicmen(conc, Vm, K), data=Puromycin)
-
-# Fit a model that includes a grouping variable with nlsList
-pur1 &amp;lt;- nlsList(rate ~ SSmicmen(conc, Vm, K)|state, data=Puromycin)
-
-# F-test : does the fitted model differ significantly by &amp;#39;state&amp;#39;?
-# The first argument is the full model, the second one the reduced model.
-anova_nlslist(pur1, pur0)
-## Analysis of Variance Table
-## 
-## Model 1: rate ~ SSmicmen(conc, Vm, K)
-## Model 2: rate ~ SSmicmen(conc, Vm, K) | state
-##   Res.Df Res.Sum Sq Df Sum Sq F value    Pr(&amp;gt;F)    
-## 1     21     7276.5                                
-## 2     19     2055.1  2 5221.5  24.138 3.608e-06 ***
-## ---
-## Signif. codes:  0 &amp;#39;***&amp;#39; 0.001 &amp;#39;**&amp;#39; 0.01 &amp;#39;*&amp;#39; 0.05 &amp;#39;.&amp;#39; 0.1 &amp;#39; &amp;#39; 1&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;Clearly from this we learn that &lt;code&gt;state&lt;/code&gt; affects the relationship very (very) much. Of course, in this example, we don’t need p-values since it is obvious from a plot of the fitted model. Also useful in this context is a quick table of the fitted coefficients, separately for each group, with confidence intervals. The &lt;code&gt;nlshelper&lt;/code&gt; package adds a method to the &lt;code&gt;tidy&lt;/code&gt; function from the &lt;code&gt;broom&lt;/code&gt; package, as the following example shows.&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# Only works if the nlshelper package is loaded
-tidy(pur1, conf.int=TRUE)
-##       group term     estimate   std.error statistic      p.value
-## 1   treated   Vm 212.68370711 6.947153189 30.614512 3.241160e-11
-## 2   treated    K   0.06412123 0.008280943  7.743227 1.565136e-05
-## 3 untreated   Vm 160.28011589 6.480250310 24.733630 1.384618e-09
-## 4 untreated    K   0.04770829 0.007781889  6.130683 1.727047e-04
-##       conf.low    conf.high
-## 1 197.30212762 229.29006416
-## 2   0.04692517   0.08615995
-## 3 145.63695367 176.54440095
-## 4   0.03137460   0.07006131
-
-# A plot of the fitted model
-palette(c(&amp;quot;#3BB8C4&amp;quot;,&amp;quot;#FF3D2F&amp;quot;))
-plot_nls(pur1, pch=19, xlim=c(0,1.2))
-
-# A future version of the package may include an automatic legend...
-legend(&amp;quot;bottomright&amp;quot;, names(pur1), pch=19, col=palette())&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/post/2017-04-24-nlshelper_files/figure-html/unnamed-chunk-5-1.png&#34; width=&#34;576&#34; /&gt;&lt;/p&gt;
-&lt;/div&gt;
-&lt;div id=&#34;future-development&#34; class=&#34;section level1&#34;&gt;
-&lt;h1&gt;Future development&lt;/h1&gt;
-&lt;p&gt;I have a few developments planned for the &lt;code&gt;nlshelper&lt;/code&gt; package including:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;Methods for non-linear mixed-effects models&lt;/li&gt;
-&lt;li&gt;Computation and plotting of confidence intervals for the fitted line, based on the bootstrap (much like the &lt;code&gt;fitplc&lt;/code&gt; package does for very specific non-linear regressions, &lt;a href=&#34;http://jplanthydro.org/article/view/1541&#34;&gt;see our paper here&lt;/a&gt;)&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/div&gt;
-</description>
+      <description>I recently organized a workshop on non-linear regression with R, covering the fundamentals and a few extras. When preparing the handout (which is available here as a PDF), I realized it is actually quite cumbersome to plot a fitted model with nls, together with the data. To make this process easier, I wrote a simple package - nlshelper - which does just that and a few other things. Read on for a simple demonstration, or visit the Github repository here, or read the full chapter in the link above.</description>
     </item>
     
     <item>
@@ -128,15 +26,9 @@ legend(&amp;quot;bottomright&amp;quot;, names(pur1), pch=19, col=palette())&lt;/
       <pubDate>Thu, 13 Apr 2017 00:00:00 +0000</pubDate>
       
       <guid>/post/2017-04-13-rworkshops/</guid>
-      <description>&lt;p&gt;Together with Jeff Powell, I am teaching a new series of workshops in Advanced Topics in R this week. Follow the links below for each of the workshops. Also visit the informal page for the R course, and these workshops at &lt;a href=&#34;http://www.hiercourse.com&#34;&gt;&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;Each of the pages hosts the handouts and other materials - all are available free of charge.&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://www.hiercourse.com/multivariate&#34;&gt;Community Ecology and Multivariate Statistics&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://www.hiercourse.com/mixedeffects&#34;&gt;Linear Mixed-Effects Models&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://www.hiercourse.com/advancedplot&#34;&gt;Advanced Plotting&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://www.hiercourse.com/nonlinear&#34;&gt;Non-linear Modelling&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
+      <description>Together with Jeff Powell, I am teaching a new series of workshops in Advanced Topics in R this week. Follow the links below for each of the workshops. Also visit the informal page for the R course, and these workshops at .
+Each of the pages hosts the handouts and other materials - all are available free of charge.
+Community Ecology and Multivariate StatisticsLinear Mixed-Effects ModelsAdvanced PlottingNon-linear Modelling</description>
     </item>
     
     <item>
@@ -145,214 +37,8 @@ legend(&amp;quot;bottomright&amp;quot;, names(pur1), pch=19, col=palette())&lt;/
       <pubDate>Thu, 13 Apr 2017 00:00:00 +0000</pubDate>
       
       <guid>/post/2017-4-13-readingwebdata/</guid>
-      <description>&lt;p&gt;In this tutorial I show how to read data from online sources, in various ways. I will also demonstrate how to tidy data using the &lt;code&gt;tidyr&lt;/code&gt; package, in particular converting from wide to long format.&lt;/p&gt;
-&lt;div id=&#34;reading-data-files-directly&#34; class=&#34;section level1&#34;&gt;
-&lt;h1&gt;Reading data files directly&lt;/h1&gt;
-&lt;p&gt;In the case where a csv or other text file is available as a direct link, we can simply read the file from the URL without having to download it. To read the current CO&lt;sub&gt;2&lt;/sub&gt; concentrations on Mauna Loa, for example, we can use the following:&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;url &amp;lt;- &amp;quot;ftp://aftp.cmdl.noaa.gov/products/trends/co2/co2_weekly_mlo.txt&amp;quot;
-d &amp;lt;- read.table(url, na.strings=&amp;quot;-999.99&amp;quot;)
-plot(d[,4], d[,5], type=&amp;#39;l&amp;#39;, xlab=&amp;quot;Year&amp;quot;, ylab=expression(&amp;quot;[&amp;quot;*CO[2]*&amp;quot;]&amp;quot;~(ppm)))&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/post/2017-4-13-readingwebdata_files/figure-html/unnamed-chunk-1-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;The only hitch here is that the column names are not read (they are embedded in the comments in a messy way), but we can find that year is the 4th column, and CO&lt;sub&gt;2&lt;/sub&gt; concentration the 5th.&lt;/p&gt;
-&lt;p&gt;Also note the use of &lt;code&gt;na.strings&lt;/code&gt; to convert missing values coded as &lt;code&gt;-999.99&lt;/code&gt; to &lt;code&gt;NA&lt;/code&gt;.&lt;/p&gt;
-&lt;div id=&#34;finding-the-url-of-a-datasource&#34; class=&#34;section level2&#34;&gt;
-&lt;h2&gt;Finding the URL of a datasource&lt;/h2&gt;
-&lt;p&gt;In the example above, and all that follow, we have to save the URL of the data source. When you find the URL of the datafile, or the button that says ‘Click to Download’, or whatever, right-click on it and select ‘Copy Link Address’ (Windows instructions).&lt;/p&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div id=&#34;downloading-text-files&#34; class=&#34;section level1&#34;&gt;
-&lt;h1&gt;Downloading text files&lt;/h1&gt;
-&lt;p&gt;In the above example, we read a text file from a direct URL. Sometimes this is not possible, and other times you would also like to have a local copy of the text file for safekeeping (in case &lt;a href=&#34;https://www.bloomberg.com/view/articles/2017-03-10/trump-s-reckless-plan-to-starve-noaa&#34;&gt;something happens to NOAA&lt;/a&gt;, for example).&lt;/p&gt;
-&lt;p&gt;The following example downloads the CO2 data to a local file.&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;url &amp;lt;- &amp;quot;ftp://aftp.cmdl.noaa.gov/products/trends/co2/co2_weekly_mlo.txt&amp;quot;
-fn &amp;lt;- basename(url)
-download.file(url, fn)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;Here I use &lt;code&gt;basename&lt;/code&gt; to extract the right-hand side of the url (&lt;code&gt;co2_weekly_mlo.txt&lt;/code&gt;), a natural name for the file.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div id=&#34;downloading-and-unzipping-zip-files&#34; class=&#34;section level1&#34;&gt;
-&lt;h1&gt;Downloading and unzipping zip files&lt;/h1&gt;
-&lt;p&gt;The next example shows how to download a zip file, containing data files, from an online source. Downloading a zip file proceeds as above, however we have to specify one extra argument.&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Warning:&lt;/strong&gt; For non-text files, on Windows, you &lt;strong&gt;must&lt;/strong&gt; use the argument &lt;code&gt;mode=&amp;quot;wb&amp;quot;&lt;/code&gt;!&lt;/p&gt;
-&lt;p&gt;If you don’t follow this warning, the file will download just fine but you cannot read it (and it may take you some time to figure out why not).&lt;/p&gt;
-&lt;p&gt;The following example downloads data from the Research Data at Western Sydney University (your data ends up here if you publish your data via the HIEv).&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;url &amp;lt;- &amp;quot;http://research-data.westernsydney.edu.au/redbox/verNum1.8-SNAPSHOT/default/detail/094c4376cead38dc21556f59470de5a0/WTC_TEMPERATURE_SUNSHADE.zip?preview=true&amp;quot;
-
-# Note the mode=&amp;#39;wb&amp;#39;
-download.file(url, &amp;quot;data.zip&amp;quot;, mode=&amp;quot;wb&amp;quot;)
-
-# Using the built-in unzipper - it returns the filenames.
-u &amp;lt;- unzip(&amp;quot;data.zip&amp;quot;)
-
-# Find the csv files
-csvfiles &amp;lt;- u[grep(&amp;quot;[.]csv&amp;quot;, u, ignore.case=TRUE)]
-
-# Read the first one
-dat &amp;lt;- read.csv(csvfiles[1])&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;div id=&#34;reading-html-tables-option-1&#34; class=&#34;section level1&#34;&gt;
-&lt;h1&gt;Reading HTML tables (Option 1)&lt;/h1&gt;
-&lt;p&gt;There are a few options to read HTML tables directly into R. This example shows the use of the simple &lt;code&gt;readHTMLTable&lt;/code&gt; from the &lt;code&gt;XML&lt;/code&gt; package. Reading data from HTML tables on the web is particularly useful for data that are updated frequently.&lt;/p&gt;
-&lt;p&gt;Here I read the water level of the Hawkesbury river at Windsor, as provided by the BOM.&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(XML)
-url &amp;lt;- &amp;quot;http://www.bom.gov.au/fwo/IDN60233/IDN60233.567044.tbl.shtml&amp;quot;
-
-# to open a URL with the default browser, do this:
-## # browseURL(url)
-
-wat &amp;lt;- readHTMLTable(url, which=1)
-names(wat) &amp;lt;- c(&amp;quot;DateTime&amp;quot;,&amp;quot;WaterLevel&amp;quot;)
-
-# for &amp;#39;mutate&amp;#39;, a cleaner way to add new variables
-library(dplyr)
-wat &amp;lt;- mutate(wat, 
-  WaterLevel = as.numeric(as.character(WaterLevel)),
-  DateTime = as.POSIXct(DateTime, format=&amp;quot;%d/%m/%Y %H:%M&amp;quot;))
-
-# Simple line plot of the river height
-par(cex.main=0.85)
-with(wat, plot(DateTime, WaterLevel, type=&amp;#39;l&amp;#39;, main=&amp;quot;Hawkesbury River water level at Windsor&amp;quot;))&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/post/2017-4-13-readingwebdata_files/figure-html/unnamed-chunk-4-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
-&lt;/div&gt;
-&lt;div id=&#34;reading-html-table-option-2&#34; class=&#34;section level1&#34;&gt;
-&lt;h1&gt;Reading HTML table (Option 2)&lt;/h1&gt;
-&lt;p&gt;The second option uses the &lt;code&gt;rvest&lt;/code&gt; package. I will also introduce the pipe operator (&lt;code&gt;%&amp;gt;%&lt;/code&gt;) for tidier coding.&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(rvest)
-url &amp;lt;- &amp;quot;https://en.wikipedia.org/wiki/Demography_of_Australia&amp;quot;
-
-tb &amp;lt;- html_nodes(read_html(url), &amp;quot;table&amp;quot;)
-
-# Many tables are found
-head(tb)
-## {xml_nodeset (6)}
-## [1] &amp;lt;table class=&amp;quot;plainlinks metadata ambox ambox-content ambox-Update&amp;quot;  ...
-## [2] &amp;lt;table class=&amp;quot;wikitable&amp;quot; style=&amp;quot;float:right; margin-left:8px;&amp;quot;&amp;gt;\n&amp;lt;tr ...
-## [3] &amp;lt;table class=&amp;quot;navbox&amp;quot;&amp;gt;\n&amp;lt;tr&amp;gt;\n&amp;lt;th colspan=&amp;quot;10&amp;quot; class=&amp;quot;navbox-title&amp;quot;&amp;gt; ...
-## [4] &amp;lt;table class=&amp;quot;wikitable sortable plainrowheaders&amp;quot; style=&amp;quot;text-align: ...
-## [5] &amp;lt;table class=&amp;quot;wikitable plainrowheaders&amp;quot; style=&amp;quot;text-align:right;&amp;quot;&amp;gt;\ ...
-## [6] &amp;lt;table class=&amp;quot;wikitable plainrowheaders&amp;quot; style=&amp;quot;text-align:right&amp;quot;&amp;gt;\n ...&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;In the above example we do the usual nesting of expressions. First the url is read (&lt;code&gt;read_html(url)&lt;/code&gt;), then the table nodes are found (&lt;code&gt;html_nodes&lt;/code&gt;). Often we have multiple steps that are nested in this way, which can make for long and sometimes unreadable code. An alternate way of writing these expressions is to use the pipe operator, which allows us to write expressions in the order that they occur. Example:&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# this expression:
-tb &amp;lt;- html_nodes(read_html(url), &amp;quot;table&amp;quot;)
-
-# is equivalent to:
-tb &amp;lt;- url %&amp;gt;% read_html %&amp;gt;% html_nodes(&amp;quot;table&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;With the pipe operator, the result of the expression to the left will be used as the &lt;em&gt;first argument&lt;/em&gt; to the next expression. For example, &lt;code&gt;url&lt;/code&gt; is sent to &lt;code&gt;read_html&lt;/code&gt; which treats it as its first argument. The output from &lt;code&gt;read_html&lt;/code&gt; is sent to &lt;code&gt;html_nodes&lt;/code&gt; which uses that as its first argument.&lt;/p&gt;
-&lt;p&gt;After digging in the results a bit, we find we want the third table. That returns a list of length one, so we take just the first element (&lt;code&gt;pop[[1]]&lt;/code&gt;).&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;pop &amp;lt;- html_table(tb[4], fill=TRUE)
-
-# Also delete first row, contains headers (again), keep only first two columnss.
-pop &amp;lt;- pop[[1]][-1,1:2] &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;The resulting table is far from pretty. First we fix the column names, then format the total population column.&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;names(pop) &amp;lt;- c(&amp;quot;Region&amp;quot;,&amp;quot;population&amp;quot;)
-
-# Remove commas by substituting them with nothing (&amp;quot;&amp;quot;)
-pop$population &amp;lt;- as.numeric(gsub(&amp;quot;,&amp;quot;,&amp;quot;&amp;quot;, pop$population))
-
-# And a simple barplot
-par(mar=c(10,4,1,1), las=3, cex.axis=0.8)
-pop &amp;lt;- pop[order(pop$population),]
-with(pop, barplot(population * 10^-6, 
-                  col=&amp;quot;cornflowerblue&amp;quot;,
-                  names.arg=Region, ylab=&amp;quot;Population (millions)&amp;quot;))&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/post/2017-4-13-readingwebdata_files/figure-html/unnamed-chunk-8-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
-&lt;/div&gt;
-&lt;div id=&#34;reading-and-tidying-a-complex-excel-workbook&#34; class=&#34;section level1&#34;&gt;
-&lt;h1&gt;Reading and tidying a complex Excel workbook&lt;/h1&gt;
-&lt;p&gt;In some cases data are stored as an Excel workbook, with data organized in tabs. I usually prefer to convert all tabs to CSV files and work with those. However there are two distinct advantages to reading data from the Excel workbook directly (although of course I do not advocate you use Excel to begin with; the point is others do and we have to work with that).&lt;/p&gt;
-&lt;p&gt;Advantages are:&lt;/p&gt;
-&lt;ol style=&#34;list-style-type: decimal&#34;&gt;
-&lt;li&gt;Reading from Excel directly avoids a manual step (saving as CSV), making your workflow more reproducible.&lt;/li&gt;
-&lt;li&gt;If cells are formatted in Excel (for example, large numbers may have commas in it), reading the data from Excel will ignore the formatting and just read the actual data in the sheets. This also applies to cells formatted as Dates (which will be read as the number of days since 1900-1-1, and can be converted with &lt;code&gt;as.Date(num, origin=&amp;quot;1900-1-1&amp;quot;)&lt;/code&gt;).&lt;/li&gt;
-&lt;/ol&gt;
-&lt;div id=&#34;getting-the-data&#34; class=&#34;section level2&#34;&gt;
-&lt;h2&gt;Getting the data&lt;/h2&gt;
-&lt;p&gt;In this example I use data form agricultural commodities (crops, livestock), available on the Australian Bureau of Statistics (&lt;a href=&#34;http://www.abs.gov.au/AUSSTATS&#34; class=&#34;uri&#34;&gt;http://www.abs.gov.au/AUSSTATS&lt;/a&gt;).&lt;/p&gt;
-&lt;p&gt;Again the URL could be found by ‘Copy Link Address’ after right-clicking the Download button.&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;url &amp;lt;- &amp;quot;http://www.abs.gov.au/AUSSTATS/subscriber.nsf/log?openagent&amp;amp;7124%20data%20cube.xls&amp;amp;7124.0&amp;amp;Data%20Cubes&amp;amp;EF15C557DF98A5F9CA257B2500137D3B&amp;amp;0&amp;amp;2010-11&amp;amp;06.03.2013&amp;amp;Latest&amp;quot;
-
-download.file(url, &amp;quot;tmp.xls&amp;quot;, mode=&amp;quot;wb&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;div id=&#34;simple-timeseries&#34; class=&#34;section level2&#34;&gt;
-&lt;h2&gt;Simple timeseries&lt;/h2&gt;
-&lt;p&gt;We use &lt;code&gt;read_excel&lt;/code&gt; from the &lt;code&gt;readxl&lt;/code&gt; package, which is pretty quick and easy to use. It does have some issues, for example it spits out a long message a lot of the time (in hexadecimal code), which is quite useless and annoying. I have suppressed the messages below, but you will see many on the screen!&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(readxl) # for read_excel
-library(tidyr)  # for gather, spread&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;As a first example we will read the ‘Horses’ tab, showing the number of horses in the country since 1885. The data are in wide format (every column is a year), and we can use &lt;code&gt;gather&lt;/code&gt; from &lt;code&gt;tidyr&lt;/code&gt; to quickly make this into long format. The first argument is the name of the new variable in long format that will contain the names of the columns that used to be in wide format (here, &lt;code&gt;year&lt;/code&gt;). The second argument is the new name of the variable that will contain the data (I here call it &lt;code&gt;count&lt;/code&gt;).&lt;/p&gt;
-&lt;p&gt;Also note the use of the &lt;code&gt;%&amp;gt;%&lt;/code&gt; operator, and the indexing (square brackets) to keep only the first row, and to delete the first column (&lt;code&gt;[1,-1]&lt;/code&gt;).&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# Look at the &amp;#39;horses&amp;#39; tab, we just want to plot the number of horses over time.
-horses &amp;lt;- read_excel(&amp;quot;tmp.xls&amp;quot;, sheet=7, skip=4)[1,-1] %&amp;gt;%
-  gather(year,count)
-
-with(horses, plot(year, count, type=&amp;#39;l&amp;#39;))&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/post/2017-4-13-readingwebdata_files/figure-html/unnamed-chunk-12-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;Clearly number of horses has declined steadily since the introduction of the automobile - but note the pause in decline during the Great Depression.&lt;/p&gt;
-&lt;p&gt;Now let’s write a simple function that takes the name of the sheet, and plots the first row of data against year. The trick here is to store the names of the sheets first (as &lt;code&gt;sh&lt;/code&gt;).&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# Read sheet names, store as vector
-# library(XLConnect)
-# sh &amp;lt;- getSheets(loadWorkbook(&amp;quot;tmp.xls&amp;quot;))
-
-# Or with readxl
-sh &amp;lt;- excel_sheets(&amp;quot;tmp.xls&amp;quot;)
-
-plot_row1 &amp;lt;- function(sheetname){
-  
-  # Look up which sheet has that name
-  i &amp;lt;- which(sh == sheetname)
-  
-  # Read that sheet. 
-  # Keep only first row, delete first column ([1,-1])
-  # Make into long format, with year as first variable, new variable
-  # &amp;#39;count&amp;#39; as variable that stores the data (gather).
-  data &amp;lt;- read_excel(&amp;quot;tmp.xls&amp;quot;, sheet=i, skip=4)[1,-1] %&amp;gt;%
-    gather(year,count)
-  
-  # Simple line plot
-  with(data, plot(year, count, main=sheetname, type=&amp;#39;l&amp;#39;))
-}
-plot_row1(&amp;quot;Sheep&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/post/2017-4-13-readingwebdata_files/figure-html/unnamed-chunk-13-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
-&lt;/div&gt;
-&lt;div id=&#34;more-complex-example&#34; class=&#34;section level2&#34;&gt;
-&lt;h2&gt;More complex example&lt;/h2&gt;
-&lt;p&gt;The final example is more complex. If you inspect the Barley tab in the Excel workbook, you see that we want to reshape two variables, representing area, and total yield. I want to plot yield per area over time (productivity), so we need to keep track of both variables. This example shows the use of &lt;code&gt;tidyr&lt;/code&gt; to accomplish that.&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(readxl)
-library(tidyr)
-library(dplyr)
-
-# Read second sheet, Barley.
-# Keep first and second row, delete first column
-aus_barley &amp;lt;- read_excel(&amp;quot;tmp.xls&amp;quot;, sheet=2, skip=4)[1:2,-1]
-
-# Rename first column, reset &amp;#39;Variable&amp;#39; to more useful names.
-names(aus_barley)[1] &amp;lt;- &amp;quot;Variable&amp;quot;
-aus_barley$Variable &amp;lt;- c(&amp;quot;Area&amp;quot;,&amp;quot;Yield&amp;quot;)
-
-# Make long format, but ignore the &amp;#39;Variable&amp;#39; column when doing so.
-aus_barley_long &amp;lt;- gather(aus_barley, year, value, -Variable)
-
-# Now we have area and yield for every year, as rows following each other:
-head(aus_barley_long)
-
-# Now we go back to wide format, &amp;#39;splitting&amp;#39; by the &amp;#39;Variable&amp;#39; column,
-# so that we have separate columns for area and yield, using spread() from tidyr.
-aus_barley_long &amp;lt;- spread(aus_barley_long, Variable, value)
-
-head(aus_barley_long)
-
-# Now add year and yield per hectare, using the convenient mutate function from dplyr
-aus_barley_long &amp;lt;- mutate(aus_barley_long,
-                          year = round(as.numeric(year),0),
-                          yield_ha = Yield / Area)
-
-# Yield per hectare over time.
-with(aus_barley_long, plot(year, yield_ha, type=&amp;#39;l&amp;#39;, 
-                           xlab=&amp;quot;Year&amp;quot;,
-                           ylab=expression(Yield~~(t~ha^-1)),
-                           main=&amp;quot;Barley yield&amp;quot;))
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-</description>
+      <description>In this tutorial I show how to read data from online sources, in various ways. I will also demonstrate how to tidy data using the tidyr package, in particular converting from wide to long format.
+Reading data files directlyIn the case where a csv or other text file is available as a direct link, we can simply read the file from the URL without having to download it. To read the current CO2 concentrations on Mauna Loa, for example, we can use the following:</description>
     </item>
     
   </channel>
