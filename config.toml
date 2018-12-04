@@ -61,11 +61,12 @@ highlightjs = true
 #    identifier = "training"
 #	weight = 1
 #	url ="/training/index.html"
-#[[menu.main]]
-#    name = "Bio"
-#    identifier = "bio"
-#    weight = 3
-#    url = "/pages/bio/"
+
+[[menu.main]]
+    name = "Bio"
+    identifier = "bio"
+    weight = 1
+    url = "/pages/bio/"
 [[menu.main]]
     name = "R Packages, R code, and R Blog"
     weight = 2

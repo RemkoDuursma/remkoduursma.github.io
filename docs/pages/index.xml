@@ -154,7 +154,23 @@ See my &lt;a href=&#34;https://scholar.google.com.au/citations?hl=en&amp;amp;use
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>/pages/bio/</guid>
-      <description>&lt;p&gt;This is me!&lt;/p&gt;
+      <description>&lt;p&gt;
+&lt;img style=&#34;float: right; margin-left:15px;&#34; src=&#34;../img/tree_landscape_small.jpg&#34;&gt;
+    I am a freelance R trainer and consultant, and live in Almere, the Netherlands. I moved back to the Netherlands in 2018, having been away for 18 years. 
+    Most recently I was an Associate Professor at the &lt;a href=&#34;https://www.westernsydney.edu.au/hie&#34; target=&#34;_blank&#34;&gt;Hawkesbury Institute for the Environment&lt;/a&gt; (Western Sydney University), where I worked on models of vegetation function and structure, as support for global models of climate change impact. In practice I worked with lots of datasets, collected at &lt;a href=&#34;https://www.westernsydney.edu.au/hie/stories/does_rising_carbon_dioxide_cause_australian_forests_to_grow_more_leaves&#34; target=&#34;_blank&#34;&gt;field&lt;/a&gt; or glasshouse studies on climate change impacts on plants, and I coded. A lot. 
+&lt;/p&gt;
+
+&lt;p&gt; 
+I have written (or co-authored) many publications in the scientific literature. You can view a selection of them &lt;a href=&#34;../pages/publications_select&#34;&gt;here&lt;/a&gt;, or browse the whole collection on &lt;a href=&#34;https://scholar.google.com/citations?user=qGSIWxcAAAAJ&amp;hl=en&#34;&gt;gscholar&lt;/a&gt;. I have also written a lot of R code, &lt;a href=&#34;../pages/rcode&#34;&gt;summarized here&lt;/a&gt;. 
+&lt;/p&gt;
+
+&lt;p&gt;
+&lt;img style=&#34;float:left; margin-right:15px;&#34; src=&#34;../img/windmill_small.jpg&#34;&gt;
+In the nineties, I studied Forestry at Wageningen University. I quickly realized I enjoyed programming, and developing mathematical models, and customized my studies to include a lot of quantitative subjects. In 2000, I moved to &lt;a href=&#34;https://www.uidaho.edu/&#34; target=&#34;_blank&#34;&gt;Idaho&lt;/a&gt; (USA) to start on my PhD, where I developed a predictive model of forest growth, taking into account variations in the weather, forest attributes, and our understanding of tree physiology. In 2001 one of my supervisors suggested I learn the &lt;a href=&#34;https://www.r-project.org/&#34; target=&#34;_blank&#34;&gt;R&lt;/a&gt; language - a nerdy affair in those days. I was quickly hooked. From 2004 to 2008 I lived in Helsinki, Finland, where I worked as a post-doc on various models of tree and forest functioning. &lt;/p&gt; 
+
+&lt;p&gt;
+&lt;img style=&#34;float: right; margin-left:15px;&#34; src=&#34;../img/banyan.png&#34;&gt;
+In 2008 I moved to Sydney, Australia, to start as a post-doctoral researcher, investigating climate change effects on &lt;a href=&#34;https://www.westernsydney.edu.au/hie/facilities/whole_tree_chambers&#34; target=&#34;_blank&#34;&gt;Eucalyptus trees&lt;/a&gt;. The intended 2 year stay turned into a decade, with eventual promotion to Associate Professor. My tasks were to carry out and lead research projects, supervise PhD students, write publications and give presentations, and teach from time to time. I developed &lt;a href=&#34;http://www.hiercourse.com&#34; target=&#34;_blank&#34;&gt;a popular R course&lt;/a&gt; from scratch, and wrote a &lt;a href=&#34;http://www.hiercourse.com/#two&#34; target=&#34;_blank&#34;&gt;300+ page manual&lt;/a&gt; used also by other institutions. &lt;/p&gt;
 </description>
     </item>
     
