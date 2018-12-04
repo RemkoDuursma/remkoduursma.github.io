@@ -56,11 +56,11 @@ highlightjs = true
 #    weight = 200
 #    url = "/about/"
 
-[[menu.main]]
-    name = "Available Training and Services"
-    identifier = "training"
-	weight = 1
-	url ="/training/index.html"
+#[[menu.main]]
+#    name = "Available Training and Services"
+#    identifier = "training"
+#	weight = 1
+#	url ="/training/index.html"
 #[[menu.main]]
 #    name = "Bio"
 #    identifier = "bio"
