@@ -14,7 +14,7 @@
 
 <title>Remko Duursma</title>
 
-<meta name="generator" content="Hugo 0.52" />
+<meta name="generator" content="Hugo 0.31.1" />
 
 
 
@@ -92,10 +92,7 @@
 
 <section id="content-pane" class="row">
   <div class="col-md-12 text-justify content">
-    
-
-
-<p>I recently organized a workshop on non-linear regression with R, covering the fundamentals and a few extras. When preparing the handout (which is <a href="http://www.hiercourse.com/nonlinear">available here</a> as a PDF), I realized it is actually quite cumbersome to plot a fitted model with <code>nls</code>, together with the data. To make this process easier, I wrote a simple package - <code>nlshelper</code> - which does just that and a few other things. Read on for a simple demonstration, or visit the <a href="https://github.com/remkoduursma/nlshelper">Github repository</a> here, or read the full chapter in the link above. The package is also on CRAN.</p>
+    <p>I recently organized a workshop on non-linear regression with R, covering the fundamentals and a few extras. When preparing the handout (which is <a href="http://www.hiercourse.com/nonlinear">available here</a> as a PDF), I realized it is actually quite cumbersome to plot a fitted model with <code>nls</code>, together with the data. To make this process easier, I wrote a simple package - <code>nlshelper</code> - which does just that and a few other things. Read on for a simple demonstration, or visit the <a href="https://github.com/remkoduursma/nlshelper">Github repository</a> here, or read the full chapter in the link above. The package is also on CRAN.</p>
 <div id="plotting-a-single-fitted-curve" class="section level1">
 <h1>Plotting a single fitted curve</h1>
 <p>The main motivation for writing this package was to quickly be able to plot a fitted curve on top of the data, but has since grown to include a few extra tools. The <code>nlstools</code> package can already be used for plotting, with <code>plotfit</code>, but it is a little inflexible, and it also does not accept models fit with <code>nlsList</code> (more on that below).</p>
@@ -278,16 +275,12 @@ hljs.initHighlightingOnLoad();
 
 
 
-<script type="application/javascript">
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-	ga('create', 'UA-10108116-1', 'auto');
-	
-	ga('send', 'pageview');
-}
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-10108116-1', 'auto');
+ga('send', 'pageview');
 </script>
-<script async src='https://www.google-analytics.com/analytics.js'></script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>

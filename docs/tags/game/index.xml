@@ -2,14 +2,12 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Game on Remko Duursma</title>
-    <link>/tags/game/</link>
-    <description>Recent content in Game on Remko Duursma</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <link>http://www.remkoduursma.com/post</link>
+    <description>Recent content on Remko Duursma</description>
+    <generator>Hugo, blogdown, rmarkdown</generator>
     <language>en-US</language>
     <lastBuildDate>Tue, 09 Oct 2018 00:00:00 +0000</lastBuildDate>
-    
-	<atom:link href="/tags/game/index.xml" rel="self" type="application/rss+xml" />
-    
+    <atom:link href="/tags/game/" rel="self" type="application/rss+xml" />
     
     <item>
       <title>Geometric dice</title>
@@ -17,8 +15,70 @@
       <pubDate>Tue, 09 Oct 2018 00:00:00 +0000</pubDate>
       
       <guid>/post/2018-10-09_geometricdice/</guid>
-      <description>As a child, I loved playing Jumbojet (from the publisher Jumbo) - basically a Monopoly knock-off but with quite a few changes. Recently my son and I found a pristine copy of this 1975 game in a second-hand store, and it made me all nostalgic.
-I might write more about the game later- as I am working on a simulator - but here just want to think about dice. What good probability problem doesn’t have dice in it?</description>
+      <description>&lt;p&gt;As a child, I loved playing Jumbojet (from the publisher Jumbo) - basically a Monopoly knock-off but with quite a few changes. Recently my son and I found a pristine copy of this 1975 game in &lt;a href=&#34;https://rataplan.nl/rataplan-almere-stad/&#34;&gt;a second-hand store&lt;/a&gt;, and it made me all nostalgic.&lt;/p&gt;
+&lt;p&gt;I might write more about the game later- as I am working on a simulator - but here just want to think about dice. What good probability problem doesn’t have dice in it?&lt;/p&gt;
+&lt;figure&gt;
+&lt;img src=&#34;img/jumbojet.jpg&#34; style=&#34;width:40%; border: 1px solid #000; margin-right: auto; display: block; margin-left: auto;&#34;&gt;
+&lt;figcaption&gt;
+&lt;i&gt;The board game Jumbojet, published in 1975, and receives a &lt;a href=&#34;https://boardgamegeek.com/boardgame/2740/jumbo-jet&#34;&gt;solid rating of 4.8/10 on Boardgamegeek.com&lt;/a&gt;, which such reviews as “Hilariously random and repetitive.”&lt;/i&gt;
+&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;p&gt;&lt;br&gt;
+&lt;br&gt;&lt;/p&gt;
+&lt;p&gt;In Jumbojet, you use two dice to advance the board; if you toss double digits, you can use the dice again and keep walking (well, flying), and so on. Unlike in Monopoly, &lt;a href=&#34;http://koaning.io/monopoly-simulations.html&#34;&gt;where you go to jail on three successive double digit tosses&lt;/a&gt;, you can keep going &lt;em&gt;ad infinitum&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;The expected value of the total of two dice is of course 3.5 + 3.5 = 7, how much does the double-digit rule add to the expected value? And, given that one die has a simple uniform distribution, what is the probability distribution for the total of all tosses, including subsequent tosses on double digits?&lt;/p&gt;
+&lt;p&gt;It turns out that this is simply a geometric distribution, because the expected value arises from a geometric series:&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[E(Y) = 7 + \frac{1}{6} \cdot 7 + \frac{1}{6^2} \cdot 7 + ... + \frac{1}{6^N} \cdot 7\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;Because you have a 1/6 chance to toss double digits, each time adding an average of 7 to the total toss.&lt;/p&gt;
+&lt;p&gt;The expected value of a geometric series can be found with the text book equation&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[E(Y) = \frac{a}{1 - r}\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;where in our case &lt;em&gt;a&lt;/em&gt; = 7 (the base value), and &lt;em&gt;r&lt;/em&gt; = 1/6 (the probability of the next event), giving an expected value of 8.4 for the grand total of tosses. So basically the &lt;strong&gt;double digit rule adds only 1.4 to the expected distance walked on the board in a single turn&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;I also want to look at the complete probability distribution, not just the first moment (the mean).&lt;/p&gt;
+&lt;p&gt;First a simple simulation, always nice to start with so we don’t have to think hard (&lt;em&gt;Computers are cheap, thinking is hard&lt;/em&gt;).&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# Grand total of two dice, including all subsequent tosses on double digits
+roll_dice &amp;lt;- function(){
+
+  dice &amp;lt;- sample(1:6, 2, replace = TRUE)
+  move &amp;lt;- sum(dice)
+  
+  i &amp;lt;- 0
+  while(dice[1] == dice[2]){
+    dice &amp;lt;- sample(1:6, 2, replace = TRUE)
+    move &amp;lt;- move + sum(dice)
+    i &amp;lt;- i + 1
+  }    
+  
+return(move)
+}
+
+# Then we can simulate a million tosses:
+set.seed(1)
+toss &amp;lt;- replicate(10^6, roll_dice())&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;If we were to make a histogram of the probability density for each grand total (which we can imagine diminishes very quickly for larger totals!), it should correspond to the density function for the geometric distribution. The latter can be found in &lt;code&gt;dgeom&lt;/code&gt; in R.&lt;/p&gt;
+&lt;p&gt;Here is also makes sense to plot the logarithmic density, since there is a lot of information in the tails that is otherwise not visible.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(magicaxis)
+
+# histogram of simulated values
+h &amp;lt;- hist(toss, breaks=50, plot=FALSE)
+par(cex.axis=0.7)
+plot(h$mids, log(h$density), 
+     axes=FALSE,
+     xlab = &amp;quot;Grand total dice&amp;quot;,
+     ylab = &amp;quot;Proability density&amp;quot;)
+magaxis(side=2, unlog=2)
+box()
+par(cex.axis=1)
+axis(1)
+
+
+# A straight line from the geometric distribution.
+# The slope of this line is -1/6, by the way.
+x &amp;lt;- 1:80
+g &amp;lt;- dgeom(x, prob = 1/6)
+lines(x, log(g))&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2018-10-09_geometricdice_files/figure-html/unnamed-chunk-2-1.png&#34; width=&#34;600px&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;As expected, the geometric distribution (solid line) agrees well enough with the simulated values - but not quite since the dice simulation is that of a discrete event, while the geometric distribution is continuous.&lt;/p&gt;
+</description>
     </item>
     
     <item>
@@ -27,9 +87,46 @@ I might write more about the game later- as I am working on a simulator - but he
       <pubDate>Wed, 20 Jun 2018 00:00:00 +0000</pubDate>
       
       <guid>/post/2018-06-20_walktheplank/</guid>
-      <description>The game of Pirate Plank. My 6yr-old wins most of the time. Why?
-There are some benefits to being unemployed - I have the time to figure out the best strategy at a board game I like to play with my 6 year old. The game is Pirate Plank, made by LEGO, and it is interesting because there’s some decision making involved.
-The game starts with each of the pirates at the start of a plank, and an empty die.</description>
+      <description>&lt;figure&gt;
+&lt;img src=&#34;img/walktheplank.jpg&#34; style=&#34;width:80%; border: 1px solid #000&#34;&gt;
+&lt;figcaption&gt;
+&lt;i&gt;The game of Pirate Plank. My 6yr-old wins most of the time. Why?&lt;/i&gt;
+&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;p&gt;&lt;br&gt;
+&lt;br&gt;&lt;/p&gt;
+&lt;p&gt;There are some benefits to being unemployed - I have the time to figure out the best strategy at a board game I like to play with my 6 year old. The game is &lt;a href=&#34;https://brickset.com/sets/3848-1/Pirate-Plank&#34;&gt;Pirate Plank&lt;/a&gt;, made by LEGO, and it is interesting because there’s some decision making involved.&lt;/p&gt;
+&lt;p&gt;The game starts with each of the pirates at the start of a plank, and an empty die. When you roll the die, and the side is empty (as it is at the start), you can place a tile with your opponent’s color on that side. If you roll the die to a side that has at least one of your opponent’s tiles on it, you can either decide to a) make your opponent walk the plank, with the number of steps equal to the number of tiles on that side of the die, or b) place another tile on that side.&lt;/p&gt;
+&lt;p&gt;When you reach the end of the plank first, you lose! Sharkbait.&lt;/p&gt;
+&lt;p&gt;We have two simple strategies to start with, either:&lt;/p&gt;
+&lt;ol style=&#34;list-style-type: decimal&#34;&gt;
+&lt;li&gt;Always make opponent walk the plank, when possible.&lt;/li&gt;
+&lt;li&gt;Always place another tile, when possible (a max of 4 tiles per side).&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Strategy 2 is probably pretty terrible, since that way we can only ever have one opponent tile on each side (but our opponent has room for three). I suppose it also depends on the length of the plank - since a longer plank will mean more chance for our opponent to fill up each side and make us walk quickly.&lt;/p&gt;
+&lt;p&gt;We can think of more strategies: what if we switch from always placing tiles to always walking when we have already two tiles on that side of the die?&lt;/p&gt;
+&lt;div id=&#34;setting-up-the-simulation&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Setting up the simulation&lt;/h2&gt;
+&lt;p&gt;It’s time to set up the basic game so we can test different strategies.&lt;/p&gt;
+&lt;p&gt;Unlike other posts in this blog, I won’t show the code - it is all pretty straightforward, and can be &lt;a href=&#34;https://github.com/remkoduursma/remkoweb&#34;&gt;read in full in this repository&lt;/a&gt;. We simply simulate a game of Pirate Plank by taking turns rolling the die, and employing one of four strategies. These are either the two strategies above, or one of two ‘switch’ strategies (always place when 1 or less tiles on the side, walk otherwise; or the same but place when 2 or less tiles on the side).&lt;/p&gt;
+&lt;p&gt;The figure below shows an example game of a player employing an “always place” strategy (the red player - thus the blue player does not walk until some sides have filled up), and a player with an “always walk” strategy (the blue player - thus the red player walks many small steps).&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2018-06-20_walktheplank_files/figure-html/unnamed-chunk-3-1.png&#34; width=&#34;500px&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;In this case the blue player wins, because the red player reaches the deadly tenth step into the ocean below.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;evaluating-the-best-strategy&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Evaluating the best strategy&lt;/h2&gt;
+&lt;p&gt;Next I set up a simulation, pitting each of the four strategies against each other, playing each game a thousand times, and tallying the winners. It turns out that the best strategy depends on your opponnent’s strategy, which makes sense because the two players share the die (tiles placed by one player take away spots for the other player). The results are shown in the next figure:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2018-06-20_walktheplank_files/figure-html/unnamed-chunk-7-1.png&#34; width=&#34;600px&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;The results are shown from the perspective of Player 2, who has a massive disadvantage because Player 1 starts the game. Only if Player 1 adopts the worst strategy (always place a tile if a spot is available), does Player 2 win most games (the blue bars). Otherwise (except for the ‘switch2’ strategy), Player 1 wins about 80% of the games!&lt;/p&gt;
+&lt;p&gt;When Player 2 uses the switch2 strategy (switch from placing to walking when 2 tiles are on the side), win chances are between 40-65%, thus this is the best strategy to use. For Player 1, it is also the best strategy, since the win chances for Player 2 drop to just over 40% when Player 1 also uses ‘switch2’.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;conclusions&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Conclusions&lt;/h2&gt;
+&lt;p&gt;In many board games, one of the rules reads “the youngest player always starts the game”. In the game of pirate plank, starting first gives a massive advantage: when both players adopt the same strategy, player 1 wins 60-80% of the time (depending on the strategy chosen).&lt;/p&gt;
+&lt;p&gt;Clearly the best way to beat my 6-yr old at this game is to remove that rule and start first!&lt;/p&gt;
+&lt;p&gt;Otherwise, the best strategy - out of what I tested - is to switch from placing tiles to making your opponent walk when there are at least 2 opponent’s tiles on the die side.&lt;/p&gt;
+&lt;/div&gt;
+</description>
     </item>
     
   </channel>
