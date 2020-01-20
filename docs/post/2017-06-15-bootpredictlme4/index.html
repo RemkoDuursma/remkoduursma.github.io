@@ -14,7 +14,7 @@
 
 <title>Remko Duursma</title>
 
-<meta name="generator" content="Hugo 0.31.1" />
+<meta name="generator" content="Hugo 0.62.2" />
 
 
 
@@ -92,7 +92,10 @@
 
 <section id="content-pane" class="row">
   <div class="col-md-12 text-justify content">
-    <p>With simple linear regression, standard errors and confidence intervals for fitted (and predicted) values are easily computed. In R, we can use the <code>se.fit</code> argument in <code>predict.lm</code>, which returns the standard error for the fitted values, and <code>interval = &quot;confidence&quot;</code> to return confidence intervals. With linear mixed-effects models, however, it is not so easy. Neither <code>predict.lme</code> (from <code>nlme</code>) nor <code>predict.merMod</code> (from <code>lme4</code>) provide these methods, as confidence intervals on mixed-effects model predictions are harder to produce.</p>
+    
+
+
+<p>With simple linear regression, standard errors and confidence intervals for fitted (and predicted) values are easily computed. In R, we can use the <code>se.fit</code> argument in <code>predict.lm</code>, which returns the standard error for the fitted values, and <code>interval = &quot;confidence&quot;</code> to return confidence intervals. With linear mixed-effects models, however, it is not so easy. Neither <code>predict.lme</code> (from <code>nlme</code>) nor <code>predict.merMod</code> (from <code>lme4</code>) provide these methods, as confidence intervals on mixed-effects model predictions are harder to produce.</p>
 <p>The solution is to use the parametric bootstrap, which is conveniently implemented in <code>bootMer</code> to be applied to models fit with the <code>lme4</code> package (<code>lmer</code>, not <code>glmer</code>). Here I describe a simple wrapper around <code>bootMer</code>, providing an alternative for <code>predict.merMod</code> that calculates standard errors (and confidence intervals) for predictions.</p>
 <p>A side-effect of this implementation is that confidence intervals now appear in <code>visreg</code> plots of mixed-effects models.</p>
 <p>The code shown below is implemented as a very simple package, <code>bootpredictlme4</code>, which can be installed with,</p>
@@ -265,12 +268,16 @@ hljs.initHighlightingOnLoad();
 
 
 
-<script>
-window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-ga('create', 'UA-10108116-1', 'auto');
-ga('send', 'pageview');
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-10108116-1', 'auto');
+	
+	ga('send', 'pageview');
+}
 </script>
-<script async src='//www.google-analytics.com/analytics.js'></script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>

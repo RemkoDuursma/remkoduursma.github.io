@@ -1,34 +1,18 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tags on Remko Duursma</title>
-    <link>http://www.remkoduursma.com/post</link>
-    <description>Recent content on Remko Duursma</description>
-    <generator>Hugo, blogdown, rmarkdown</generator>
+    <link>/tags/</link>
+    <description>Recent content in Tags on Remko Duursma</description>
+    <generator>Hugo -- gohugo.io</generator>
     <language>en-US</language>
-    <lastBuildDate>Sun, 02 Oct 2016 22:55:05 -0400</lastBuildDate>
-    <atom:link href="/tags/" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 09 Oct 2018 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
+    
     
     <item>
-      <title>About</title>
-      <link>/tags/about/</link>
-      <pubDate>Sun, 02 Oct 2016 22:55:05 -0400</pubDate>
-      
-      <guid>/tags/about/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Api</title>
-      <link>/tags/api/</link>
-      <pubDate>Wed, 06 Jun 2018 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/api/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Boardgame</title>
+      <title>boardgame</title>
       <link>/tags/boardgame/</link>
       <pubDate>Tue, 09 Oct 2018 00:00:00 +0000</pubDate>
       
@@ -37,16 +21,7 @@
     </item>
     
     <item>
-      <title>Ecology</title>
-      <link>/tags/ecology/</link>
-      <pubDate>Thu, 01 Jun 2017 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/ecology/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Game</title>
+      <title>game</title>
       <link>/tags/game/</link>
       <pubDate>Tue, 09 Oct 2018 00:00:00 +0000</pubDate>
       
@@ -55,97 +30,7 @@
     </item>
     
     <item>
-      <title>Journalclub</title>
-      <link>/tags/journalclub/</link>
-      <pubDate>Thu, 01 Jun 2017 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/journalclub/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Lme4</title>
-      <link>/tags/lme4/</link>
-      <pubDate>Thu, 01 Jun 2017 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/lme4/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Maps</title>
-      <link>/tags/maps/</link>
-      <pubDate>Tue, 30 May 2017 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/maps/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Mixedeffects</title>
-      <link>/tags/mixedeffects/</link>
-      <pubDate>Thu, 13 Apr 2017 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/mixedeffects/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Multivariate</title>
-      <link>/tags/multivariate/</link>
-      <pubDate>Thu, 13 Apr 2017 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/multivariate/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Nonlinear</title>
-      <link>/tags/nonlinear/</link>
-      <pubDate>Mon, 24 Apr 2017 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/nonlinear/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Optparse</title>
-      <link>/tags/optparse/</link>
-      <pubDate>Wed, 06 Jun 2018 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/optparse/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Plot</title>
-      <link>/tags/plot/</link>
-      <pubDate>Mon, 24 Apr 2017 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/plot/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Plumber</title>
-      <link>/tags/plumber/</link>
-      <pubDate>Wed, 06 Jun 2018 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/plumber/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Regression</title>
-      <link>/tags/regression/</link>
-      <pubDate>Mon, 24 Apr 2017 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/regression/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Simulation</title>
+      <title>simulation</title>
       <link>/tags/simulation/</link>
       <pubDate>Tue, 09 Oct 2018 00:00:00 +0000</pubDate>
       
@@ -154,7 +39,43 @@
     </item>
     
     <item>
-      <title>Spatial</title>
+      <title>api</title>
+      <link>/tags/api/</link>
+      <pubDate>Wed, 06 Jun 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/api/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>optparse</title>
+      <link>/tags/optparse/</link>
+      <pubDate>Wed, 06 Jun 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/optparse/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>plumber</title>
+      <link>/tags/plumber/</link>
+      <pubDate>Wed, 06 Jun 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/plumber/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>web</title>
+      <link>/tags/web/</link>
+      <pubDate>Wed, 06 Jun 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/web/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>spatial</title>
       <link>/tags/spatial/</link>
       <pubDate>Wed, 24 Jan 2018 00:00:00 +0000</pubDate>
       
@@ -163,16 +84,7 @@
     </item>
     
     <item>
-      <title>Statistics</title>
-      <link>/tags/statistics/</link>
-      <pubDate>Thu, 01 Jun 2017 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/statistics/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Temporal</title>
+      <title>temporal</title>
       <link>/tags/temporal/</link>
       <pubDate>Wed, 24 Jan 2018 00:00:00 +0000</pubDate>
       
@@ -181,11 +93,101 @@
     </item>
     
     <item>
-      <title>Web</title>
-      <link>/tags/web/</link>
-      <pubDate>Wed, 06 Jun 2018 00:00:00 +0000</pubDate>
+      <title>ecology</title>
+      <link>/tags/ecology/</link>
+      <pubDate>Thu, 01 Jun 2017 00:00:00 +0000</pubDate>
       
-      <guid>/tags/web/</guid>
+      <guid>/tags/ecology/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>journalclub</title>
+      <link>/tags/journalclub/</link>
+      <pubDate>Thu, 01 Jun 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/journalclub/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>lme4</title>
+      <link>/tags/lme4/</link>
+      <pubDate>Thu, 01 Jun 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/lme4/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>statistics</title>
+      <link>/tags/statistics/</link>
+      <pubDate>Thu, 01 Jun 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/statistics/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>maps</title>
+      <link>/tags/maps/</link>
+      <pubDate>Tue, 30 May 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/maps/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>nonlinear</title>
+      <link>/tags/nonlinear/</link>
+      <pubDate>Mon, 24 Apr 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/nonlinear/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>plot</title>
+      <link>/tags/plot/</link>
+      <pubDate>Mon, 24 Apr 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/plot/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>regression</title>
+      <link>/tags/regression/</link>
+      <pubDate>Mon, 24 Apr 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/regression/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>mixedeffects</title>
+      <link>/tags/mixedeffects/</link>
+      <pubDate>Thu, 13 Apr 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/mixedeffects/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>multivariate</title>
+      <link>/tags/multivariate/</link>
+      <pubDate>Thu, 13 Apr 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/multivariate/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>about</title>
+      <link>/tags/about/</link>
+      <pubDate>Sun, 02 Oct 2016 22:55:05 -0400</pubDate>
+      
+      <guid>/tags/about/</guid>
       <description></description>
     </item>
     

@@ -23,8 +23,8 @@ enableRobotsTXT = true
 ## Site Settings
 [params]
 author = "Remko Duursma"
-intro = "Freelance R Trainer & Consultant"
-description = "Data Analyst & Scientist, R Programmer, Educator and Birdwatcher"
+intro = "Data Scientist, R Programmer, R Trainer, Scientist."
+description = ""
 authorimage = "remko.jpg"
 dateformat = "Jan 2, 2006"
 
@@ -47,6 +47,9 @@ bitbucket = "remkoduursma"
 copyright = "© 2017-2018. Remko Duursma." 
 poweredby = true
 highlightjs = true
+
+[markup.goldmark.renderer]
+unsafe= true
 
 ## Main Menu
 
